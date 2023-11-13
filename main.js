@@ -5,6 +5,13 @@ import Vue from 'vue'
 import './uni.promisify.adaptor'
 import uView from '@/uni_modules/uview-ui'
 Vue.use(uView)
+
+import store from './store'
+Vue.prototype.$store = store
+
+import mixin from "./mixins/mixinsPullDownRefresh";
+Vue.mixin(mixin)
+
 Vue.config.productionTip = false
 App.mpType = 'app'
 const app = new Vue({
