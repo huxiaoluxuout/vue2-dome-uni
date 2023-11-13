@@ -1,0 +1,151 @@
+page {
+  --page-gap: 30rpx;
+  --tabbar-height: 60px;
+
+}
+
+.page-gap-margin {
+  margin: 0 var(--page-gap);
+}
+
+.page-gap-padding {
+  padding: 0 var(--page-gap);
+}
+
+// #ifdef  MP
+
+// 组件标签
+[is] {
+  display: contents;
+}
+
+// 组件插槽标签
+.is__view__root :first-child:not([class]):last-child:not([class]) {
+  display: contents;
+}
+
+// #endif
+
+
+.flex-container {
+  --scale: 1; //宽高比例（不能直接写成分数形式）
+  --num-columns: 2;
+  --view-width: 100%;
+  --gap: var(--page-gap);
+  --item-width: calc((var(--view-width) / var(--num-columns)) - (var(--gap)));
+  --item-height-scale: calc(var(--item-width) / var(--scale));
+
+  gap: var(--gap);
+  margin-right: calc(-1 * var(--gap));
+  display: flex;
+  flex-wrap: wrap;
+  box-sizing: border-box;
+
+
+  .flex-item {
+    width: var(--item-width);
+    box-sizing: border-box;
+    position: relative;
+  }
+
+  .flex-item__scale {
+    height: var(--item-height-scale);
+  }
+
+}
+
+
+.root-view {
+  min-height: calc(100vh - var(--window-top));
+  background-color: #F9F9F9;
+  box-sizing: border-box;
+  position: relative;
+  padding-bottom: calc(var(--ios-bottom-height) + var(--window-top) + var(--tabbar-height));
+
+  .flex-column-container {
+
+    flex: 1;
+    //background-color: #8cd2ca;
+
+  }
+}
+
+
+.has-custom-tabbar {
+  position: relative;
+  min-height: calc(100vh - var(--window-top));
+  box-sizing: border-box;
+  //border-top: 1px solid transparent;
+  //border-bottom: 1px solid transparent;
+
+  display: flex;
+  flex-direction: column;
+
+  .flex-column-container {
+
+    flex: 1;
+
+
+  }
+}
+
+
+.has-custom-tabbar.navbar-img {
+  background-color: transparent;
+  background-size: 100%;
+  background-repeat: no-repeat;
+}
+
+
+.button {
+  padding-left: 8px;
+  padding-right: 8px;
+}
+
+.button:after {
+  border: none;
+}
+
+[mode="widthFix"][mode="widthFix"] {
+  height: auto;
+}
+
+.mask-view-box {
+  position: relative;
+}
+
+.mask-view {
+  position: absolute;
+  inset: 0;
+  background-color: #fafafa;
+  opacity: .3;
+  z-index: 1001;
+}
+
+
+/* 解决小程序和app滚动条的问题 */
+/* #ifdef MP-WEIXIN || APP-PLUS */
+::-webkit-scrollbar {
+  display: none;
+  width: 0 !important;
+  height: 0 !important;
+  -webkit-appearance: none;
+  background: transparent;
+  color: transparent;
+}
+
+/* #endif */
+
+/* 解决H5 的问题 */
+/* #ifdef H5 */
+uni-scroll-view .uni-scroll-view::-webkit-scrollbar {
+  /* 隐藏滚动条，但依旧具备可以滚动的功能 */
+  display: none;
+  width: 0 !important;
+  height: 0 !important;
+  -webkit-appearance: none;
+  background: transparent;
+  color: transparent;
+}
+
+/* #endif */
