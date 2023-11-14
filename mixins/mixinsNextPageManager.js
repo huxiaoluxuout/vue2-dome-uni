@@ -57,6 +57,7 @@ const PageManager = function () {
     const reload = () => {
         page = 1
         dataList = []
+        isLastPage = false
         registerCallbacks();
     }
 

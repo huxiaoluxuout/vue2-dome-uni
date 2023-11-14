@@ -39,7 +39,7 @@ export default {
   },
   onLoad() {
     // this._getHomeBannerList()
-    // console.log('this:=====:', this)
+    console.log('this:=====:', this)
 
     this.nextPageManager.nexPageSetFunction(this._getHomeBannerList)
 
@@ -56,8 +56,6 @@ export default {
 
     _getHomeBannerList() {
 
-      console.log('pageSize:', this.nextPageManager.getPageSize())
-      console.log('page:', this.nextPageManager.getPage())
 
       getHomeBannerList({
         "user_id": 13,
