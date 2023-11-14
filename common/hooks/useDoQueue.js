@@ -15,7 +15,7 @@ export default function useDoQueue() {
     };
 
     // 只能加一个,多了会被覆盖
-    const setFunctions = (func, ...args) => {
+    const setFunction = (func, ...args) => {
         funcList = [{func, args}]
     }
 
@@ -25,7 +25,7 @@ export default function useDoQueue() {
 
     return {
         addFunctions,
-        setFunctions,
+        setFunction,
         DoFunQueue,
     };
 }

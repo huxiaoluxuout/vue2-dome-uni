@@ -1,35 +1,25 @@
 <template>
   <view>
-    3333
-    <view>1</view>
+    {{ viewDataList.length }}
+    <view>ddddddd</view>
     <view>2</view>
     <view>3</view>
-    <view>4</view>
-    <view>5</view>
-    <view>6</view>
-    <view>6</view>
-    <view>7</view>
-    <view>9</view>
-    <view>0</view>
-    <view>1</view>
     <view>3</view>
-    <view>4</view>
-    <view>556</view>
-    <view>7</view>
-    <view>7</view>
-    <view>8</view>
-    <view>9</view>
     <view>3</view>
-    <view>r</view>
-    <view>r</view>
-    <view>r</view>
-    <view>r</view>
-    <view>r</view>
-    <view>r</view>
-    <view>r</view>
-    <view>r</view>
-    <view>r</view>
-    <view>r</view>
+    <view>3</view>
+    <view>3</view>
+    <view>3</view>
+    <view>3</view>
+    <view>3</view>
+    <view>3</view>
+    <view>3</view>
+    <view>3</view>
+    <view>3</view>
+    <view>3</view>
+    <view>3</view>
+
+    <view v-for="item in viewDataList">{{ item.add_time_text}}</view>
+
     <tabbar :INDEX="2"></tabbar>
 
   </view>
@@ -44,44 +34,39 @@ export default {
   mixins: [mixinsNextPageManager],
   data() {
     return {
-      viewDataList: []
+      viewDataList: [],
     }
   },
   onLoad() {
-    this._getHomeBannerList()
-    console.log('this:=====:', this)
-    const {pullDownRefreshSetFunctions, pullDownRefreshAddFunctions, pullDownRefreshReload} = this.pullDownRefreshFunctions()
-    /*pullDownRefreshSetFunctions(this.foo, 444)
+    // this._getHomeBannerList()
+    // console.log('this:=====:', this)
 
-    pullDownRefreshAddFunctions(this.foo, 666)*/
+    this.nextPageManager.nexPageSetFunction(this._getHomeBannerList)
 
-    // pullDownRefreshAddFunctions(this._getHomeBannerList)
-    console.log('xxxxxxx-----xxxxx', this.foo1());
-    const { page,reload, dataList, nexPageDoFunQueue, nexPageSetAddFunction, nexPageSetFunction} = this.foo1()
-    nexPageSetAddFunction(this._getHomeBannerList)
-    reload()
+    this.pullDownRefresh.pullDownRefreshAddFunctions(this.nextPageManager.reload)
 
-    //==============
+    this.nextPageManager.onReload(() => {
+      console.log('响应重新加载')
+      this.viewDataList = []
+    })
 
 
   },
   methods: {
-    foo(info) {
-      console.log('foo', info)
-    },
+
     _getHomeBannerList() {
-      console.log('page:', this.foo1().page,)
-      // console.log('pageSize:', this.foo1().pageSize)
+
+      console.log('pageSize:', this.nextPageManager.getPageSize())
+      console.log('page:', this.nextPageManager.getPage())
+
       getHomeBannerList({
         "user_id": 13,
         "appscret": "47a610ee35391da40ec7f6b73e15b902",
         "token": "2b8f63cc39629f4ca92be548673978a8f80f834b40ad51add17ba6c71e896d79",
-        /*  page:this.foo1().page,
-          pageSize:this.foo1().pageSize,*/
-      }).then(res => {
-        console.log(321321321132, res)
 
-        // this.viewDataList = this.foo1().setDataList(res.data).dataList
+      }).then(res => {
+
+        this.viewDataList = this.nextPageManager.setDataList(res.data)
 
       })
     },
