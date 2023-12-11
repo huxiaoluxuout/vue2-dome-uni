@@ -16,7 +16,8 @@
 
     </view>
 
-    <view v-show="!isRelative" class="view-gap" :style="{'--height':rectHeight+'px'}"></view>
+    <view v-show="!isRelative" :class="viewGapHeight" :style="{'--height':rectHeight+'px'}"></view>
+
 
   </view>
 
@@ -57,6 +58,8 @@ export default {
       default: '#fff',
     },
 
+    navigationCustom: Boolean,
+
   },
   data() {
     return {
@@ -83,7 +86,16 @@ export default {
           background: this.bgColor
         }
       }
-    }
+    },
+
+    viewGapHeight() {
+      if (this.navigationCustom && Number(this.top) === 0) {
+        return 'view-gap-2'
+      } else {
+        return 'view-gap'
+
+      }
+    },
   },
   mounted() {
     /*getViewInfo('.zshu-tabs', (rect) => {
@@ -116,7 +128,7 @@ export default {
   height: 45px;
   z-index: 10;
   width: 100%;
-  
+
   .scroll-row {
     height: 100%;
     white-space: nowrap;
@@ -185,8 +197,19 @@ export default {
   }
 }
 
+/*
 .view-gap {
   height: calc(var(--height) + var(--window-top) + var(--status-bar-height));
+}
+*/
+
+
+.view-gap {
+  height: calc(var(--height) + var(--status-bar-height));
+}
+
+.view-gap-2 {
+  height: calc(var(--height) + var(--status-bar-height));
 }
 
 </style>

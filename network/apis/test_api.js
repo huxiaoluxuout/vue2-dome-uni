@@ -1,4 +1,5 @@
 import {request} from '@/network/request'
 
-export const getHomeBannerList = (data) => request({url: '/mall/api.Goods/getHomeBannerList', method: 'post', data});
+export const getMineOrderList = (data) => request({url: '/feiying/api.order/getMineOrderList', method: 'post', data});
+
 

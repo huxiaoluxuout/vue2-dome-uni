@@ -55,6 +55,7 @@ const PageManager = function () {
     }
     // 重新加载
     const reload = () => {
+        console.log('重新加载')
         page = 1
         dataList = []
         isLastPage = false

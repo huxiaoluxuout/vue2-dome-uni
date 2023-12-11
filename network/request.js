@@ -1,6 +1,45 @@
 import {baseURL} from "@/network/config";
 
 
+// 请求函数
+
+export const request = (options) => {
+    options.url = baseURL + options.url;
+
+    return new Promise((resolve, reject)=>{
+
+        uni.request({
+            ...options,
+            header: {
+                token: 'f12733919b710fd57da57c86846feb6df407c4ae'
+            },
+            success(response) {
+                const mappingKey = {
+                    "success": 200,// 正常情况
+                    "expired": 403,// token过期
+                }
+                if (response.data['code'] === mappingKey['success']) {
+                    return resolve(response.data);
+                } else if (response.data['code'] === mappingKey['expired']) {
+
+                    return reject(response.data);
+
+                } else {
+                    console.error(response.data)
+                    return reject(response.data);
+                }
+            },
+        });
+
+    })
+};
+
+
+
+/*
+import {baseURL} from "@/network/config";
+
+
 import {TokenManager} from "./TokenManager";
 
 
@@ -46,3 +85,4 @@ export const request = async (options) => {
         return Promise.reject(error);
     }
 };
+*/

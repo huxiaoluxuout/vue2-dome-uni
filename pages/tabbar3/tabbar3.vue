@@ -1,24 +1,8 @@
 <template>
   <view>
-    {{ viewDataList.length }}
-    <view>ddddddd</view>
-    <view>2</view>
-    <view>3</view>
-    <view>3</view>
-    <view>3</view>
-    <view>3</view>
-    <view>3</view>
-    <view>3</view>
-    <view>3</view>
-    <view>3</view>
-    <view>3</view>
-    <view>3</view>
-    <view>3</view>
-    <view>3</view>
-    <view>3</view>
-    <view>3</view>
+    <zshu-tabs navigation-custom :activeId="activeId" @updateActiveId="(id)=>{activeId = id}" :list-tabs="listTabs"></zshu-tabs>
 
-    <view v-for="item in viewDataList">{{ item.add_time_text}}</view>
+    <ylx-slider :data-list="viewDataList" :currentIndex="currentIndex" @updateCurrentIndex="(index)=>{currentIndex = index}"></ylx-slider>
 
     <tabbar :INDEX="2"></tabbar>
 
@@ -26,45 +10,76 @@
 </template>
 
 <script>
-import {getHomeBannerList} from "@/network/apis/test_api";
+import {getMineOrderList} from "@/network/apis/test_api";
 import mixinsNextPageManager from "@/mixins/mixinsNextPageManager";
+import YlxSlider from "@/components/ylx-components/ylx-slider.vue";
+import ZshuTabs from "@/components/zshu-components/zshu-tabs.vue";
+import index from "@/pages/index/index.vue";
 
 
 export default {
+  components: {ZshuTabs, YlxSlider},
   mixins: [mixinsNextPageManager],
   data() {
     return {
       viewDataList: [],
+      // activeId: 2,
+      listTabs: [
+        {
+          id: 2,
+          text: '派送',
+          text2: '大厅',
+        },
+        {
+          id: 1,
+          text: '抢单',
+          text2: '大厅',
+        }, {
+          id: 3,
+          text: '抢单3',
+          text2: '大厅3',
+        }
+      ],
+
+      activeId: 2,
+      currentIndex: 0,
+
     }
   },
+  watch: {
+    activeId(newVal) {
+      this.currentIndex = this.listTabs.findIndex(item => item.id === newVal)
+    },
+    currentIndex(newVal) {
+      this.activeId = this.listTabs[newVal].id
+    },
+  },
   onLoad() {
-    // this._getHomeBannerList()
-    console.log('this:=====:', this)
-
-    this.nextPageManager.nexPageSetFunction(this._getHomeBannerList)
+    this.getMineOrderListApi()
+    this.nextPageManager.nexPageSetFunction(this.getMineOrderListApi)
 
     this.pullDownRefresh.pullDownRefreshAddFunctions(this.nextPageManager.reload)
 
     this.nextPageManager.onReload(() => {
       console.log('响应重新加载')
       this.viewDataList = []
+      // this.getMineOrderListApi()
+
     })
 
 
   },
   methods: {
 
-    _getHomeBannerList() {
+    getMineOrderListApi() {
 
-
-      getHomeBannerList({
-        "user_id": 13,
-        "appscret": "47a610ee35391da40ec7f6b73e15b902",
-        "token": "2b8f63cc39629f4ca92be548673978a8f80f834b40ad51add17ba6c71e896d79",
-
+      getMineOrderList({
+        page: 1,
+        page_size: 6,
+        status: 1
       }).then(res => {
 
-        this.viewDataList = this.nextPageManager.setDataList(res.data)
+        this.viewDataList = this.nextPageManager.setDataList(res.data.data)
 
       })
     },
