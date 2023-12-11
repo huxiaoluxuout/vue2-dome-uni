@@ -13,7 +13,7 @@
 
 <script>
 
-import {uploadImgUrl} from "@/Http/config";
+import {uploadImgUrl} from "@/network/config";
 
 export default {
   name: "zshu-upload",

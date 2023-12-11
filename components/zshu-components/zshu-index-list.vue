@@ -29,7 +29,7 @@
 <script>
 
 
-import {getBrandList} from "@/Http/apis/feiying";
+import {getBrandList} from "@/network/apis/feiying";
 
 export default {
   name: "indexed-board",

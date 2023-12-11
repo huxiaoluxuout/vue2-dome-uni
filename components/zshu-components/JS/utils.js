@@ -1,5 +1,5 @@
-import {baseURL} from '@/Http/request'
-import {uploadFile} from '@/Http/apis/common'
+import {baseURL} from '@/network/request'
+import {uploadFile} from '@/network/apis/common'
 
 
 const uploadsFile = (filePaths, config = {

@@ -1,5 +1,5 @@
-import {request} from '@/Http/request'
-import {baseURL} from "@/Http/config";
+import {request} from '@/network/request'
+import {baseURL} from "@/network/config";
 
 
 // 获取省份列表

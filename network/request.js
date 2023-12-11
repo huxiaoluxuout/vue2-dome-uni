@@ -1,4 +1,4 @@
-import {baseURL} from "@/Http/config";
+import {baseURL} from "@/network/config";
 
 
 import {TokenManager} from "./TokenManager";

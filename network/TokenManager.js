@@ -1,4 +1,4 @@
-import {baseURL, fetchTokenApi, TOKEN_EXPIRY_INTERVAL} from "@/Http/config";
+import {baseURL, fetchTokenApi, TOKEN_EXPIRY_INTERVAL} from "@/network/config";
 
 
 import {getLoginCode} from "@/utils/tools";

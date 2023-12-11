@@ -107,7 +107,7 @@
 
 <script>
 import {getMyLocation, handleEvent, navigateTo} from "@/utils/zshuTools";
-import {againVisit, delOrder, payQrcode, refund, startService} from "@/Http/apis/feiying";
+import {againVisit, delOrder, payQrcode, refund, startService} from "@/network/apis/feiying";
 import {navigationToPathMapping} from "@/common/commonMapping";
 
 export default {

@@ -1,4 +1,4 @@
-import {request} from '@/Http/request'
+import {request} from '@/network/request'
 
 // 站内通知设为已读状态
 export const readNotice = (data) => request({url: '/api/message/readNotice', method: 'post', data})

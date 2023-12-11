@@ -26,7 +26,7 @@
 </template>
 
 <script>
-import {getHomeBannerList} from "@/Http/apis/test_api";
+import {getHomeBannerList} from "@/network/apis/test_api";
 import mixinsNextPageManager from "@/mixins/mixinsNextPageManager";
 
 

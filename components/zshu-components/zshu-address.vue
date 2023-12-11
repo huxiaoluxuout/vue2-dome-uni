@@ -57,7 +57,7 @@
 <script>
 
 
-import {getCityList, getCountyList, getProvinceList, getStreetList} from "@/Http/apis/feiying";
+import {getCityList, getCountyList, getProvinceList, getStreetList} from "@/network/apis/feiying";
 
 
 export default {

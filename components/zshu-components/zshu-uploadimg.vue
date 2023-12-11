@@ -31,7 +31,7 @@
 <script>
 
 
-import {uploadImg} from "@/Http/apis/feiying";
+import {uploadImg} from "@/network/apis/feiying";
 
 export default {
   name: "zshu-upload-img",
