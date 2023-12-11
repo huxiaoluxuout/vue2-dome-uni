@@ -1,13 +1,17 @@
 <template>
 	<view>
-		1111
+		<zshu-navbar></zshu-navbar>
+    000
     <tabbar :INDEX="0"></tabbar>
 
 	</view>
 </template>
 
 <script>
-	export default {
+	import ZshuNavbar from "@/components/zshu-components/zshu-navbar.vue";
+
+  export default {
+    components: {ZshuNavbar},
 		data() {
 			return {
 

@@ -1,133 +1,5 @@
 // import {baseURL} from "@/http/config";
 
-// 封装语音授权判断和引导函数
-function checkAndGuideRecordAuth() {
-    return new Promise((resolve, reject) => {
-        uni.getSetting({
-            success(res) {
-                if (!res.authSetting['scope.record']) {
-                    // 未授权，请求授权或引导用户开启授权
-                    uni.authorize({
-                        scope: 'scope.record',
-                        success() {
-                            resolve(true);
-                        },
-                        fail() {
-                            guideUserToEnableRecordAuth()
-                                .then((enabled) => {
-                                    resolve(enabled);
-                                })
-                                .catch((error) => {
-                                    reject(error);
-                                });
-                        },
-                    });
-                } else {
-                    resolve(true);
-                }
-            },
-            fail(err) {
-                reject(err);
-            },
-        });
-    });
-}
-
-// 引导用户开启语音授权
-function guideUserToEnableRecordAuth() {
-    return new Promise((resolve, reject) => {
-        uni.showModal({
-            title: '授权提示',
-            content: '为了正常使用语音功能，请点击确定前往开启语音授权。',
-            success(res) {
-                if (res.confirm) {
-                    uni.openSetting({
-                        success(settingRes) {
-                            if (settingRes.authSetting['scope.record']) {
-                                resolve(true);
-                            } else {
-                                resolve(false);
-                            }
-                        },
-                        fail() {
-                            resolve(false);
-                        },
-                    });
-                } else {
-                    resolve(false);
-                }
-            },
-            fail(err) {
-                reject(err);
-            },
-        });
-    });
-}
-
-// 封装位置授权判断和引导函数
-function checkAndGuideLocationAuth() {
-    return new Promise((resolve, reject) => {
-        uni.getSetting({
-            success(res) {
-                if (!res.authSetting['scope.userLocation']) {
-                    // 未授权，请求授权或引导用户开启授权
-                    uni.authorize({
-                        scope: 'scope.userLocation',
-                        success() {
-                            resolve(true);
-                        },
-                        fail() {
-                            guideUserToEnableLocationAuth()
-                                .then((enabled) => {
-                                    resolve(enabled);
-                                })
-                                .catch((error) => {
-                                    reject(error);
-                                });
-                        },
-                    });
-                } else {
-                    resolve(true);
-                }
-            },
-            fail(err) {
-                reject(err);
-            },
-        });
-    });
-}
-
-// 引导用户开启位置授权
-function guideUserToEnableLocationAuth() {
-    return new Promise((resolve, reject) => {
-        uni.showModal({
-            title: '授权提示',
-            content: '为了获取您的位置信息，请点击确定前往开启位置授权。',
-            success(res) {
-                if (res.confirm) {
-                    uni.openSetting({
-                        success(settingRes) {
-                            if (settingRes.authSetting['scope.userLocation']) {
-                                resolve(true);
-                            } else {
-                                resolve(false);
-                            }
-                        },
-                        fail() {
-                            resolve(false);
-                        },
-                    });
-                } else {
-                    resolve(false);
-                }
-            },
-            fail(err) {
-                reject(err);
-            },
-        });
-    });
-}
-
 // IOS 底部兼容
 const getIOSBottomHeight = () => {
     const {model} = uni.getSystemInfoSync()
@@ -524,8 +396,18 @@ function uploadImages(filePaths, config = {}) {
     });
 }
 
+ const getViewInfo = (selector, callback, that) => {
+    uni.createSelectorQuery()
+        .in(that)
+        .select(selector)
+        .boundingClientRect((rect) => {
+            callback(rect)
+        })
+        .exec()
+}
 
 export {
+    getViewInfo,
     throttle,
     debounce,
     getIOSBottomHeight,
@@ -539,8 +421,7 @@ export {
     payMoney,
     getMyLocation,
     getChooseLocation,
-    checkAndGuideRecordAuth,
-    checkAndGuideLocationAuth,
+
     getPageInfo,
     getCacheUserInfo,
     handleEvent,

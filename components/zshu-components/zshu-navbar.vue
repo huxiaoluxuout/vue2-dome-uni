@@ -37,7 +37,7 @@
 </template>
 <script>
 import pagesConfig from "@/pages.json";
-import {filterPath, navigateTo} from "@/utils/zshuTools";
+import {filterPath, navigateTo} from "@/utils/tools";
 
 const {tabBar: {list: tabBarPages}} = pagesConfig
 
@@ -63,6 +63,10 @@ export default {
       type: String,
       default: ''
     },
+    updateNavbarHeight: {
+      type: Function,
+      default: ()=>{}
+    },
     // 用于显示跳转到首页的icon
     showHomeIcon: Boolean
   },
@@ -75,7 +79,7 @@ export default {
       pageHierarchy: 1,
       zshuBavbarHeight: 44,
 
-      bgColor: 'transparent',
+      bgColor: '#007aff33',
 
       currentPagePath: '',
     }
@@ -95,7 +99,8 @@ export default {
 
     zahuNavbarContainerStyle() {
       this.zshuBavbarHeight = (this.menuButtonHeight + this.menuButtonTop + this.statusBarHeight + 12)
-      this.$emit('navbarHeight', this.zshuBavbarHeight)
+      this.updateNavbarHeight(this.zshuBavbarHeight)
+
       return {
         height: this.zshuBavbarHeight + 'px'
       }
@@ -103,7 +108,8 @@ export default {
 
     zshuNavbarTempViewStyle() {
       this.zshuBavbarHeight = (this.menuButtonHeight + this.menuButtonTop + this.statusBarHeight + 12)
-      this.$emit('navbarHeight', this.zshuBavbarHeight)
+      this.updateNavbarHeight(this.zshuBavbarHeight)
+
       return {
         height: this.zshuBavbarHeight + 'px'
       }
@@ -130,20 +136,15 @@ export default {
     const pages = getCurrentPages();
     this.currentPagePath = pages[pages.length - 1]['route'];
     this.pageHierarchy = pages.length;
-
     // #ifdef MP-WEIXIN || MP-ALIPAY
     const menuButtonInfoALI = uni.getMenuButtonBoundingClientRect();
     this.menuButtonTop = Math.ceil(menuButtonInfoALI.top);
     this.menuButtonHeight = Math.ceil(menuButtonInfoALI.height);
     this.menuButtonWidth = Math.ceil(menuButtonInfoALI.width);
     // #endif
-
-
     // #ifdef APP-PLUS
     this.statusBarHeight = uni.getSystemInfoSync().statusBarHeight;
     // #endif
-
-
   },
 
 

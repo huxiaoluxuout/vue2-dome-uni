@@ -1,27 +1,29 @@
 <template>
   <view class="root-zshu-tabs">
-    <view id="zshu-tabs" class="zshu-tabs" :style="{background:bgColor}">
+    <view id="zshu-tabs" class="zshu-tabs" :style="tabStyle">
       <scroll-view class="scroll-row" :scroll-x="true" scroll-with-animation :scroll-into-view="'id-'+viewId">
-        <view class="tabs">
-          <view :id="'id-'+item.id" class="tabs-container" v-for="item in listTabs" :key="item.id" @click="clickId(item.id)">
+        <view class="tabs-container">
+          <view :id="'id-'+item.id" class="tabs-content" :class="{'tabs-content-gap':!hidePag}"
+                v-for="item in listTabs" :key="item.id"
+                @click="clickId(item.id)">
             <view class="item-text" :class="{'active-opacity':item.id===activeId}">
               <text>{{ item.text }}</text>
               <text :class="{'active2':item.id===activeId}">{{ item.text2 }}</text>
             </view>
           </view>
         </view>
-
       </scroll-view>
 
     </view>
 
-    <view v-show="!isRelative" :style="{height: rectHeight+'px'}"></view>
+    <view v-show="!isRelative" class="view-gap" :style="{'--height':rectHeight+'px'}"></view>
 
   </view>
 
 </template>
 <script>
 import {cssVar as cssVar_,} from "@/components/zshu-components/JS/cssVar"
+import {getViewInfo} from "@/utils/tools";
 
 export default {
   props: {
@@ -43,8 +45,9 @@ export default {
       type: Number,
       default: 1,
     },
-    // isFixed: Boolean,
+
     isRelative: Boolean,
+    hidePag: Boolean,
 
     // css 变量
     cssVar: cssVar_,
@@ -58,20 +61,34 @@ export default {
   data() {
     return {
       viewId: '1',
-      rectHeight: '44',
+      rectHeight: '45',
     }
   },
   computed: {
-    zshuTabStyle() {
-
-      // if (!this.isRelative) {
-      return {
-        position: 'fixed',
-        borderBottom: `1px solid #f4f4f4`,
-        top: `calc(var(--window-top))`
-        // }
+    tabStyle() {
+      if (!this.isRelative) {
+        return {
+          position: 'fixed',
+          left: 0,
+          top: 0,
+          right: 0,
+          paddingTop: `calc(var(--window-top) + var(--status-bar-height))`,
+          borderBottom: `1px solid #f4f4f4`,
+          background: this.bgColor
+        }
+      } else {
+        return {
+          position: 'relative',
+          // borderBottom: `1px solid #f4f4f4`,
+          background: this.bgColor
+        }
       }
     }
+  },
+  mounted() {
+    /*getViewInfo('.zshu-tabs', (rect) => {
+      this.rectHeight = Math.ceil(rect?.height);
+    }, this)*/
   },
 
   methods: {
@@ -92,35 +109,30 @@ export default {
 .root-zshu-tabs {
   --page-gap: 30rpx;
   --gap-l-r: var(--page-gap);
-  --gap: 34rpx;
-
-  //margin:0  calc(-1 * var(--gap));
+  --gap: 30rpx;
 }
 
 .zshu-tabs {
-
-  //background-color: #fff;
-
+  height: 45px;
   z-index: 10;
-  position: relative;
   width: 100%;
-
+  
   .scroll-row {
     height: 100%;
     white-space: nowrap;
     overflow-x: auto;
-    padding-top: 20rpx;
-    padding-bottom: 20rpx;
+    display: flex;
+    align-items: center;
   }
 }
 
 
-.tabs {
-  display: flex;
-
+.tabs-container {
   gap: var(--gap);
+  display: flex;
+  height: 100%;
 
-  .tabs-container:first-child:before, .tabs-container:last-child:after {
+  .tabs-content-gap:first-child:before, .tabs-content-gap:last-child:after {
     content: '';
     height: 100%;
     width: var(--gap-l-r);
@@ -128,9 +140,9 @@ export default {
   }
 
 
-  .tabs-container {
+  .tabs-content {
     display: flex;
-    align-content: center;
+    align-items: center;
     justify-content: center;
     position: relative;
     flex: 1;
@@ -171,6 +183,10 @@ export default {
     font-weight: bold;
 
   }
+}
+
+.view-gap {
+  height: calc(var(--height) + var(--window-top) + var(--status-bar-height));
 }
 
 </style>

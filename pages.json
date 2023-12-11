@@ -1,21 +1,25 @@
 {
   "easycom": {
-    "^u-(.*)": "@/uni_modules/uview-ui/components/u-$1/u-$1.vue"
+    "^u-(.*)": "@/uni_modules/uview-ui/components/u-$1/u-$1.vue",
+    "^zshu-(.*)": "@/components/zshu-components/zshu-$1.vue"
   },
+
   "pages": [
 
     {
       "path": "pages/tabbar1/tabbar1",
       "style": {
         "navigationBarTitleText": "tabbar1",
-        "enablePullDownRefresh": false
+        "enablePullDownRefresh": false,
+        "navigationStyle": "default"
       }
     },
     {
       "path": "pages/tabbar2/tabbar2",
       "style": {
         "navigationBarTitleText": "tabbar2",
-        "enablePullDownRefresh": false
+        "enablePullDownRefresh": false,
+        "navigationStyle": "default"
       }
     },
     {

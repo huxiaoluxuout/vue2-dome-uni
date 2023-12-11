@@ -1,5 +1,5 @@
 {
-  "name": "feiying_test_vue2",
+  "name": "vue2-dome-uni",
   "version": "1.0.0",
   "description": "",
   "main": "main.js",
@@ -10,7 +10,6 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "sass": "^1.69.5",
-    "sass-loader": "^13.3.2"
+
   }
 }

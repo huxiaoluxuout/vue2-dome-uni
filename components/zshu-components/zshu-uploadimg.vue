@@ -1,30 +1,26 @@
 <template>
 
-
-  <view class="zshu-upload-img flex-container page-gap"
-        :style="{'--num-columns':columnsLimit,'--scale':scale,'--view-width':width,'--gap':gap}">
+  <view class="flex-container page-gap"
+        :style="{'--num-columns':columnsLimit,'--scale':scale,'--view-width':localStyleViewWidth,'--gap':localStyleGap}">
     <!--图片-->
-    <view class="flex-item flex-item__scale image-video-container" :class="{'position-ab':hiddenIcon}"
-          v-for="(item,index) in filePathsView" :key="item.url + index">
-      <image class="image-item" :src="item.url" mode="aspectFill" @click.stop="previewImage(index)"/>
+    <view v-if="!onlyUpload" class="flex-item flex-item__scale container"
+          v-for="(item,index) in localFileList" :key="item.thumb+index">
+      <image class="image-item" :src="item.thumb" mode="aspectFill" @click.stop="previewImage(index)"/>
 
-      <view v-if="!hiddenIcon" class="del-icon" @click.stop="delImage(index)">
+      <view class="del-icon" @click.stop="delImage(index)">
         <uni-icons type="close" color="#ff3c3c" size="26"></uni-icons>
       </view>
 
-      <!--        <view class="loading" v-show="true"></view>-->
+<!--      <view class="loading" v-show="item.status==='uploading'"></view>-->
 
     </view>
 
-
     <!--图片 视频 上传-->
     <view v-show="isShowUpload"
-          class="flex-item__scale image-video-container upload-icon-position"
-          :class="{'upload-icon-ab':hiddenIcon}" @click="chooseFile"
+          class="flex-item__scale container upload-icon-position"
+          @click="chooseFile"
     >
-
-      <slot v-if="!hiddenIcon">
-
+      <slot name="upload">
         <image class="image-item" mode="aspectFill" :src="uploadDefaultIcon"/>
       </slot>
     </view>
@@ -34,7 +30,8 @@
 
 <script>
 
-// import {uploadImgUrl} from "@/Http/config";
+
+import {uploadImg} from "@/Http/apis/feiying";
 
 export default {
   name: "zshu-upload-img",
@@ -45,23 +42,16 @@ export default {
       default: () => []
     },
 
-    multiple: Boolean,
-    maxCount: {
-      type: [String, Number],
-      default: 3
-    },
-
-
     // ======================
     // 总共允许上传数量
     limit: {
       type: [Number, String],
-      default: 6
+      default: 3
     },
     // 一行有几列
     columnsLimit: {
       type: [Number, String],
-      default: 2
+      default: 3
     },
     // 宽高比例
     scale: {
@@ -71,85 +61,84 @@ export default {
     // 当前可用总宽度
     width: {
       type: [Number, String],
-      default: '750rpx'
-      // default: `calc(750rpx - 30rpx)`
+      default: `calc(750rpx - 30rpx)`
     },
     gap: {
       type: String,
       default: `30rpx`
     },
-    // ======================
-
-
-    isHiddenIcon: Boolean,
-
-    srcUrl: {
-      type: Array,
-      default: () => {
-        return [
-          {
-            url: 'https://jxgx88.oss-cn-shenzhen.aliyuncs.com/uploads/20230914/4f0f962a712b9dc277d6ed0c7b00e632.jpg',
-
-          }
-        ]
-      },
-    },
-
 
     _that_: {
       type: Object,
       default: () => {
       }
     },
+    _fileImageList_: {
+      type: String,
+      default: 'fileImageList'
+    },
+    hiddenUploadIcon: Boolean,
+    onlyUpload: Boolean,
+
   },
   data() {
     return {
 
-      hiddenIcon: '',
-
-      // filePathsView: '',
       uploadDefaultIcon: 'https://xcx.jxgxsmt.com/static/images/add-img.png',
-      viewTempSrcUrl: []
-
     };
   },
+
   computed: {
+    localStyleViewWidth() {
+      return this.convertCalcExpression(this.width)
+    },
+    localStyleGap() {
+      return this.convertCalcExpression(this.gap)
+    },
 
     localFileList() {
+      this.fileImageList.forEach(item => {
+        if (!item.status && item.url) {
+          item.status = 'success'
+          item.thumb = item.url
+        }
+      })
       return this.fileImageList
     },
 
     isShowUpload() {
-      return false
-      // return this.hiddenIcon ? this.hiddenIcon : Number(this.limit) > this.filePathsView.length;
+      return this.hiddenUploadIcon ? false : Number(this.limit) > this.localFileList.length;
     },
-
     chooseCountLimit() {
-      return Number(this.limit) - this.filePathsView.length;
+      return Number(this.limit) - this.localFileList.length;
     },
-
-    viewInitSrcUrl() {
-      return this.srcUrl
-    },
-    filePathsView() {
-      return this.viewInitSrcUrl.concat(this.viewTempSrcUrl)
-    },
-
-    postSrcUrl() {
-      return this.srcUrl
-    }
 
 
   },
 
   methods: {
+    // 将 rpx 转换为 px
+    convertCalcExpression(expression) {
+      const regex = /(\d+)(rpx|px)/g;
+      return expression.replace(regex, (match, number, unit) => {
+        // 将 rpx 转换为 px
+        if (unit === 'rpx') {
+          number = number / 2;
+        }
+        // 返回转换后的数字和单位
+        return `${number}px`;
+      });
+    },
+
     chooseFile() {
+      const that = this
       uni.chooseImage({
-        count: this.chooseCountLimit,
+        count: that.chooseCountLimit,
         sizeType: ['original', 'compressed'],
         sourceType: ['album', 'camera'],
         success: function (res) {
-          this.afterRead(res)
+          // console.log('chooseImage', res)
+          that.afterRead(res)
         },
         fail: function (fail) {
           console.warn(fail)
@@ -158,61 +147,78 @@ export default {
 
     },
 
-
-    delImage() {
-
-    },
-    previewImage() {
-
-    },
-
-    // =================
     // 删除图片
-    deletePic(event) {
-      console.log(321213213213213)
-      this._that_.fileImageList.splice(event.index, 1)
+    delImage(index) {
+      const that = this
+      uni.showModal({
+        title: '确定删除吗?',
+        success: function (res) {
+          if (res.confirm) {
+            that._that_[that._fileImageList_].splice(index, 1)
+          } else if (res.cancel) {
+            console.log('用户点击取消');
+          }
+        }
+      });
+
+    },
+
+    // 预览图片
+    previewImage(index) {
+      const that = this
+      uni.previewImage({
+        urls: that.localFileList.map(item => item.thumb),
+        current: that.localFileList[index].thumb,
+      })
     },
 
     // 新增图片
     async afterRead(event) {
-      console.log(event)
-      console.log('------------------------')
-      console.log(event.file)
-      return
-      // 当设置 multiple 为 true 时, file 为数组格式，否则为对象格式
-      let lists = [].concat(event.file)
-      let fileImageListLen = this._that_.fileImageList.length
+      const that = this
+      let arrFile = []
+      event.tempFiles.forEach(item => {
+        arrFile.push({size: item.size, thumb: item.path, url: item.path})
+      })
+      let lists = [].concat(arrFile)
+      let fileImageListLen = that.localFileList.length
       lists.map((item) => {
-        this._that_.fileImageList.push({
+        that._that_[that._fileImageList_].push({
           ...item,
           status: 'uploading',
           message: '上传中'
         })
       })
       for (let i = 0; i < lists.length; i++) {
-        const result = await this.uploadFilePromise(lists[i].url)
-        let item = this._that_.fileImageList[fileImageListLen]
-        this._that_.fileImageList.splice(fileImageListLen, 1, Object.assign(item, {
+        const result = await that.uploadFilePromise(lists[i].url)
+        let item = that.localFileList[fileImageListLen]
+        that._that_[that._fileImageList_].splice(fileImageListLen, 1, Object.assign(item, {
           status: 'success',
           message: '',
           url: result
         }))
         fileImageListLen++
       }
-    },
+      console.log(that._that_[that._fileImageList_]);
 
+    },
+    // 上传图片
     uploadFilePromise(url) {
       return new Promise((resolve) => {
-        /*uni.uploadFile({
-          url: uploadImgUrl,
+        uni.uploadFile({
+          url: uploadImg,
           filePath: url,
           name: 'file',
           success: (res) => {
-            setTimeout(() => {
-              resolve(JSON.parse(res.data).data.url)
-            }, 1000)
+            let resData = JSON.parse(res.data)
+            // console.log('resData', resData)
+
+            if (resData.code === 200) {
+              resolve(resData.data.url)
+            } else {
+              console.error('', resData.msg)
+            }
           }
-        });*/
+        });
       })
     },
 
@@ -223,9 +229,7 @@ export default {
 </script>
 
 <style scoped>
-.zshu-upload-image {
-//position: relative; //width: 100%;
-}
+
 
 .loading {
   position: absolute;
@@ -240,6 +244,8 @@ export default {
   position: absolute;
   z-index: 2;
   inset: 0;
+  background: url("./static/loading.svg") no-repeat;
+
   animation: uni-loading 1s steps(12) infinite;
   background-size: 100%;
   scale: .5;
@@ -251,35 +257,42 @@ export default {
   position: relative;
 }
 
-.image-video-container {
+.container {
   position: relative;
-  width: 350rpx;
-
 }
 
 .del-icon {
   position: absolute;
-  top: 20rpx;
-  right: 20rpx;
+  top: 0;
+  right: 0;
+  box-sizing: border-box;
+  z-index: 1;
+  transform: translate(50%, -50%);
+}
+
+.icon__play {
+  width: 40px;
+  height: 40px;
+  display: block;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
   box-sizing: border-box;
   z-index: 1;
 }
 
 
-.image-item {
+.image-item, .video-item {
   display: block;
-
-  width: var(--view-width);
   height: var(--item-height-scale);
-
-
-  /*  height:750rpx;
-    width:750rpx;*/
-
+  width: var(--item-width);
   border-radius: 5px;
 }
 
+
 .upload-icon-position {
+//border: 1px solid #000;
 
 }
 
@@ -301,4 +314,6 @@ export default {
   right: calc(-1 * var(--gap));
 
 }
+
 </style>
+
