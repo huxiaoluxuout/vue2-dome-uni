@@ -2,7 +2,17 @@
   <view>
     <zshu-tabs navigation-custom :activeId="activeId" @updateActiveId="(id)=>{activeId = id}" :list-tabs="listTabs"></zshu-tabs>
 
-    <ylx-slider :data-list="viewDataList" :currentIndex="currentIndex" @updateCurrentIndex="(index)=>{currentIndex = index}"></ylx-slider>
+    <ylx-slider :data-list="viewDataList" :currentIndex="currentIndex"
+                @updateCurrentIndex="(index)=>{currentIndex = index}"
+                :is-loading="isLoading"
+    >
+      <template #content="{item}">
+        <view style="border: 1px solid yellow;">
+          <view>{{item.order_sn}}</view>
+          <view>{{item.take_time_text}}</view>
+        </view>
+      </template>
+    </ylx-slider>
 
     <tabbar :INDEX="2"></tabbar>
 
@@ -43,6 +53,7 @@ export default {
 
       activeId: 2,
       currentIndex: 0,
+      isLoading: true,
 
     }
   },
@@ -61,9 +72,9 @@ export default {
     this.pullDownRefresh.pullDownRefreshAddFunctions(this.nextPageManager.reload)
 
     this.nextPageManager.onReload(() => {
-      console.log('响应重新加载')
+      // console.log('响应重新加载')
       this.viewDataList = []
-      // this.getMineOrderListApi()
+      this.getMineOrderListApi()
 
     })
 
@@ -72,14 +83,15 @@ export default {
   methods: {
 
     getMineOrderListApi() {
-
+      this.isLoading=true
       getMineOrderList({
         page: 1,
         page_size: 6,
         status: 1
       }).then(res => {
-
         this.viewDataList = this.nextPageManager.setDataList(res.data.data)
+
+        this.isLoading=false
 
       })
     },

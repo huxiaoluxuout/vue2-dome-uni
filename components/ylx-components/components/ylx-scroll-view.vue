@@ -10,20 +10,19 @@
                  :refresher-background="styleConfigLocal.bgColor"
     >
       <view class="list-item">
-        <template v-if="isLoading">
+        <view v-show="isLoading">
           <u-loading-page :loading="isLoading"></u-loading-page>
-        </template>
-        <template v-else>
-          <template v-if="isEmpty">
+        </view>
+        <view v-show="!isLoading">
+          <view v-show="!isEmpty">
+            <slot name="default"></slot>
+          </view>
+          <view v-show="isEmpty">
             <view class="empty-data">
-              <image src="/static/no_goods.png"></image>
               <view>{{ emptyText }}</view>
             </view>
-          </template>
-          <template v-else>
-            <slot></slot>
-          </template>
-        </template>
+          </view>
+        </view>
       </view>
     </scroll-view>
   </view>
@@ -41,7 +40,7 @@ export default {
     },
     emptyText: {
       type: [String, Number],
-      default: '暂无发现任何产品，去看看其他的吧'
+      default: '数据为空'
     },
     isEmpty: {
       type: [Boolean],
@@ -88,7 +87,7 @@ export default {
     },
     styleConfigLocal() {
       return Object.assign({
-        bgColor: this.bgColor,//
+        bgColor: this.bgColor,
       }, this.styleConfig);
     }
   },

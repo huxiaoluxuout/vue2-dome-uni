@@ -4,7 +4,12 @@
 
       <swiper class="swiper-view-height" :current="currentIndex" :duration="200" @change="changeSwipeIndex" :disable-touch="disableTouch">
         <swiper-item v-for="(item,index) in dataList" :key="index">
-          <view style="border: 1px solid blueviolet;font-size: 20px;color:red;">{{index}}</view>
+<!--          <view style="border: 1px solid blueviolet;font-size: 20px;color:red;">{{index}}</view>-->
+          <ylxScrollView :is-loading="isLoading">
+            <template #default>
+              <slot name="content" :item="item"></slot>
+            </template>
+          </ylxScrollView>
         </swiper-item>
       </swiper>
 
@@ -48,20 +53,18 @@ export default {
       type: [Number, String],
       default: 14
     },
-    active: {
-      type: [Number],
-      default: 0
-    },
+    // =======================
+
     isEmpty: {
+      type: Boolean,
+      default: false
+    },
+
+    isLoading: {
       type: Boolean,
       default: true
     },
-    isLoading: {
-      type: Boolean,
-      default: false
 
-    },
-    // =======================
     currentIndex: {
       type: Number,
       default: 0
@@ -69,18 +72,10 @@ export default {
     },
   },
 
-  watch: {
-    indexActive(newValue) {
-      this.$emit('update:active', newValue);
-    },
-    active(newValue) {
-      this.indexActive = newValue
-    }
-  },
 
   data() {
     return {
-      indexActive: this.active,
+
       disableTouch: false,
       circular: true,
       //=======================
@@ -93,16 +88,12 @@ export default {
 
 
   methods: {
-    clickEdit(e){
-      this.$emit('click',e)
-    },
+
     //==================
     changeSwipeIndex(event) {
       this.$emit('updateCurrentIndex',event.detail.current)
     },
-    _loadMore() {
-      this.$emit("loadMore")
-    },
+
     touchstart(e) {
       // console.log(e)
       startClientX = e.changedTouches[0].clientX
@@ -137,7 +128,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .ylx-slider {
 
   height: calc(100vh - var(--tabbar-height) - var(--window-top));
