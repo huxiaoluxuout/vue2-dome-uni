@@ -1,6 +1,25 @@
 <template>
-  <image v-if="preview" class="zshu-scale-img" :src="url" mode="aspectFill" :style="customStyles" @click.stop="previewImage"></image>
-  <image v-else class="zshu-scale-img" :src="url" mode="aspectFill" :style="customStyles" @click="$emit('click')"></image>
+  <view class="zshu-scale-img-view" :style="customStyles">
+
+    <view v-show="loadingStatus==='uploading'" class="loading">
+      <view class="loading-content">
+        <view class="spinner"></view>
+      </view>
+    </view>
+
+    <image v-show="loadingStatus==='error'" :mode="mode" class="zshu-scale-img" src="./static/loading_err.png" ></image>
+
+    <view v-show="loadingStatus==='success'" >
+
+      <image v-if="preview" class="zshu-scale-img" :style="customStyles" :src="url" :mode="mode" @click.stop="previewImage" @load="loadSuccess" @error="loadError"></image>
+
+      <image v-else-if="stopClick" class="zshu-scale-img"  :style="customStyles" :src="url" :mode="mode" @click.stop="$emit('click')" @load="loadSuccess" @error="loadError"></image>
+      <image v-else-if="!stopClick" class="zshu-scale-img"  :style="customStyles" :src="url" :mode="mode" @click="$emit('click')" @load="loadSuccess" @error="loadError"></image>
+
+    </view>
+
+  </view>
+
 </template>
 
 <script>
@@ -24,14 +43,25 @@ export default {
 
     url: {
       type: String,
-      default: `https://xcx.jxgxsmt.com/static/images/add-img.png`
+      default: 'https://app-jinti.oss-cn-hangzhou.aliyuncs.com/uploads/20231225//39608349e10cbde8f54e957fac05d08c.jpg'
+    },
+    mode: {
+      type: String,
+      default: `aspectFill`
+    },
+    errorUrl: {
+      type: String,
+      default: `./static/loading_err.png`
     },
 
     preview: Boolean,
+    stopClick: Boolean,
 
   },
   data() {
-    return {};
+    return {
+      loadingStatus: 'uploading'
+    };
   },
 
   computed: {
@@ -72,7 +102,14 @@ export default {
       })
     },
 
-
+    loadSuccess(e) {
+      console.log(e)
+      this.loadingStatus = 'success'
+    },
+    loadError(e) {
+      console.log('loadError',e)
+      this.loadingStatus = 'error'
+    }
   }
 
 }
@@ -80,13 +117,20 @@ export default {
 
 <style scoped>
 //宽高比例（不能直接写成分数形式）
-.zshu-scale-img {
+.zshu-scale-img-view {
+  position: relative;
   --scale: 1;
   --view-width: 100%;
   --item-width: var(--view-width);
   --item-height-scale: calc(var(--item-width) / var(--scale));
 
+  width: var(--item-width);
+  height: var(--item-height-scale);
+  box-sizing: border-box;
 
+}
+
+.zshu-scale-img {
   width: var(--item-width);
   height: var(--item-height-scale);
   box-sizing: border-box;
@@ -94,6 +138,52 @@ export default {
   display: block;
 }
 
+
+
+.loading {
+  position: absolute;
+  z-index: 2;
+  border-radius: 5px;
+  inset: 0;
+  background: rgba(130, 130, 130, .5);
+}
+
+.loading-content {
+  animation: loading 1s steps(12) infinite;
+  position: absolute;
+  inset: 0;
+}
+
+.loading .spinner {
+  width: 40px;
+  height: 40px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: url("./static/loading.svg") no-repeat;
+  background-size: 100%;
+
+}
+
+@keyframes loading {
+  0% {
+    transform-origin: center center;
+    transform: rotate(0deg);
+  }
+  100% {
+    transform-origin: center center;
+    transform: rotate(360deg);
+  }
+}
+
+
+.err {
+  position: absolute;
+  inset: 0;
+  width: var(--item-width);
+  height: var(--item-height-scale);
+}
 
 </style>
 

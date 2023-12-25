@@ -1,27 +1,31 @@
 <template>
 
-  <view class="flex-container page-gap"
+  <view class="zshu-upload-img" :class="{'hidden-view':hidden}"
         :style="{'--num-columns':columnsLimit,'--scale':scale,'--view-width':localStyleViewWidth,'--gap':localStyleGap}">
     <!--图片-->
-    <view v-if="!onlyUpload" class="flex-item flex-item__scale container"
-          v-for="(item,index) in localFileList" :key="item.thumb+index">
-      <image class="image-item" :src="item.thumb" mode="aspectFill" @click.stop="previewImage(index)"/>
+    <view class="flex-item__view" v-for="(item,index) in localFileList" :key="''+index+item.thumb">
 
-      <view class="del-icon" @click.stop="delImage(index)">
+      <zshu-scale-img :url="item.thumb" :scale="scale" :width="widthImg" preview></zshu-scale-img>
+
+<!--      <view class="del-icon" @click.stop="delImage(index)">
         <uni-icons type="close" color="#ff3c3c" size="26"></uni-icons>
       </view>
 
-<!--      <view class="loading" v-show="item.status==='uploading'"></view>-->
+
+      <view v-show="showDel" class="del-view">
+        <button @click.stop="delImage(index)">del</button>
+      </view>-->
+
 
     </view>
 
     <!--图片 视频 上传-->
     <view v-show="isShowUpload"
-          class="flex-item__scale container upload-icon-position"
+          class="flex-item__view upload-icon-position"
           @click="chooseFile"
     >
       <slot name="upload">
-        <image class="image-item" mode="aspectFill" :src="uploadDefaultIcon"/>
+        <image class="image-item upload-icon-default" mode="aspectFill" src="./static/icon-upload.png"/>
       </slot>
     </view>
   </view>
@@ -32,10 +36,12 @@
 
 
 import {uploadImg} from "@/network/config"
+import ZshuScaleImg from "@/components/zshu-components/zshu-scale-img.vue";
 
 
 export default {
   name: "zshu-upload-img",
+  components: {ZshuScaleImg},
 
   props: {
     fileImageList: {
@@ -52,18 +58,25 @@ export default {
     // 一行有几列
     columnsLimit: {
       type: [Number, String],
-      default: 3
+      default: 1
     },
     // 宽高比例
     scale: {
       type: [Number, String],
-      default: `calc(${1})`
+      default: 1
     },
-    // 当前可用总宽度
-    width: {
+    // 自定义图片宽
+    imgWidth: {
       type: [Number, String],
-      default: `calc(750rpx - 30rpx)`
+      default: 0
     },
+
+    // 当前可用总宽度
+    viewWidth: {
+      type: [Number, String],
+      default: `calc(750rpx)`
+    },
+
     gap: {
       type: String,
       default: `30rpx`
@@ -78,23 +91,31 @@ export default {
       type: String,
       default: 'fileImageList'
     },
+
     hiddenUploadIcon: Boolean,
-    onlyUpload: Boolean,
+
+    onlyCamera: Boolean,
+
+    hidden: Boolean,//视觉隐藏
 
   },
   data() {
     return {
 
       uploadDefaultIcon: 'https://xcx.jxgxsmt.com/static/images/add-img.png',
+      showDel: false
     };
   },
 
   computed: {
     localStyleViewWidth() {
-      return this.convertCalcExpression(this.width)
+      return this.convertCalcExpression(this.viewWidth)
     },
     localStyleGap() {
       return this.convertCalcExpression(this.gap)
+    },
+    localStyleImgWidth() {
+      return this.convertCalcExpression(this.imgWidth)
     },
 
     localFileList() {
@@ -112,6 +133,23 @@ export default {
     },
     chooseCountLimit() {
       return Number(this.limit) - this.localFileList.length;
+    },
+
+    widthImg() {
+      console.log(this.imgWidth === 0)
+      if (this.imgWidth === 0) {
+        let num = Number(this.columnsLimit)
+        let gapWidth = `${this.localStyleGap} * ${num - 1}`
+
+        let str = `calc((${this.localStyleViewWidth} - ${gapWidth}) / ${num})`
+
+        console.log(str)
+        return str
+
+      } else {
+        return this.localStyleImgWidth
+
+      }
     },
 
 
@@ -133,6 +171,12 @@ export default {
 
     chooseFile() {
       const that = this
+      let sourceTypes = ['album', 'camera']
+
+      if (this.onlyCamera) {
+        sourceTypes.splice(0, 1)
+      }
+
       uni.chooseImage({
         count: that.chooseCountLimit,
         sizeType: ['original', 'compressed'],
@@ -229,37 +273,43 @@ export default {
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+.zshu-upload-img {
+
+  --scale: 1; //宽高比例（不能直接写成分数形式）
+  --num-columns: 1;
+  --view-width: 100%;
+  --gap: 10px;
+
+  --item-width-local: calc((var(--view-width) - (var(--gap) * var(--num-columns))) / var(--num-columns));
+
+  --item-height-scale: calc(var(--item-width-local) / var(--scale));
+
+  display: flex;
+  flex-wrap: wrap;
+  box-sizing: border-box;
+
+  //margin-right: calc(-1 * var(--gap));
+  //background-color: blue;
+  //outline: 1px solid blueviolet;
+
+  gap: var(--gap);
+
+  width: var(--view-width);
+
+  .flex-item__view {
+    box-sizing: border-box;
+    position: relative;
+
+  }
 
 
-.loading {
+}
+
+.del-view {
   position: absolute;
-  z-index: 2;
-  border-radius: 5px;
-  background-color: rgba(130, 130, 130, .5);
   inset: 0;
-}
-
-.loading:after {
-  content: '';
-  position: absolute;
-  z-index: 2;
-  inset: 0;
-  background: url("./static/loading.svg") no-repeat;
-
-  animation: uni-loading 1s steps(12) infinite;
-  background-size: 100%;
-  scale: .5;
-
-
-}
-
-.page-gap {
-  position: relative;
-}
-
-.container {
-  position: relative;
+  background-color: rgba(0, 0, 0, .82);
 }
 
 .del-icon {
@@ -271,50 +321,20 @@ export default {
   transform: translate(50%, -50%);
 }
 
-.icon__play {
-  width: 40px;
-  height: 40px;
-  display: block;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  box-sizing: border-box;
-  z-index: 1;
-}
-
 
 .image-item, .video-item {
   display: block;
   height: var(--item-height-scale);
-  width: var(--item-width);
+  width: var(--item-width-local);
   border-radius: 5px;
 }
 
 
 .upload-icon-position {
-//border: 1px solid #000;
+  //border: 1px solid #000;
 
 }
 
-.upload-icon-ab {
-  position: absolute;
-  left: 0;
-  bottom: calc(-1 * var(--item-height-scale));
-  right: calc(-1 * var(--gap));
-  z-index: 4;
-  height: calc(var(--item-height-scale) / 2 - 30rpx);
-  background-color: rgba(45, 45, 45, .6);
-}
-
-.position-ab {
-  position: absolute;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  right: calc(-1 * var(--gap));
-
-}
 
 </style>
 
