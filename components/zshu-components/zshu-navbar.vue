@@ -63,10 +63,10 @@ export default {
       type: String,
       default: ''
     },
-    updateNavbarHeight: {
+    /*updateNavbarHeight: {
       type: Function,
       default: ()=>{}
-    },
+    },*/
     // 用于显示跳转到首页的icon
     showHomeIcon: Boolean
   },
@@ -99,7 +99,7 @@ export default {
 
     zahuNavbarContainerStyle() {
       this.zshuBavbarHeight = (this.menuButtonHeight + this.menuButtonTop + this.statusBarHeight + 12)
-      this.updateNavbarHeight(this.zshuBavbarHeight)
+      this.$emit('updateNavbarHeight',this.zshuBavbarHeight)
 
       return {
         height: this.zshuBavbarHeight + 'px'
@@ -108,7 +108,8 @@ export default {
 
     zshuNavbarTempViewStyle() {
       this.zshuBavbarHeight = (this.menuButtonHeight + this.menuButtonTop + this.statusBarHeight + 12)
-      this.updateNavbarHeight(this.zshuBavbarHeight)
+      this.$emit('updateNavbarHeight',this.zshuBavbarHeight)
+
 
       return {
         height: this.zshuBavbarHeight + 'px'

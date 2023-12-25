@@ -7,12 +7,17 @@
       </view>
     </view>
 
-    <image v-show="loadingStatus==='error'" :mode="mode" class="zshu-scale-img" src="./static/loading_err.png" ></image>
 
-    <view v-show="loadingStatus==='success'" >
-      <image v-if="preview" class="zshu-scale-img" :style="customStyles" :src="url" :mode="mode" @click.stop="previewImage" @load="loadSuccess" @error="loadError"></image>
-      <image v-else-if="stopClick" class="zshu-scale-img"  :style="customStyles" :src="url" :mode="mode" @click.stop="$emit('click')" @load="loadSuccess" @error="loadError"></image>
-      <image v-else-if="!stopClick" class="zshu-scale-img"  :style="customStyles" :src="url" :mode="mode" @click="$emit('click')" @load="loadSuccess" @error="loadError"></image>
+    <image v-show="loadingStatus==='error'" :mode="mode" class="zshu-scale-img"
+           src="https://s11.ax1x.com/2023/12/25/piHLA0A.png"></image>
+
+    <view v-show="loadingStatus==='success'">
+      <image v-if="preview" class="zshu-scale-img" :style="customStyles" :src="url" :mode="mode"
+             @click.stop="previewImage" @load="loadSuccess" @error="loadError"></image>
+      <image v-else-if="stopClick" class="zshu-scale-img" :style="customStyles" :src="url" :mode="mode"
+             @click.stop="$emit('click')" @load="loadSuccess" @error="loadError"></image>
+      <image v-else-if="!stopClick" class="zshu-scale-img" :style="customStyles" :src="url" :mode="mode"
+             @click="$emit('click')" @load="loadSuccess" @error="loadError"></image>
 
     </view>
 
@@ -22,6 +27,8 @@
 
 <script>
 
+
+import {objectToString} from "@/components/zshu-components/JS/utils";
 
 export default {
   name: "zshu-scale-img",
@@ -58,7 +65,7 @@ export default {
   },
   data() {
     return {
-      loadingStatus: 'uploading'
+      loadingStatus: 'uploading',
     };
   },
 
@@ -68,11 +75,13 @@ export default {
     },
 
     customStyles() {
-      return {
+      return objectToString({
         '--scale': Number(this.scale),
         '--item-width': this.localStyleViewWidth,
-      }
+      })
+
     },
+
 
   },
 
@@ -105,6 +114,8 @@ export default {
     },
     loadError() {
       this.loadingStatus = 'error'
+
+
     }
   }
 
@@ -112,7 +123,7 @@ export default {
 </script>
 
 <style scoped>
-//宽高比例（不能直接写成分数形式）
+/*宽高比例（不能直接写成分数形式）*/
 .zshu-scale-img-view {
   position: relative;
   --scale: 1;
@@ -122,18 +133,17 @@ export default {
   width: var(--item-width);
   height: var(--item-height-scale);
   box-sizing: border-box;
-  //background-color: red;
-  //border: 1px solid blueviolet;
+  /*background-color: red;*/
+  /*border: 1px solid blueviolet;*/
 }
 
 .zshu-scale-img {
   width: var(--item-width);
   height: var(--item-height-scale);
+  vertical-align:top;
   box-sizing: border-box;
   position: relative;
-  display: block;
 }
-
 
 
 .loading {
@@ -157,7 +167,7 @@ export default {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  background: url("./static/loading.svg") no-repeat;
+  /*background: url("./static/loading.svg") no-repeat;*/
   background-size: 100%;
 
 }

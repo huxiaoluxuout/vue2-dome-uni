@@ -3,7 +3,7 @@
   <view class="zshu-upload-img" :class="{'hidden-view':hidden}"
         :style="{'--num-columns':columnsLimit,'--scale':scale,'--view-width':localStyleViewWidth,'--gap':localStyleGap}">
     <!--图片-->
-    <view class="flex-item__view" v-for="(item,index) in localFileList" :key="''+index+item.thumb">
+    <view class="flex-item__view" v-for="(item,index) in localFileList" :key="index">
 
       <zshu-scale-img :url="item.thumb" :scale="scale" :width="widthImg" preview></zshu-scale-img>
 
@@ -22,7 +22,7 @@
     <!--图片 视频 上传-->
     <view v-show="isShowUpload" class="flex-item__view upload-icon-position" @click="chooseFile">
       <slot name="upload">
-        <image class="image-item upload-icon-default" mode="aspectFill" src="./static/icon-upload.png"/>
+        <image class="image-item upload-icon-default" mode="aspectFill" src="https://s11.ax1x.com/2023/12/25/piHL87n.png"/>
       </slot>
     </view>
   </view>

@@ -1,7 +1,7 @@
 <template>
   <view>
     <!--    <zshu-tabs  :activeId="activeId" @updateActiveId="updateActiveId" :list-tabs="listTabs"></zshu-tabs>-->
-    <zshu-navbar :updateNavbarHeight="(height)=>top=height"></zshu-navbar>
+    <zshu-navbar @updateNavbarHeight="(height)=>top=height"></zshu-navbar>
 
     <zshu-fixed-view :top="top" :navigation-custom="false">
       <template #content-inner>
@@ -26,11 +26,13 @@
 
     <button @click="$refs.uploadImg.chooseFile()">上传图片</button>
 
-    <zshu-uploadimg ref="uploadImg" columnsLimit="2" gap="10px" scale="1.58"
+<!--    <zshu-uploadimg ref="uploadImg" columnsLimit="2" gap="10px" scale="1.58"
                     limit="13" hidden-upload-icon :_that_="_that_" img-width="150px"
                     :fileImageList="fileImageList" hidden>
 
-    </zshu-uploadimg>
+    </zshu-uploadimg>-->
+
+
     <view @click="handlerView">
       <zshu-scale-img :url="urlImg" scale="1.78" stop-click @click="handlerImg"></zshu-scale-img>
     </view>
@@ -80,6 +82,7 @@ export default {
         url: 'https://images-jinti.oss-cn-hangzhou.aliyuncs.com/5fa1201ea36ad.jpg'
 
       },*/],
+      // urlImg: 'https://images-jinti.oss-cn-hangzhou.aliyuncs.com/5fa1201ea36ad.jpg'
       urlImg: 'https://images-jinti.oss-cn-hangzhou.aliyuncs.com/5fa1201ea36ad.jpg'
 
     }
