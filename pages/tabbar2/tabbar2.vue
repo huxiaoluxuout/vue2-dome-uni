@@ -27,13 +27,13 @@
     <button @click="$refs.uploadImg.chooseFile()">上传图片</button>
 
     <zshu-uploadimg ref="uploadImg" columnsLimit="2" gap="10px" scale="1.58"
-                    limit="13" hiddenUploadIcon :_that_="_that_"
-                    :fileImageList="fileImageList">
+                    limit="13" hidden-upload-icon :_that_="_that_" img-width="150px"
+                    :fileImageList="fileImageList" hidden>
+
     </zshu-uploadimg>
     <view @click="handlerView">
-      <zshu-scale-img :url="urlImg" img-width="200px" scale="2" stop-click @click="handlerImg"></zshu-scale-img>
+      <zshu-scale-img :url="urlImg" scale="1.78" stop-click @click="handlerImg"></zshu-scale-img>
     </view>
-
 
     <tabbar :INDEX="1"></tabbar>
 
@@ -42,10 +42,11 @@
 
 <script>
 import ZshuTabs from "@/components/zshu-components/zshu-tabs.vue";
+import zshuUploadimg from "@/components/zshu-components/zshu-uploadimg.vue";
 import {getViewInfo} from "@/utils/tools";
 
 export default {
-  components: {ZshuTabs},
+  components: {ZshuTabs,zshuUploadimg},
   data() {
     return {
       activeId: 2,
@@ -70,19 +71,15 @@ export default {
       top: 0,
       cc: 0,
 
-      fileImageList: [{
-        // url:'https://app-jinti.oss-cn-hangzhou.aliyuncs.com/uploads/20231225//588f0f676b18d403feb58485be203413.jpeg'
+      fileImageList: [/*{
         url: 'https://images-jinti.oss-cn-hangzhou.aliyuncs.com/5fa1201ea36ad.jpg'
       }, {
-        // url:'https://app-jinti.oss-cn-hangzhou.aliyuncs.com/uploads/20231225//588f0f676b18d403feb58485be203413.jpeg'
-        // url:'http://images-jinti.oss-cn-hangzhou.aliyuncs.com/5fa1201ea36ad.jpg4'
+        url: 'https://images-jinti.oss-cn-hangzhou.aliyuncs.com/5fa1201ea36ad.jpg'
+
       }, {
-        // url:'https://app-jinti.oss-cn-hangzhou.aliyuncs.com/uploads/20231225//588f0f676b18d403feb58485be203413.jpeg'
-        // url:'http://images-jinti.oss-cn-hangzhou.aliyuncs.com/5fa1201ea36ad.jpg4'
-      }, {
-        // url:'https://app-jinti.oss-cn-hangzhou.aliyuncs.com/uploads/20231225//588f0f676b18d403feb58485be203413.jpeg'
-        // url:'http://images-jinti.oss-cn-hangzhou.aliyuncs.com/5fa1201ea36ad.jpg4'
-      }],
+        url: 'https://images-jinti.oss-cn-hangzhou.aliyuncs.com/5fa1201ea36ad.jpg'
+
+      },*/],
       urlImg: 'https://images-jinti.oss-cn-hangzhou.aliyuncs.com/5fa1201ea36ad.jpg'
 
     }
@@ -90,6 +87,11 @@ export default {
   computed: {
     _that_() {
       return this
+    }
+  },
+  watch:{
+    fileImageList(val){
+      this.urlImg=val[val.length-1].url
     }
   },
   mounted() {

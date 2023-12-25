@@ -10,9 +10,7 @@
     <image v-show="loadingStatus==='error'" :mode="mode" class="zshu-scale-img" src="./static/loading_err.png" ></image>
 
     <view v-show="loadingStatus==='success'" >
-
       <image v-if="preview" class="zshu-scale-img" :style="customStyles" :src="url" :mode="mode" @click.stop="previewImage" @load="loadSuccess" @error="loadError"></image>
-
       <image v-else-if="stopClick" class="zshu-scale-img"  :style="customStyles" :src="url" :mode="mode" @click.stop="$emit('click')" @load="loadSuccess" @error="loadError"></image>
       <image v-else-if="!stopClick" class="zshu-scale-img"  :style="customStyles" :src="url" :mode="mode" @click="$emit('click')" @load="loadSuccess" @error="loadError"></image>
 
@@ -38,7 +36,7 @@ export default {
     // 当前可用总宽度
     width: {
       type: String,
-      default: `calc(750rpx)`
+      default: `100vw`
     },
 
     url: {
@@ -72,7 +70,7 @@ export default {
     customStyles() {
       return {
         '--scale': Number(this.scale),
-        '--view-width': this.localStyleViewWidth,
+        '--item-width': this.localStyleViewWidth,
       }
     },
 
@@ -102,12 +100,10 @@ export default {
       })
     },
 
-    loadSuccess(e) {
-      console.log(e)
+    loadSuccess() {
       this.loadingStatus = 'success'
     },
-    loadError(e) {
-      console.log('loadError',e)
+    loadError() {
       this.loadingStatus = 'error'
     }
   }
@@ -120,14 +116,14 @@ export default {
 .zshu-scale-img-view {
   position: relative;
   --scale: 1;
-  --view-width: 100%;
-  --item-width: var(--view-width);
+
   --item-height-scale: calc(var(--item-width) / var(--scale));
 
   width: var(--item-width);
   height: var(--item-height-scale);
   box-sizing: border-box;
-
+  //background-color: red;
+  //border: 1px solid blueviolet;
 }
 
 .zshu-scale-img {
@@ -175,14 +171,6 @@ export default {
     transform-origin: center center;
     transform: rotate(360deg);
   }
-}
-
-
-.err {
-  position: absolute;
-  inset: 0;
-  width: var(--item-width);
-  height: var(--item-height-scale);
 }
 
 </style>

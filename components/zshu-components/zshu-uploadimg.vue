@@ -7,23 +7,20 @@
 
       <zshu-scale-img :url="item.thumb" :scale="scale" :width="widthImg" preview></zshu-scale-img>
 
-<!--      <view class="del-icon" @click.stop="delImage(index)">
-        <uni-icons type="close" color="#ff3c3c" size="26"></uni-icons>
-      </view>
+      <!--      <view class="del-icon" @click.stop="delImage(index)">
+              <uni-icons type="close" color="#ff3c3c" size="26"></uni-icons>
+            </view>
 
 
-      <view v-show="showDel" class="del-view">
-        <button @click.stop="delImage(index)">del</button>
-      </view>-->
+            <view v-show="showDel" class="del-view">
+              <button @click.stop="delImage(index)">del</button>
+            </view>-->
 
 
     </view>
 
     <!--图片 视频 上传-->
-    <view v-show="isShowUpload"
-          class="flex-item__view upload-icon-position"
-          @click="chooseFile"
-    >
+    <view v-show="isShowUpload" class="flex-item__view upload-icon-position" @click="chooseFile">
       <slot name="upload">
         <image class="image-item upload-icon-default" mode="aspectFill" src="./static/icon-upload.png"/>
       </slot>
@@ -74,7 +71,7 @@ export default {
     // 当前可用总宽度
     viewWidth: {
       type: [Number, String],
-      default: `calc(750rpx)`
+      default: '100vw'
     },
 
     gap: {
@@ -90,6 +87,10 @@ export default {
     _fileImageList_: {
       type: String,
       default: 'fileImageList'
+    },
+    fileType: {
+      type: String,
+      default: 'image' //文件类型，image/video/audio
     },
 
     hiddenUploadIcon: Boolean,
@@ -136,19 +137,14 @@ export default {
     },
 
     widthImg() {
-      console.log(this.imgWidth === 0)
+
       if (this.imgWidth === 0) {
         let num = Number(this.columnsLimit)
         let gapWidth = `${this.localStyleGap} * ${num - 1}`
-
-        let str = `calc((${this.localStyleViewWidth} - ${gapWidth}) / ${num})`
-
-        console.log(str)
-        return str
+        return `calc((${this.localStyleViewWidth} - ${gapWidth}) / ${num})`
 
       } else {
-        return this.localStyleImgWidth
-
+        return this.imgWidth
       }
     },
 
@@ -222,7 +218,14 @@ export default {
       const that = this
       let arrFile = []
       event.tempFiles.forEach(item => {
+       /* if(that.hidden){
+          // arrFile=[{size: item.size, thumb: item.path, url: item.path}]
+        }else {
+          arrFile.push({size: item.size, thumb: item.path, url: item.path})
+
+        }*/
         arrFile.push({size: item.size, thumb: item.path, url: item.path})
+
       })
       let lists = [].concat(arrFile)
       let fileImageListLen = that.localFileList.length
@@ -252,19 +255,25 @@ export default {
         uni.uploadFile({
           url: uploadImg,
           filePath: url,
+          fileType: this.fileType,
           name: 'file',
           success: (res) => {
             let resData = JSON.parse(res.data)
-            // console.log('resData', resData)
-
             if (resData.code === 200) {
               resolve(resData.data.url)
             } else {
               console.error('', resData.msg)
             }
-          }
+          },
+          complete: (complete) => {
+            console.log('complete', complete)
+          },
+
         });
+
+
       })
+
     },
 
 
@@ -274,9 +283,16 @@ export default {
 </script>
 
 <style scoped lang="scss">
-.zshu-upload-img {
+.hidden-view{
+  pointer-events: none;
+  position: absolute;
+  top: -10000px;
+  left: -10000px;
+}
 
-  --scale: 1; //宽高比例（不能直接写成分数形式）
+.zshu-upload-img {
+  //宽高比例（不能直接写成分数形式）
+  --scale: 1;
   --num-columns: 1;
   --view-width: 100%;
   --gap: 10px;
@@ -289,8 +305,8 @@ export default {
   flex-wrap: wrap;
   box-sizing: border-box;
 
-  //margin-right: calc(-1 * var(--gap));
-  //background-color: blue;
+  //margin-right: calc(-2 * var(--gap));
+  //background-color: violet;
   //outline: 1px solid blueviolet;
 
   gap: var(--gap);
@@ -334,6 +350,7 @@ export default {
   //border: 1px solid #000;
 
 }
+
 
 
 </style>
