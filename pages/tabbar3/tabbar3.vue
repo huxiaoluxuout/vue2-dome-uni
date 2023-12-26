@@ -1,8 +1,10 @@
 <template>
   <view>
-    <zshu-tabs navigation-custom :activeId="activeId" @updateActiveId="(id)=>{activeId = id}" :list-tabs="listTabs"></zshu-tabs>
+    <zshu-navbar title="我的"></zshu-navbar>
 
-    <ylx-slider :data-list="viewDataList" :currentIndex="currentIndex"
+<!--    <zshu-tabs navigation-custom :activeId="activeId" @updateActiveId="(id)=>{activeId = id}" :list-tabs="listTabs"></zshu-tabs>-->
+
+<!--    <ylx-slider :data-list="viewDataList" :currentIndex="currentIndex"
                 @updateCurrentIndex="(index)=>{currentIndex = index}"
                 :is-loading="isLoading"
     >
@@ -12,7 +14,7 @@
           <view>{{item.take_time_text}}</view>
         </view>
       </template>
-    </ylx-slider>
+    </ylx-slider>-->
 
     <tabbar :INDEX="2"></tabbar>
 
@@ -25,10 +27,11 @@ import mixinsNextPageManager from "@/mixins/mixinsNextPageManager";
 import YlxSlider from "@/components/ylx-components/ylx-slider.vue";
 import ZshuTabs from "@/components/zshu-components/zshu-tabs.vue";
 import index from "@/pages/index/index.vue";
+import ZshuNavbar from "@/components/zshu-components/zshu-navbar.vue";
 
 
 export default {
-  components: {ZshuTabs, YlxSlider},
+  components: {ZshuNavbar, ZshuTabs, YlxSlider},
   mixins: [mixinsNextPageManager],
   data() {
     return {

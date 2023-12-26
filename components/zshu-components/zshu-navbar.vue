@@ -22,12 +22,15 @@
           </view>
           <view class="zshu-navbar-container__center">
             <view class="zshu-navbar-content-title">
-              <view class="title">{{ configNavBar_.title }}</view>
-              <slot name="center"></slot>
+              <slot name="center">
+                <view class="title">{{ configNavBar_.title }}</view>
+              </slot>
             </view>
           </view>
           <view class="zshu-navbar-container__right" v-if="configNavBar_.right">
-            <slot name="right"></slot>
+            <slot name="right">
+              rrrrrr
+            </slot>
           </view>
         </view>
       </view>
@@ -38,6 +41,7 @@
 <script>
 import pagesConfig from "@/pages.json";
 import {filterPath, navigateTo} from "@/utils/tools";
+import {objectToString} from "@/components/zshu-components/JS/utils";
 
 const {tabBar: {list: tabBarPages}} = pagesConfig
 
@@ -75,11 +79,13 @@ export default {
       menuButtonWidth: 0,
       menuButtonTop: 10,
       menuButtonHeight: 24,
+      menuButtonRight: 0,
       statusBarHeight: 0,
       pageHierarchy: 1,
       zshuBavbarHeight: 44,
 
-      bgColor: '#007aff33',
+      bgColor: 'rgba(243,243,243,1)',
+      // bgColor: '#007aff33',
 
       currentPagePath: '',
     }
@@ -99,31 +105,41 @@ export default {
 
     zahuNavbarContainerStyle() {
       this.zshuBavbarHeight = (this.menuButtonHeight + this.menuButtonTop + this.statusBarHeight + 12)
-      this.$emit('updateNavbarHeight',this.zshuBavbarHeight)
+      this.$emit('updateNavbarHeight', this.zshuBavbarHeight)
 
-      return {
-        height: this.zshuBavbarHeight + 'px'
-      }
+      return objectToString({
+        // height: this.zshuBavbarHeight + 'px',
+        position: 'absolute',
+        top: `${this.menuButtonTop + this.menuButtonHeight / 2}px`,
+        transform: 'translateY(-50%)',
+        'margin-right': `calc(${this.menuButtonWidth}px + ${this.menuButtonRight}px)`,
+
+      })
     },
+
 
     zshuNavbarTempViewStyle() {
       this.zshuBavbarHeight = (this.menuButtonHeight + this.menuButtonTop + this.statusBarHeight + 12)
-      this.$emit('updateNavbarHeight',this.zshuBavbarHeight)
+      this.$emit('updateNavbarHeight', this.zshuBavbarHeight)
+      return objectToString({
+        height: this.zshuBavbarHeight + 'px',
+      })
 
-
-      return {
-        height: this.zshuBavbarHeight + 'px'
-      }
     },
 
 
     navbarStyle_() {
-      return Object.assign({
-        ...this.zshuNavbarTempViewStyle,
+
+      return objectToString({
         background: this.bgColor,
-        backgroundPosition: 'top',
-        backgroundSize: 'cover',
-      }, this.navbarStyle)
+        height: `${this.zshuBavbarHeight}px`,
+
+        // 'padding-top': `${this.menuButtonHeight / 2}px`,
+
+        // 'background-position': this.top,
+        // 'background-size': 'cover',
+        ...this.navbarStyle
+      })
     },
 
 
@@ -139,9 +155,12 @@ export default {
     this.pageHierarchy = pages.length;
     // #ifdef MP-WEIXIN || MP-ALIPAY
     const menuButtonInfoALI = uni.getMenuButtonBoundingClientRect();
+    // console.log('menuButtonInfoALI',menuButtonInfoALI)
     this.menuButtonTop = Math.ceil(menuButtonInfoALI.top);
     this.menuButtonHeight = Math.ceil(menuButtonInfoALI.height);
     this.menuButtonWidth = Math.ceil(menuButtonInfoALI.width);
+    this.menuButtonRight = 15;
+
     // #endif
     // #ifdef APP-PLUS
     this.statusBarHeight = uni.getSystemInfoSync().statusBarHeight;
@@ -154,8 +173,9 @@ export default {
       const cssKeyValuePairs = [
         {key: 'background', keyword: /linear-gradient|url/},
         {key: 'backgroundImage', keyword: /url/},
+        {key: 'backgroundColor', keyword: /#fff/},
         // 添加更多的属性和匹配关键字对
-        // { key: 'anotherProperty', keyword: /anotherKeyword/ },
+
       ];
 
       for (const {key, keyword} of cssKeyValuePairs) {
@@ -165,12 +185,12 @@ export default {
           // console.log(key, cssValue)
 
           if (keyword.test(cssValue)) {
-            return '#fff';
+            return '#313131';
           }
         }
       }
 
-      return '#fff';
+      return '#999';
     },
 
     leftIconClick() {
@@ -178,7 +198,7 @@ export default {
         if (this.pageHierarchy.value > 1) {
           uni.navigateBack({delta: 1});
         } else {
-          const ROUTE_HOME = '/pagesFeiying/orderingDesk/orderingDesk';
+          const ROUTE_HOME = '/pages/tabbar1/tabbar1';
 
           navigateTo(ROUTE_HOME);
         }
@@ -192,7 +212,7 @@ export default {
     handlePageScroll(e) {
       this.bgColor = `rgba(255,255,255,${Math.ceil(e.scrollTop / this.zshuBavbarHeight)})`
 
-      console.log('this.bgColor',this.bgColor)
+      console.log('this.bgColor', this.bgColor)
     }
 
   },
@@ -216,8 +236,9 @@ export default {
   z-index: 9999;
   display: flex;
   align-items: center;
-  padding-left: 15px;
-  padding-right: 15px;
+  border-bottom:  1px solid #f3f3f3;
+
+
 }
 
 .temp-view {
@@ -237,16 +258,16 @@ export default {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  position: absolute;
   left: 0;
+  right: 0;
+
 }
 
 .zshu-navbar-container__left:not(:empty) {
   min-width: 1em;
   border-radius: 50%;
   box-sizing: border-box;
-  margin-right: 10px;
-  margin-top: 2px;
+
 }
 
 
@@ -273,15 +294,18 @@ export default {
 }
 
 .title {
-  flex-shrink: 0;
+  color: #333333;
   overflow: hidden;
   word-break: break-all;
+  /* break-all(允许在单词内换行。) */
   text-overflow: ellipsis;
+  /* 超出部分省略号 */
   display: -webkit-box;
+  /** 对象作为伸缩盒子模型显示 **/
   -webkit-box-orient: vertical;
+  /** 设置或检索伸缩盒对象的子元素的排列方式 **/
   -webkit-line-clamp: 1;
-  //color: #333333;
-  mix-blend-mode: hard-light;
+  /** 显示的行数 **/
 
 }
 

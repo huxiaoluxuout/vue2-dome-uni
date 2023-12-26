@@ -1,9 +1,8 @@
 <template>
 	<view>
-		<zshu-navbar></zshu-navbar>
-    000
-	<image src="https://images-jinti.oss-cn-hangzhou.aliyuncs.com/5fa1201ea36ad.jpg" ></image>
-	 
+000
+
+	 <button @click="navigateTo('pages/A1/A1')"> 页面1</button>
 	 
     <tabbar :INDEX="0"></tabbar>
 
@@ -12,6 +11,7 @@
 
 <script>
 	import ZshuNavbar from "@/components/zshu-components/zshu-navbar.vue";
+  import {navigateTo} from "@/utils/tools";
 
   export default {
     components: {ZshuNavbar},
@@ -21,6 +21,7 @@
 			}
 		},
 		methods: {
+      navigateTo
 
 		}
 	}

@@ -35,6 +35,15 @@
       "style": {
         "navigationBarTitleText": "uni-app"
       }
+    },
+    {
+    	"path" : "pages/A1/A1",
+    	"style" : 
+    	{
+    		"navigationBarTitleText" : "",
+    		"enablePullDownRefresh" : false,
+			"navigationStyle": "custom"
+    	}
     }
   ],
   "tabBar": {
