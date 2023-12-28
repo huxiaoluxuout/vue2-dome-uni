@@ -7,14 +7,14 @@
 
       <zshu-scale-img :url="item.thumb" :scale="scale" :width="widthImg" preview></zshu-scale-img>
 
-      <!--      <view class="del-icon" @click.stop="delImage(index)">
+            <view class="del-icon" @click.stop="delImage(index)">
               <uni-icons type="close" color="#ff3c3c" size="26"></uni-icons>
             </view>
 
 
-            <view v-show="showDel" class="del-view">
-              <button @click.stop="delImage(index)">del</button>
-            </view>-->
+      <!--            <view v-show="showDel" class="del-view">
+                    <button @click.stop="delImage(index)">del</button>
+                  </view>-->
 
 
     </view>
@@ -34,6 +34,7 @@
 
 import {uploadImg} from "@/network/config"
 import ZshuScaleImg from "@/components/zshu-components/zshu-scale-img.vue";
+import {navigateTo} from "@/utils/tools";
 
 
 export default {
@@ -164,13 +165,25 @@ export default {
         return `${number}px`;
       });
     },
-
+    getHandlerImgUrl(url) {
+      let info = {tempFiles: [{size: 1000, path: url}]}
+      this.afterRead(info)
+    },
     chooseFile() {
       const that = this
       let sourceTypes = ['album', 'camera']
 
+
       if (this.onlyCamera) {
         sourceTypes.splice(0, 1)
+        // #ifndef H5
+        uni.$off('imgUrl', this.getHandlerImgUrl)
+        uni.$once('imgUrl', this.getHandlerImgUrl)
+
+        navigateTo('pages/custom-camera/custom-camera')
+        return
+        // #endif
+
       }
 
       uni.chooseImage({
@@ -218,14 +231,7 @@ export default {
       const that = this
       let arrFile = []
       event.tempFiles.forEach(item => {
-       /* if(that.hidden){
-          // arrFile=[{size: item.size, thumb: item.path, url: item.path}]
-        }else {
-          arrFile.push({size: item.size, thumb: item.path, url: item.path})
-
-        }*/
         arrFile.push({size: item.size, thumb: item.path, url: item.path})
-
       })
       let lists = [].concat(arrFile)
       let fileImageListLen = that.localFileList.length
@@ -246,7 +252,7 @@ export default {
         }))
         fileImageListLen++
       }
-      console.log(that._that_[that._fileImageList_]);
+
 
     },
     // 上传图片

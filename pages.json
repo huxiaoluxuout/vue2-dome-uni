@@ -44,6 +44,14 @@
     		"enablePullDownRefresh" : false,
 			"navigationStyle": "custom"
     	}
+    },
+    {
+    	"path" : "pages/custom-camera/custom-camera",
+    	"style" : 
+    	{
+    		"navigationBarTitleText" : "相机",
+    		"enablePullDownRefresh" : false
+    	}
     }
   ],
   "tabBar": {
