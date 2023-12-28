@@ -34,9 +34,9 @@
     </zshu-uploadimg>
 
 
-    <!--    <view @click="handlerView">
+        <view @click="handlerView">
           <zshu-scale-img :url="urlImg" scale="1.78" stop-click @click="handlerImg"></zshu-scale-img>
-        </view>-->
+        </view>
 
     <tabbar :INDEX="1"></tabbar>
 
@@ -84,7 +84,8 @@ export default {
 
       ],
 
-      urlImg: 'https://images-jinti.oss-cn-hangzhou.aliyuncs.com/5fa1201ea36ad.jpg'
+      urlImg: 'https://cdn.nlark.com/yuque/0/2023/png/21700210/1703754974325-6135ad2c-ba64-4ae6-8d19-82d7fc0b3df5.png'
+      // urlImg: 'https://images-jinti.oss-cn-hangzhou.aliyuncs.com/5fa1201ea36ad.jpg'
 
     }
   },

@@ -406,6 +406,11 @@ function uploadImages(filePaths, config = {}) {
         .exec()
 }
 
+const debuggerMsg = () => {
+    uni.showToast({title: '开发调试中', icon: 'none'})
+    throw new Error('开发调试中')
+}
+
 export {
     getViewInfo,
     throttle,
@@ -428,6 +433,7 @@ export {
     uploadImages,
     uuid,
     getPageEvent,
+    debuggerMsg,
 
 }
 
