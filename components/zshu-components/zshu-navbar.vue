@@ -13,12 +13,20 @@
           </view>
           <view class="zshu-navbar-container__center">
             <view class="zshu-navbar-content-title">
-              <slot name="center">
+              <template v-if="configNavBar_.title">
                 <view class="title">{{ configNavBar_.title }}</view>
-              </slot>
+              </template>
+              <template v-else>
+                <view style="display:flex;justify-content:center;width: 100%;">
+                  <view style="height: 100%;width: calc(100% - 1em);display:flex;justify-content: center;">
+                    <slot name="center"></slot>
+                  </view>
+                </view>
+              </template>
+
             </view>
           </view>
-          <view class="zshu-navbar-container__right" v-if="configNavBar_.right">
+          <view class="zshu-navbar-container__right">
             <slot name="right"></slot>
           </view>
         </view>
@@ -236,6 +244,7 @@ export default {
 <style scoped lang="scss">
 .zshu-navbar {
   box-sizing: border-box;
+
 }
 
 .zshu-navbar-wrap {
@@ -249,7 +258,6 @@ export default {
   align-items: center;
   border-bottom: 1px solid #f3f3f3;
 
-
 }
 
 
@@ -257,6 +265,9 @@ export default {
   position: relative;
   width: 100%;
   height: 100%;
+  /* 两端距离 */
+  margin-left: 5px;
+  margin-right: 15px;
 }
 
 
@@ -287,6 +298,7 @@ export default {
   min-width: 1em;
   display: flex;
   justify-content: flex-end;
+  font-size: 22px;
 }
 
 .zshu-navbar-content-title {

@@ -1,10 +1,11 @@
 <template>
 	<view>
-    <zshu-navbar title="A1A1A1A1A1A1A1A1A1A1qqqqqqqqqq">
+    <zshu-navbar >
       <template #center>
-        <view style="display:flex;justify-content:center;background-color:rebeccapurple;width: 100%;border: 1px solid #000;">
-          <view style="transform: translateX(-1em);background-color:#fff;height: 100%;width: 50%;border-radius: 100px;">aa</view>
-        </view>
+        <view style="width: 90%;background-color:red;">444</view>
+      </template>
+      <template #right>
+        ffff
       </template>
     </zshu-navbar>
 0000000
