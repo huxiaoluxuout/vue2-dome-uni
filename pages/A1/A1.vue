@@ -2,8 +2,8 @@
 	<view>
     <zshu-navbar title="A1A1A1A1A1A1A1A1A1A1qqqqqqqqqq">
       <template #center>
-        <view style="display:flex;justify-content:center;background-color:rebeccapurple;width: 100%;">
-          <view style="transform: translateX(-1em);background-color:#fff;height: 20px;width: 50%;border-radius: 100px;"></view>
+        <view style="display:flex;justify-content:center;background-color:rebeccapurple;width: 100%;border: 1px solid #000;">
+          <view style="transform: translateX(-1em);background-color:#fff;height: 100%;width: 50%;border-radius: 100px;">aa</view>
         </view>
       </template>
     </zshu-navbar>

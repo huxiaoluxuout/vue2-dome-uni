@@ -1,24 +1,15 @@
 <template>
-  <view class="zshu-navbar" :style="{'--navbar-height':zshuBavbarHeight+'px'}">
+  <view class="zshu-navbar" :style="{'--navbar-height':navbarHeight+'px'}">
     <view class="zshu-navbar-wrap" :style="navbarStyle_">
       <view class="navbar-content__container">
         <view class="zshu-navbar-container" :style="zahuNavbarContainerStyle">
-          <view class="zshu-navbar-container__left" v-if="configNavBar_.isTabBarPage">
+          <view v-if="configNavBar_.isTabBarPage" class="zshu-navbar-container__left">
             <slot name="left"></slot>
           </view>
-          <view class="zshu-navbar-container__left" v-else>
-
-            <template v-if="!showHomeIcon&&pageHierarchy>1">
-              <slot name="left_back_icon">
-                <u-icon name="arrow-left" :color="iconColor" size="22" @click="leftIconClick"></u-icon>
-              </slot>
-            </template>
-            <template v-else-if="showHomeIcon||pageHierarchy===1">
-              <slot name="left_back_icon">
-                <u-icon name="home" :color="iconColor" size="22" @click="leftIconClick"></u-icon>
-              </slot>
-            </template>
-
+          <view v-else class="zshu-navbar-container__left" @click="leftIconClick">
+            <slot name="left_back_icon">
+              <u-icon :name="defaultLeftIconName" :color="iconColor" :size="iconSize"></u-icon>
+            </slot>
           </view>
           <view class="zshu-navbar-container__center">
             <view class="zshu-navbar-content-title">
@@ -28,14 +19,12 @@
             </view>
           </view>
           <view class="zshu-navbar-container__right" v-if="configNavBar_.right">
-            <slot name="right">
-              rrrrrr
-            </slot>
+            <slot name="right"></slot>
           </view>
         </view>
       </view>
     </view>
-    <view class="temp-view" :style="zshuNavbarTempViewStyle"></view>
+    <view style="width: 100%;" :style="{height:navbarHeight + 'px'}"></view>
   </view>
 </template>
 <script>
@@ -44,6 +33,7 @@ import {filterPath, navigateTo} from "@/utils/tools";
 import {objectToString} from "@/components/zshu-components/JS/utils";
 
 const {tabBar: {list: tabBarPages}} = pagesConfig
+let menuButtonInfoALI = null, systemInfo = null;
 
 export default {
   props: {
@@ -67,22 +57,23 @@ export default {
       type: String,
       default: ''
     },
-    /*updateNavbarHeight: {
-      type: Function,
-      default: ()=>{}
-    },*/
+    iconSize: {
+      type: [String, Number],
+      default: '22'
+    },
+
     // 用于显示跳转到首页的icon
     showHomeIcon: Boolean
   },
   data() {
     return {
       menuButtonWidth: 0,
-      menuButtonTop: 10,
-      menuButtonHeight: 24,
+      menuButtonTop: 34, //内容高度
+      bottomGap: 10,//标题到底部之间的距离
+      menuButtonHeight: 0,
       menuButtonRight: 0,
       statusBarHeight: 0,
       pageHierarchy: 1,
-      zshuBavbarHeight: 44,
 
       bgColor: 'rgba(243,243,243,1)',
       // bgColor: '#007aff33',
@@ -92,6 +83,23 @@ export default {
   },
 
   computed: {
+
+    defaultLeftIconName() {
+      if (!this.showHomeIcon && this.pageHierarchy > 1) {
+        return 'arrow-left'
+      } else if (this.showHomeIcon || this.pageHierarchy === 1) {
+        return 'home'
+      }
+    },
+
+    //navbar总高 44
+    navbarHeight() {
+      // 10 标题到底部之间的距离
+      let navbarHeight = this.bottomGap + this.menuButtonTop + this.statusBarHeight + this.menuButtonHeight
+      this.$emit('updateNavbarHeight', navbarHeight)
+      return navbarHeight
+    },
+
     configNavBar_() {
 
       const isTabBarPage = tabBarPages.map(item => filterPath(item.pagePath)).includes(filterPath(this.currentPagePath));
@@ -103,14 +111,28 @@ export default {
       }, this.configNavBar);
     },
 
-    zahuNavbarContainerStyle() {
-      this.zshuBavbarHeight = (this.menuButtonHeight + this.menuButtonTop + this.statusBarHeight + 12)
-      this.$emit('updateNavbarHeight', this.zshuBavbarHeight)
 
+    defaultContentTop() {
+      let top = `${this.statusBarHeight}px`
+      // #ifdef MP-WEIXIN || MP-ALIPAY
+      top = `${this.menuButtonTop + this.menuButtonHeight / 2}px`
+      // #endif
+
+      // #ifdef APP-PLUS
+      top = `calc(${50}% + ${this.statusBarHeight / 2}px)`
+      // #endif
+
+      // #ifdef H5
+      top = `${50}%`
+      // #endif
+      return top
+    },
+
+    zahuNavbarContainerStyle() {
       return objectToString({
-        // height: this.zshuBavbarHeight + 'px',
+
         position: 'absolute',
-        top: `${this.menuButtonTop + this.menuButtonHeight / 2}px`,
+        top: this.defaultContentTop,
         transform: 'translateY(-50%)',
         'margin-right': `calc(${this.menuButtonWidth}px + ${this.menuButtonRight}px)`,
 
@@ -118,26 +140,11 @@ export default {
     },
 
 
-    zshuNavbarTempViewStyle() {
-      this.zshuBavbarHeight = (this.menuButtonHeight + this.menuButtonTop + this.statusBarHeight + 12)
-      this.$emit('updateNavbarHeight', this.zshuBavbarHeight)
-      return objectToString({
-        height: this.zshuBavbarHeight + 'px',
-      })
-
-    },
-
-
     navbarStyle_() {
-
       return objectToString({
+
         background: this.bgColor,
-        height: `${this.zshuBavbarHeight}px`,
-
-        // 'padding-top': `${this.menuButtonHeight / 2}px`,
-
-        // 'background-position': this.top,
-        // 'background-size': 'cover',
+        height: `${this.navbarHeight}px`,
         ...this.navbarStyle
       })
     },
@@ -149,22 +156,34 @@ export default {
 
 
   },
+  beforeCreate() {
+
+    // #ifdef MP-WEIXIN || MP-ALIPAY
+    menuButtonInfoALI = uni.getMenuButtonBoundingClientRect();
+    // #endif
+
+    // #ifdef APP-PLUS
+    systemInfo = uni.getSystemInfoSync();
+    // #endif
+
+  },
   mounted() {
     const pages = getCurrentPages();
     this.currentPagePath = pages[pages.length - 1]['route'];
     this.pageHierarchy = pages.length;
     // #ifdef MP-WEIXIN || MP-ALIPAY
-    const menuButtonInfoALI = uni.getMenuButtonBoundingClientRect();
-    // console.log('menuButtonInfoALI',menuButtonInfoALI)
     this.menuButtonTop = Math.ceil(menuButtonInfoALI.top);
     this.menuButtonHeight = Math.ceil(menuButtonInfoALI.height);
     this.menuButtonWidth = Math.ceil(menuButtonInfoALI.width);
     this.menuButtonRight = 15;
+    // #endif
 
-    // #endif
     // #ifdef APP-PLUS
-    this.statusBarHeight = uni.getSystemInfoSync().statusBarHeight;
+
+    this.statusBarHeight = systemInfo.statusBarHeight;
     // #endif
+
+
   },
 
 
@@ -198,22 +217,14 @@ export default {
         if (this.pageHierarchy.value > 1) {
           uni.navigateBack({delta: 1});
         } else {
-          const ROUTE_HOME = '/pages/tabbar1/tabbar1';
-
-          navigateTo(ROUTE_HOME);
+          // 首页
+          const indexPagePath = pagesConfig.pages[0].path
+          navigateTo(indexPagePath);
         }
       } catch (error) {
         console.error('Error while handling leftIconClick:', error);
       }
     },
-
-
-    // 页面上下滚动
-    handlePageScroll(e) {
-      this.bgColor = `rgba(255,255,255,${Math.ceil(e.scrollTop / this.zshuBavbarHeight)})`
-
-      console.log('this.bgColor', this.bgColor)
-    }
 
   },
 
@@ -236,14 +247,11 @@ export default {
   z-index: 9999;
   display: flex;
   align-items: center;
-  border-bottom:  1px solid #f3f3f3;
+  border-bottom: 1px solid #f3f3f3;
 
 
 }
 
-.temp-view {
-  width: 100%;
-}
 
 .navbar-content__container {
   position: relative;
@@ -265,9 +273,7 @@ export default {
 
 .zshu-navbar-container__left:not(:empty) {
   min-width: 1em;
-  border-radius: 50%;
   box-sizing: border-box;
-
 }
 
 
@@ -289,7 +295,7 @@ export default {
   display: flex;
   align-items: center;
   flex: 1;
-  //justify-content: center;
+
 
 }
 
