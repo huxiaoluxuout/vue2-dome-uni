@@ -1,5 +1,3 @@
-// import {baseURL} from "@/http/config";
-
 // IOS 底部兼容
 const getIOSBottomHeight = () => {
     const {model} = uni.getSystemInfoSync()
@@ -10,6 +8,7 @@ const getIOSBottomHeight = () => {
         return 0
     }
 };
+
 // 登录 code
 const getLoginCode = () => {
     return new Promise((resolve, reject) => {
@@ -32,16 +31,16 @@ const getLoginCode = () => {
 const payMoney = function (data) {
     return new Promise((resolve, reject) => {
         uni.requestPayment({
-            'timeStamp': data.timeStamp,
-            'nonceStr': data.nonceStr,
-            'package': data.package,
-            'signType': data.signType,
-            'paySign': data.paySign,
-            'success': function (success) {
+            timeStamp: data.timeStamp,
+            nonceStr: data.nonceStr,
+            package: data.package,
+            signType: data.signType,
+            paySign: data.paySign,
+            success: function (success) {
                 resolve(success);
             },
-            'fail': function (fail) {
-                resolve(fail);
+            fail: function (fail) {
+                reject(fail);
             }
         });
     })
@@ -124,16 +123,10 @@ const getPageInfo = (callback, task = 1) => {
 
 }
 
-const getRoute = () => {
-    const pages = getCurrentPages();
-    return pages[pages.length - 1].route
-}
 
 // 页面路由跳转 --start
 
 import pagesConfig from "@/pages.json";
-
-import {$DataInfo} from "@/utils/envBus";
 
 const {tabBar: {list: tabBarPages}} = pagesConfig
 
@@ -151,44 +144,8 @@ const uuid = () => {
 }
 
 
-function getTabBarParams(pagePath) {
-    // 对输入的pagePath进行验证和过滤，确保安全性
-    if (typeof pagePath !== 'string') {
-        throw new Error('Invalid pagePath');
-    }
-    let paramsStr = pagePath;
-    const paramsIndex = paramsStr.indexOf('??');
-    if (paramsIndex > -1) {
-        const matchResult = paramsStr.match(/([^?]+)\?{2}(.*)/);
-        if (!matchResult) {
-            throw new Error('Invalid pagePath');
-        }
-        const url = matchResult[1];
-        const paramString = matchResult[2];
-        const params = {};
-        paramString.split('&&').forEach((pair) => {
-            const [key, value] = pair.split('=');
-            // 对键和值进行验证和过滤，确保安全性
-            if (typeof key === 'string' && typeof value === 'string') {
-                params[key] = value;
-            }
-        });
-        console.log('URL:', url);
-        console.log('参数:', params);
-        return {
-            url,
-            params
-        };
-    } else {
-        return {
-            url: pagePath,
-            params: ''
-        };
-    }
-}
-
 const toTargetPage = (pagePath, parseInfo = {}, api) => {
-    console.log('pagePath', pagePath)
+
     if (!pagePath) return;
 
     const pattern = /\/?([^?]+)/;
@@ -205,36 +162,24 @@ const toTargetPage = (pagePath, parseInfo = {}, api) => {
             }
         })
     } else {
-        const eventId = uuid() // 事件标识
+
         let env = pagePath.indexOf('?') === -1 ? '?' : '&'
 
         uni[api]({
-            url: filterPath(pagePath + env + 'eventId=' + eventId),
-            fail: function (fail) {
-                $msg(fail.errMsg)
-                console.error(fail.errMsg);
-            },
+            url: filterPath(pagePath + env),
             success: function (res) {
-                $DataInfo.setDataInfo(filterPath(route), {...parseInfo})
+                console.log(res.errMsg)
+            },
+            fail: function (fail) {
+                console.error('fail', fail.errMsg);
             }
         })
     }
 }
-export const $getPrevPageInfo = () => {
-    return $DataInfo.getDataInfo(filterPath(getRoute()))
-}
+
 
 const navigateTo = (pagePath, parse) => toTargetPage(pagePath, parse, 'navigateTo');
 const redirectTo = (pagePath, parse) => toTargetPage(pagePath, parse, 'redirectTo');
-
-const getPageEvent = (eventId, callback) => {
-    uni.$once('post' + eventId, (data) => {
-        console.log('post:======')
-        callback(data)
-    })
-    uni.$emit('get' + eventId)
-
-}
 
 
 // 事件处理器函数，根据条件执行操作或回调
@@ -336,74 +281,14 @@ const debounce = (func, delay = 500, immediate = true) => {
     };
 }
 
-// 获取缓存数据
-const getCacheUserInfo = () => {
-
-    return new Promise(resolve => {
-        const userInfo = uni.getStorageSync('MY_USER_INFO') || {}
-        resolve(userInfo)
-    })
-
-}
-
-
-// 图片上传函数
-function uploadImages(filePaths, config = {}) {
-    if (!Array.isArray(filePaths)) {
-        console.warn('filePaths 必须是数组')
-        return
-    }
-    return new Promise((resolve, reject) => {
-
-        const defaultConfig = {
-            url: 'baseURL' + '/api/common/upload',
-        };
-        config = {...defaultConfig, ...config};
-
-        const uploadPromises = filePaths.map(filePath => {
-            return new Promise((resolve, reject) => {
-                uni.uploadFile({
-                    filePath: filePath,
-                    name: 'file',
-                    ...config,
-                    success: res => {
-                        resolve(JSON.parse(res.data));
-                    },
-                    fail: err => {
-                        reject(filePath);
-                    }
-                });
-            });
-        });
-
-        Promise.all(uploadPromises)
-            .then(results => {
-
-                resolve(results);
-            })
-            .catch(failedFilePaths => {
-
-                const successFiles = filePaths.filter(filePath => !failedFilePaths.includes(filePath));
-                reject({
-                    code: -1,
-                    msg: '部分图片上传失败',
-                    data: {
-                        success: successFiles,
-                        fail: failedFilePaths
-                    }
-                });
-            });
-    });
-}
-
- const getViewInfo = (selector, callback, that) => {
+const getViewInfo = (selector, callback, that) => {
     uni.createSelectorQuery()
         .in(that)
         .select(selector)
         .boundingClientRect((rect) => {
             callback(rect)
         })
-        .exec()
+        .exec();
 }
 
 const debuggerMsg = () => {
@@ -411,6 +296,14 @@ const debuggerMsg = () => {
     throw new Error('开发调试中')
 }
 
+// 对象转成字符串 (style)
+const objectToString = (obj) => {
+    let str = '';
+    for (const key in obj) {
+        str += `${key.replace(/([A-Z])/g, '-$1').toLowerCase()}:${obj[key]};`;
+    }
+    return str;
+}
 export {
     getViewInfo,
     throttle,
@@ -428,11 +321,11 @@ export {
     getChooseLocation,
 
     getPageInfo,
-    getCacheUserInfo,
+
     handleEvent,
-    uploadImages,
+
     uuid,
-    getPageEvent,
+    objectToString,
     debuggerMsg,
 
 }

@@ -16,11 +16,12 @@ const $msg = (title, duration = 1500, mask = true, icon = 'none') => {
     });
 }
 
-// 对象转成字符串
+// 对象转成字符串 (style)
+
 const objectToString = (obj) => {
     let str = '';
     for (const key in obj) {
-        str += `${key}:${obj[key]};`;
+        str += `${key.replace(/([A-Z])/g, '-$1').toLowerCase()}:${obj[key]};`;
     }
     return str;
 }

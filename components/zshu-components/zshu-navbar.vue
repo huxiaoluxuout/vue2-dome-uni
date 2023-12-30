@@ -3,10 +3,10 @@
     <view class="zshu-navbar-wrap" :style="navbarStyle_">
       <view class="navbar-content__container">
         <view class="zshu-navbar-container" :style="zahuNavbarContainerStyle">
-          <view v-if="configNavBar_.isTabBarPage" class="zshu-navbar-container__left">
+          <view v-if="configNavBar_.isTabBarPage" class="navbar-container__left">
             <slot name="left"></slot>
           </view>
-          <view v-else class="zshu-navbar-container__left" @click="leftIconClick">
+          <view v-else class="navbar-container__left" @click="leftIconClick">
             <slot name="left_back_icon">
               <u-icon :name="defaultLeftIconName" :color="iconColor" :size="iconSize"></u-icon>
             </slot>
@@ -14,7 +14,7 @@
           <view class="zshu-navbar-container__center">
             <view class="zshu-navbar-content-title">
               <template v-if="configNavBar_.title">
-                <view class="title">{{ configNavBar_.title }}</view>
+                <view class="title" :style="titleStyle_">{{ configNavBar_.title }}</view>
               </template>
               <template v-else>
                 <view style="display:flex;justify-content:center;width: 100%;">
@@ -32,7 +32,7 @@
         </view>
       </view>
     </view>
-    <view style="width: 100%;" :style="{height:navbarHeight + 'px'}"></view>
+    <view :style="{width: '100%',height:navbarHeight + 'px'}"></view>
   </view>
 </template>
 <script>
@@ -41,7 +41,7 @@ import {filterPath, navigateTo} from "@/utils/tools";
 import {objectToString} from "@/components/zshu-components/JS/utils";
 
 const {tabBar: {list: tabBarPages}} = pagesConfig
-let menuButtonInfoALI = null, systemInfo = null;
+let menuButtonInfoALI = null, systemInfo = null, pages = null;
 
 export default {
   props: {
@@ -70,6 +70,20 @@ export default {
       default: '22'
     },
 
+    bgColor: {
+      type: String,
+      default: 'rgba(243,243,243,1)'
+    },
+
+    color: {
+      type: String,
+      default: '#303030'
+    },
+    size: {
+      type: String,
+      default: '16'
+    },
+
     // 用于显示跳转到首页的icon
     showHomeIcon: Boolean
   },
@@ -82,10 +96,6 @@ export default {
       menuButtonRight: 0,
       statusBarHeight: 0,
       pageHierarchy: 1,
-
-      bgColor: 'rgba(243,243,243,1)',
-      // bgColor: '#007aff33',
-
       currentPagePath: '',
     }
   },
@@ -142,7 +152,7 @@ export default {
         position: 'absolute',
         top: this.defaultContentTop,
         transform: 'translateY(-50%)',
-        'margin-right': `calc(${this.menuButtonWidth}px + ${this.menuButtonRight}px)`,
+        marginRight: `calc(${this.menuButtonWidth}px + ${this.menuButtonRight}px)`,
 
       })
     },
@@ -156,6 +166,14 @@ export default {
         ...this.navbarStyle
       })
     },
+    titleStyle_() {
+
+      return objectToString({
+        'color': this.color,
+        'fontSize': this.size + 'px',
+
+      })
+    },
 
 
     iconColor() {
@@ -165,6 +183,7 @@ export default {
 
   },
   beforeCreate() {
+    pages = getCurrentPages();
 
     // #ifdef MP-WEIXIN || MP-ALIPAY
     menuButtonInfoALI = uni.getMenuButtonBoundingClientRect();
@@ -176,7 +195,6 @@ export default {
 
   },
   mounted() {
-    const pages = getCurrentPages();
     this.currentPagePath = pages[pages.length - 1]['route'];
     this.pageHierarchy = pages.length;
     // #ifdef MP-WEIXIN || MP-ALIPAY
@@ -282,7 +300,7 @@ export default {
 
 }
 
-.zshu-navbar-container__left:not(:empty) {
+.navbar-container__left:not(:empty) {
   min-width: 1em;
   box-sizing: border-box;
 }
@@ -302,17 +320,14 @@ export default {
 }
 
 .zshu-navbar-content-title {
-  font-size: 16px;
-  color: #303030;
   display: flex;
   align-items: center;
   flex: 1;
-
+  justify-content: center;
 
 }
 
 .title {
-  color: #333333;
   overflow: hidden;
   word-break: break-all;
   /* break-all(允许在单词内换行。) */

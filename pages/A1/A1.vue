@@ -1,12 +1,10 @@
 <template>
 	<view>
-    <zshu-navbar >
-      <template #center>
-        <view style="width: 90%;background-color:red;">444</view>
-      </template>
-      <template #right>
-        ffff
-      </template>
+    <zshu-navbar title="A!" size="16">
+<!--      <template #center>
+        <view style="width: 90%;background-color:royalblue;">444</view>
+      </template>-->
+
     </zshu-navbar>
 0000000
     <div>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Amet, asperiores aspernatur atque, beatae doloremque
