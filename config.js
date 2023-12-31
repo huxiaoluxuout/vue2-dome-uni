@@ -1,6 +1,6 @@
 System.config({
     "paths": {
-        "@/Http/*": "./network/*",
+        "@/network/*": "./network/*",
         "@/components/*": "./components/*",
         // "@/store/*": "./store/*",
         "@/uni_modules/*": "./uni_modules/*",

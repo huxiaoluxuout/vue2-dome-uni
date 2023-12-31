@@ -27,7 +27,8 @@
 import pagesConfig from "@/pages.json";
 
 const {tabBar: {list, color, selectedColor}} = pagesConfig
-import {getIOSBottomHeight, navigateTo, filterPath} from '@/utils/tools';
+import {navigateTo, filterPath} from '@/utils/tools';
+import {getIOSBottomHeight} from "@/components/zshu-components/JS/tools";
 
 export default {
   props: {
@@ -66,7 +67,7 @@ export default {
       this.$emit('tabBarClick')
 
 
-      fun(item.pagePath + '??tabbarId=' + itemIndex)
+      fun(item.pagePath + '?tabBarId=' + itemIndex)
     }
   }
 }

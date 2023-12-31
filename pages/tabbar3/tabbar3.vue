@@ -26,7 +26,7 @@ import {getMineOrderList} from "@/network/apis/test_api";
 import mixinsNextPageManager from "@/mixins/mixinsNextPageManager";
 import YlxSlider from "@/components/ylx-components/ylx-slider.vue";
 import ZshuTabs from "@/components/zshu-components/zshu-tabs.vue";
-import index from "@/pages/index/index.vue";
+
 import ZshuNavbar from "@/components/zshu-components/zshu-navbar.vue";
 
 
@@ -70,11 +70,11 @@ export default {
   },
   onLoad() {
     this.getMineOrderListApi()
-    this.nextPageManager.nexPageSetFunction(this.getMineOrderListApi)
+    this.ylxNextPageManager.setEmitFunctions(this.getMineOrderListApi)
 
-    this.pullDownRefresh.pullDownRefreshAddFunctions(this.nextPageManager.reload)
+    this.ylxPullDownRefresh.addEmitFunctions(this.ylxNextPageManager.reload)
 
-    this.nextPageManager.onReload(() => {
+    this.ylxNextPageManager.reloadCallback(() => {
       // console.log('响应重新加载')
       this.viewDataList = []
       this.getMineOrderListApi()
@@ -90,9 +90,10 @@ export default {
       getMineOrderList({
         page: 1,
         page_size: 6,
-        status: 1
+        status: 0
       }).then(res => {
-        this.viewDataList = this.nextPageManager.setDataList(res.data.data)
+
+        this.viewDataList = this.ylxNextPageManager.setDataList(res.data.data)
 
         this.isLoading=false
 

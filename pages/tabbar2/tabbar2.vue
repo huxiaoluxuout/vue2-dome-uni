@@ -1,7 +1,7 @@
 <template>
   <view>
     <!--    <zshu-tabs  :activeId="activeId" @updateActiveId="updateActiveId" :list-tabs="listTabs"></zshu-tabs>-->
-    <zshu-navbar @updateNavbarHeight="(height)=>top=height"></zshu-navbar>
+
 
     <zshu-fixed-view :top="top" :navigation-custom="false">
       <template #content-inner>
@@ -34,9 +34,9 @@
     </zshu-uploadimg>
 
 
-        <view @click="handlerView">
-          <zshu-scale-img :url="urlImg" scale="1.78" stop-click @click="handlerImg"></zshu-scale-img>
-        </view>
+    <view @click="handlerView">
+      <zshu-scale-img :url="urlImg" scale="1.78" stop-click @click="handlerImg"></zshu-scale-img>
+    </view>
 
     <tabbar :INDEX="1"></tabbar>
 
@@ -46,7 +46,7 @@
 <script>
 import ZshuTabs from "@/components/zshu-components/zshu-tabs.vue";
 import zshuUploadimg from "@/components/zshu-components/zshu-uploadimg.vue";
-import {getViewInfo} from "@/utils/tools";
+
 
 export default {
   components: {ZshuTabs, zshuUploadimg},
@@ -99,11 +99,7 @@ export default {
       this.urlImg = val[val.length - 1].url
     }
   },
-  mounted() {
-    /*getViewInfo('.zshu-fixed-inner', (rect) => {
-      this.rectHeight = Math.ceil(rect?.height);
-    }, this)*/
-  },
+
   methods: {
     updateActiveId(id) {
       this.activeId = id

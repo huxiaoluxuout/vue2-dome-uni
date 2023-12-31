@@ -85,14 +85,34 @@
 </template>
 
 <script>
-	export default {
+	import mixinsPullDownRefresh from "@/mixins/mixinsPullDownRefresh";
+  import mixinsNextPageManager from "@/mixins/mixinsNextPageManager";
+
+  export default {
+    mixins:[mixinsPullDownRefresh,mixinsNextPageManager],
 		data() {
 			return {
 				
 			}
 		},
+
 		methods: {
-			
+      ylxOnPullDown() {
+        console.log('1 onPullDown');
+
+      },
+      ylxPullDownCallBack() {
+        console.log('2 pullDownCallBack');
+
+      },
+      ylxOnReachBottom() {
+        console.log('ylxOnReachBottom');
+        // this.ylxNextPageManager.setDataList([])
+        // console.log(this.ylxNextPageManager.getPage());
+        // console.log(this.ylxNextPageManager.getDataList());
+
+      },
+
 		}
 	}
 </script>

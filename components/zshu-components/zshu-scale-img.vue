@@ -28,7 +28,9 @@
 <script>
 
 
-import {objectToString} from "@/components/zshu-components/JS/utils";
+// import {objectToString} from "@/components/zshu-components/JS/utils";
+import {objectToString} from "@/utils/tools";
+
 
 export default {
   name: "zshu-scale-img",

@@ -1,24 +1,24 @@
-import {baseURL} from "@/network/config";
+import {BASE_URL} from "@/network/config";
 
 
 // 请求函数
 
 export const request = (options) => {
-    options.url = baseURL + options.url;
+    options.url = BASE_URL + options.url;
 
     return new Promise((resolve, reject)=>{
 
         uni.request({
             ...options,
             header: {
-                token: 'f12733919b710fd57da57c86846feb6df407c4ae'
+                token: uni.getStorageSync('token')
             },
             success(response) {
                 const mappingKey = {
                     "success": 200,// 正常情况
                     "expired": 403,// token过期
                 }
-                if (response.data['code'] === mappingKey['success']) {
+                if (response.data['code'] === mappingKey['success']||response.data['status'] === mappingKey['success']) {
                     return resolve(response.data);
                 } else if (response.data['code'] === mappingKey['expired']) {
 

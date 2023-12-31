@@ -1,6 +1,7 @@
 import useDoQueue from "@/common/hooks/useDoQueue"
 
 import useCallbackOnDataReady from "@/common/hooks/useCallbackOnDataReady";
+import cellGroup from "@/uni_modules/uview-ui/libs/config/props/cellGroup";
 
 const {setFunction, addFunctions, DoFunQueue} = useDoQueue()
 
@@ -10,10 +11,10 @@ const {readyCallback, registerCallbacks, unReadyCallback} = useCallbackOnDataRea
 const pullDownRefreshFunctions = () => {
     return {
         // 只能加一个,多了会被覆盖
-        pullDownRefreshSetFunction: setFunction,
-        pullDownRefreshAddFunctions: addFunctions,
+        setEmitFunctions: setFunction,
+        addEmitFunctions: addFunctions,
         // 刷新重置回调
-        onReload: readyCallback,
+        reloadCallback: readyCallback,
 
         // 下拉刷新完成
         funQueue: () => {
@@ -25,15 +26,27 @@ const pullDownRefreshFunctions = () => {
     }
 }
 
-
+const pullDownRefresh = pullDownRefreshFunctions()
 export default {
     data() {
         return {
-            pullDownRefresh: pullDownRefreshFunctions()
+            ylxPullDownRefresh: pullDownRefresh
         }
     },
+    onLoad() {
+        pullDownRefresh.setEmitFunctions(this.ylxOnPullDown)
+        pullDownRefresh.reloadCallback(this.ylxPullDownCallBack)
+    },
+    methods: {
+        ylxOnPullDown() {
+
+        },
+        ylxPullDownCallBack() {
+
+        },
+    },
     onPullDownRefresh() {
-        this.pullDownRefresh.funQueue()
+        pullDownRefresh.funQueue()
     },
 
 }

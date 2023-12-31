@@ -4,9 +4,7 @@
     "^zshu-(.*)": "@/components/zshu-components/zshu-$1.vue",
     "^ylx-(.*)": "@/components/ylx-components/ylx-$1.vue"
   },
-
   "pages": [
-
     {
       "path": "pages/tabbar1/tabbar1",
       "style": {
@@ -27,7 +25,8 @@
       "path": "pages/tabbar3/tabbar3",
       "style": {
         "navigationBarTitleText": "tabbar3",
-        "enablePullDownRefresh": true
+        "enablePullDownRefresh": true,
+        "navigationStyle": "custom"
       }
     },
     {
@@ -37,21 +36,19 @@
       }
     },
     {
-    	"path" : "pages/A1/A1",
-    	"style" : 
-    	{
-    		"navigationBarTitleText" : "",
-    		"enablePullDownRefresh" : false,
-			"navigationStyle": "custom"
-    	}
+      "path": "pages/A1/A1",
+      "style": {
+        "navigationBarTitleText": "",
+        "enablePullDownRefresh": true,
+        "navigationStyle": "custom"
+      }
     },
     {
-    	"path" : "pages/custom-camera/custom-camera",
-    	"style" : 
-    	{
-    		"navigationBarTitleText" : "相机",
-    		"enablePullDownRefresh" : false
-    	}
+      "path": "pages/custom-camera/custom-camera",
+      "style": {
+        "navigationBarTitleText": "相机",
+        "enablePullDownRefresh": false
+      }
     }
   ],
   "tabBar": {

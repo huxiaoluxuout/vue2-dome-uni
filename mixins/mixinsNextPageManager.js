@@ -26,6 +26,10 @@ const PageManager = function () {
         if (!Array.isArray(newResDataList)) {
             throw new Error('传入数据只能是数组');
         }
+        if (!newResDataList.length) {
+            console.log('没有新数据了')
+            return
+        }
 
         let isCanGetNextPage = newResDataList.length % pageSize === 0
 
@@ -86,22 +90,41 @@ const PageManager = function () {
         getPageSize,
         getDataList,
         setDataList,
+
         nexPageDoFunQueue,
-        nexPageSetFunction,
-        nexPageSetAddFunction,
-        onReload: readyCallback,
+        setEmitFunctions: nexPageSetFunction,
+        addEmitFunctions: nexPageSetAddFunction,
         reload,
+        reloadCallback: readyCallback,
     }
 }
 
+const nextPageManager = PageManager();
+
 export default {
+    onLoad() {
+        nextPageManager.addEmitFunctions(this.ylxOnReachBottom)
+        // nextPageManager.reloadCallback(this.ylxReachBottomCallBack)
+    },
     data() {
         return {
-            nextPageManager: PageManager(),
+            ylxNextPageManager: nextPageManager,
+            // nextPageManager: PageManager(),
         }
     },
+    methods: {
+
+        ylxOnReachBottom() {
+            console.log('ylxOnReachBottom');
+
+        },
+      /*  ylxReachBottomCallBack() {
+            console.log('ylxReachBottomCallBack');
+
+        },*/
+    },
     onReachBottom() {
-        this.nextPageManager.nexPageDoFunQueue()
+        nextPageManager.nexPageDoFunQueue()
     }
 
 }

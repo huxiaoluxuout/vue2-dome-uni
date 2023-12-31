@@ -38,7 +38,7 @@
 <script>
 import pagesConfig from "@/pages.json";
 import {filterPath, navigateTo} from "@/utils/tools";
-import {objectToString} from "@/components/zshu-components/JS/utils";
+import {styleObjectToString} from "@/components/zshu-components/JS/tools";
 
 const {tabBar: {list: tabBarPages}} = pagesConfig
 let menuButtonInfoALI = null, systemInfo = null, pages = null;
@@ -147,7 +147,7 @@ export default {
     },
 
     zahuNavbarContainerStyle() {
-      return objectToString({
+      return styleObjectToString({
 
         position: 'absolute',
         top: this.defaultContentTop,
@@ -159,16 +159,14 @@ export default {
 
 
     navbarStyle_() {
-      return objectToString({
-
+      return styleObjectToString({
         background: this.bgColor,
         height: `${this.navbarHeight}px`,
         ...this.navbarStyle
       })
     },
     titleStyle_() {
-
-      return objectToString({
+      return styleObjectToString({
         'color': this.color,
         'fontSize': this.size + 'px',
 

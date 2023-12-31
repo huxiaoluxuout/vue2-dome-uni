@@ -35,7 +35,7 @@
 </template>
 <script>
 
-import {attributeStylers} from "@/components/zshu-components/JS/attributeStylers";
+import {attributeStylers} from "@/components/zshu-components/JS/tools";
 import {uuid} from "@/utils/zshuTools";
 
 export default {

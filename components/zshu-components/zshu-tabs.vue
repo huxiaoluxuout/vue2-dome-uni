@@ -23,8 +23,8 @@
 
 </template>
 <script>
-import {cssVar as cssVar_,} from "@/components/zshu-components/JS/cssVar"
-import {getViewInfo} from "@/utils/tools";
+import {cssVar as cssVar_,} from "@/components/zshu-components/JS/props"
+
 
 export default {
   props: {
