@@ -10,7 +10,7 @@ const {registerCallbacks, readyCallback, unReadyCallback} = useCallbackOnDataRea
 
 const PageManager = function () {
     // 每页数量
-    const pageSize = 10
+    const pageSize = 7
 
     // 当前页码
     let page = 1
@@ -19,16 +19,22 @@ const PageManager = function () {
     let dataList = []
 
     let isLastPage = false
+    let len1 = 0
+    let len2 = 0
 
 
     const updateDataList = (newResDataList, oldDataList) => {
 
         if (!Array.isArray(newResDataList)) {
-            throw new Error('传入数据只能是数组');
-        }
-        if (!newResDataList.length) {
-            console.log('没有新数据了')
+            console.error('传入数据只能是数组');
             return
+        }
+        len1 = dataList.length
+
+        if (newResDataList.length === 0) {
+            len2 = dataList.length
+            console.warn('没有新数据了，尝试刷新页面');
+            return dataList
         }
 
         let isCanGetNextPage = newResDataList.length % pageSize === 0
@@ -49,6 +55,7 @@ const PageManager = function () {
                 console.warn('数据加载完成，尝试刷新页面');
             }
         }
+        len2 = dataList.length
         return dataList
 
     }
@@ -84,6 +91,9 @@ const PageManager = function () {
     const getPageSize = () => pageSize
 
     const getDataList = () => dataList
+    const getLen1 = () => len1
+    const getLen2 = () => len2
+
 
     return {
         getPage,
@@ -96,6 +106,8 @@ const PageManager = function () {
         addEmitFunctions: nexPageSetAddFunction,
         reload,
         reloadCallback: readyCallback,
+        getLen1,
+        getLen2
     }
 }
 
@@ -103,28 +115,32 @@ const nextPageManager = PageManager();
 
 export default {
     onLoad() {
-        nextPageManager.addEmitFunctions(this.ylxOnReachBottom)
-        // nextPageManager.reloadCallback(this.ylxReachBottomCallBack)
+        // nextPageManager.setEmitFunctions(this.ylxSetFunctions)
+        // nextPageManager.reloadCallback(this.ylxReloadCallback)
     },
     data() {
         return {
             ylxNextPageManager: nextPageManager,
-            // nextPageManager: PageManager(),
+
         }
     },
     methods: {
-
         ylxOnReachBottom() {
-            console.log('ylxOnReachBottom');
-
+            // console.log('ylxOnReachBottom');
         },
-      /*  ylxReachBottomCallBack() {
-            console.log('ylxReachBottomCallBack');
+       /* ylxSetFunctions() {
 
         },*/
+        ylxReloadCallback() {
+
+        },
+
     },
     onReachBottom() {
-        nextPageManager.nexPageDoFunQueue()
+        console.log(nextPageManager.getLen1(), nextPageManager.getLen2())
+        if (nextPageManager.getLen1() < nextPageManager.getLen2()) {
+            nextPageManager.nexPageDoFunQueue()
+        }
     }
 
 }

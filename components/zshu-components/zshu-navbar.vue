@@ -39,11 +39,14 @@
 import pagesConfig from "@/pages.json";
 import {filterPath, navigateTo} from "@/utils/tools";
 import {styleObjectToString} from "@/components/zshu-components/JS/tools";
+import mixinsPullDownRefresh from "@/mixins/mixinsPullDownRefresh";
+import mixinsNextPageManager from "@/mixins/mixinsNextPageManager";
 
 const {tabBar: {list: tabBarPages}} = pagesConfig
 let menuButtonInfoALI = null, systemInfo = null, pages = null;
 
 export default {
+  mixins:[mixinsPullDownRefresh,mixinsNextPageManager],
   props: {
     configNavBar: {
       type: Object,

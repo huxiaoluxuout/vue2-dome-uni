@@ -22,6 +22,9 @@ export default {
   },
   methods: {
     navigateTo,
+    ylxGetInfoFromChild(data) {
+      console.log(data)
+    },
 
     testHandler() {
       this.requestAndroidPermission('android.permission.ACCESS_FINE_LOCATION')

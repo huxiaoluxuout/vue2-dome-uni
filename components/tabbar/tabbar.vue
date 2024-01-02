@@ -49,12 +49,7 @@ export default {
   created() {
     uni.hideTabBar()
   },
-  activated() {
-    console.log('1111')
-  },
-  deactivated() {
-    console.log('2222')
-  },
+
   methods: {
     navigateTo,
     filterPath,

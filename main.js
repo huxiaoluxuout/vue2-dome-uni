@@ -9,7 +9,7 @@ Vue.use(uView)
 import store from './store'
 Vue.prototype.$store = store
 
-import mixin from "./mixins/mixinsPullDownRefresh";
+import mixin from "./mixins/mixinsGlobal";
 Vue.mixin(mixin)
 
 Vue.config.productionTip = false

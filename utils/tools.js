@@ -295,6 +295,19 @@ const objectToString = (obj) => {
     }
     return str;
 }
+
+const ylxOnUni = (uniCallBack, callBack) => {
+    let pages = getCurrentPages();
+    let currentEvenName = pages[pages.length - 1]['route'];
+    let proEvenName = ''
+    if (pages.length > 1) {
+        proEvenName = pages[pages.length - 2]['route'];
+    }
+
+    uni.$on(currentEvenName, uniCallBack)
+    return {currentEvenName, proEvenName}
+
+}
 export {
     getViewInfo,
     throttle,
@@ -314,7 +327,7 @@ export {
     getPageInfo,
 
     handleEvent,
-
+    ylxOnUni,
     uuid,
     objectToString,
     debuggerMsg,

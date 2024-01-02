@@ -34,8 +34,8 @@ export default {
         }
     },
     onLoad() {
-        pullDownRefresh.setEmitFunctions(this.ylxOnPullDown)
-        pullDownRefresh.reloadCallback(this.ylxPullDownCallBack)
+        // pullDownRefresh.setEmitFunctions(this.ylxOnPullDown)
+        // pullDownRefresh.reloadCallback(this.ylxPullDownCallBack)
     },
     methods: {
         ylxOnPullDown() {
