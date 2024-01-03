@@ -1,6 +1,6 @@
 import pagesConfig from "@/pages.json";
 import permision from "@/js_sdk/wa-permission/permission";
-import {objectToQueryString} from "@/utils/tools";
+
 
 const {tabBar: {list: tabBarPages}} = pagesConfig
 
@@ -114,6 +114,17 @@ const ylxChooseLocation = () => {
     });
 }
 
+// IOS 底部兼容
+const ylxIOSBottomHeight = () => {
+    const {model} = uni.getSystemInfoSync()
+    const models = ['X', 'XR', 'XS', '11', '12', '13', '14', '15'];
+    if (model.indexOf('iPhone') !== -1 && models.some(item => model.indexOf(item) !== -1)) {
+        return 35
+    } else {
+        return 0
+    }
+};
+
 // 节点信息
 const ylxViewInfo = (selector, callback, that) => {
     uni.createSelectorQuery()
@@ -154,8 +165,6 @@ const toTargetPage = (pagePath, parseInfo = {}, api) => {
 
     const pattern = /\/?([^?]+)/;
     const route = pagePath.match(pattern)[1];
-    console.log('route', route)
-
     const isTabBarPage = tabBarPages.map(item => ylxFilterPath(item.pagePath)).includes(ylxFilterPath(route));
 
 
@@ -167,20 +176,15 @@ const toTargetPage = (pagePath, parseInfo = {}, api) => {
             }
         })
     } else {
-        console.log(JSON.stringify(parseInfo))
-        const queryString = Object.keys(parseInfo).map((key) => `${key}=${parseInfo[key]}`).join('&');
-        console.log(queryString)
-        let env = pagePath.indexOf('?') === -1
-        if(!env){
 
-            console.log(pagePath.split('?')[1]);
-        }else {
-            console.log(2)
-
+        let startStr = pagePath.indexOf('?') === -1 ? '?' : '&';
+        let queryString = '';
+        if (Object.keys(parseInfo).length) {
+            queryString = startStr + Object.keys(parseInfo).map((key) => `${key}=${parseInfo[key]}`).join('&');
         }
 
         uni[api]({
-            url: ylxFilterPath(pagePath),
+            url: ylxFilterPath(pagePath + queryString),
             success: function (res) {
                 console.log(res.errMsg)
             },
@@ -226,21 +230,12 @@ const ylxStyleObjectToString = (obj) => {
     return str;
 }
 
-// IOS 底部兼容
-const ylxIOSBottomHeight = () => {
-    const {model} = uni.getSystemInfoSync()
-    const models = ['X', 'XR', 'XS', '11', '12', '13', '14', '15'];
-    if (model.indexOf('iPhone') !== -1 && models.some(item => model.indexOf(item) !== -1)) {
-        return 35
-    } else {
-        return 0
-    }
-};
+
 
 const ylxUniOn = (uniCallback) => {
     let pages = getCurrentPages();
     let currentEvenName = pages[pages.length - 1]['route'];
-    let preEvenName = ''
+    let preEvenName = '';
     if (pages.length > 1) {
         preEvenName = pages[pages.length - 2]['route'];
     }
@@ -249,6 +244,7 @@ const ylxUniOn = (uniCallback) => {
     return {currentEvenName, preEvenName}
 
 }
+
 export {
     ylxAttributeStylers,
     ylxStyleObjectToString,

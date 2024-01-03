@@ -8,7 +8,7 @@
     </zshu-navbar>
 
     <view style="position: fixed;top: 50%;left:50%;background-color:#fff;z-index: 10;">
-      <button @click="ylxEmit('haha')">xixi</button>
+      <button @click="ylxUniEmit('haha',callback)">xixi</button>
     </view>
 
   </view>
@@ -17,13 +17,18 @@
 <script>
 import mixinsPullDownRefresh from "@/mixins/mixinsPullDownRefresh";
 import mixinsNextPageManager from "@/mixins/mixinsNextPageManager";
-
+function foo() {
+  console.log('foo')
+}
 export default {
   mixins: [mixinsPullDownRefresh, mixinsNextPageManager],
   data() {
     return {}
   },
+  onLoad() {
+    this.ylxPullDownRefresh.setEmitFunctions(foo)
 
+  },
   methods: {
 
     ylxOnPullDown() {
@@ -41,6 +46,9 @@ export default {
       // console.log(this.ylxNextPageManager.getDataList());
 
     },
+    callback(info){
+      console.log('A1',info)
+    }
 
   }
 }

@@ -236,7 +236,7 @@ export default {
         }
       }
 
-      return '#999';
+      return '#3a3a3a';
     },
 
     leftIconClick() {

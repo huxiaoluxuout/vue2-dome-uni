@@ -8,18 +8,35 @@ export default {
             isPageReady: false,
         }
     },
-    onLoad() {
+    onLoad(options) {
+        console.log(options)
         let {currentEvenName, preEvenName} = ylxUniOn(this.ylxGetInfoFromChild)
         this.preEvenName = preEvenName
         this.currentEvenName = currentEvenName
     },
     methods: {
-        ylxGetInfoFromChild(info) {
-            console.log('GetInfoFromChild', info)
+        ylxUniEmit(params, callback) {
+            const callbackType = typeof callback;
+            if (callbackType !== 'undefined') {
+                if (callbackType !== 'function') {
+                    callback = function () {
+                    }
+                    console.error('第二个参数必为函数！')
+                }
+            } else {
+                callback = function () {
+                }
+            }
+            uni.$emit(this.preEvenName, {params, callback})
         },
-        ylxEmit(param) {
-            uni.$emit(this.preEvenName, param)
+
+        ylxGetInfoFromChild({params, callback}) {
+            setTimeout(() => {
+                callback('hehehe')
+            }, 200)
         },
+
+
         ylxOnShow() {
             console.log('ylxOnShow')
         },
@@ -33,6 +50,7 @@ export default {
     onReady() {
         this.isPageReady = true
     },
+
     onUnload() {
         uni.$off(this.currentEvenName, this.ylxGetInfoFromChild)
     },
