@@ -3,7 +3,7 @@
     <!--    <zshu-tabs  :activeId="activeId" @updateActiveId="updateActiveId" :list-tabs="listTabs"></zshu-tabs>-->
 
 
-    <zshu-fixed-view :top="top" :navigation-custom="false">
+<!--    <zshu-fixed-view :top="top" :navigation-custom="false">
       <template #content-inner>
         <view class="zshu-fixed-inner">
           <view class="tab-wrapper">
@@ -36,7 +36,7 @@
 
     <view @click="handlerView">
       <zshu-scale-img :url="urlImg" scale="1.78" stop-click @click="handlerImg"></zshu-scale-img>
-    </view>
+    </view>-->
 
     <tabbar :INDEX="1"></tabbar>
 

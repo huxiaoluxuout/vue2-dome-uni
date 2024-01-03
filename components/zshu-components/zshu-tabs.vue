@@ -16,7 +16,7 @@
 
     </view>
 
-    <view v-show="!isRelative" :class="viewGapHeight" :style="{'--height':rectHeight+'px'}"></view>
+    <view v-if="!isRelative" :style="{height:rectHeight}"></view>
 
 
   </view>
@@ -24,6 +24,7 @@
 </template>
 <script>
 import {cssVar as cssVar_,} from "@/components/zshu-components/JS/props"
+import {ylxStyleObjectToString} from "@/utils/uniTools";
 
 
 export default {
@@ -46,9 +47,18 @@ export default {
       type: Number,
       default: 1,
     },
+    top: {
+      type: Number,
+      default: 60,
+    },
+    viewHeight: {
+      type: Number,
+      default: 0,
+    },
 
     isRelative: Boolean,
     hidePag: Boolean,
+    isCustom: Boolean,
 
     // css 变量
     cssVar: cssVar_,
@@ -58,44 +68,33 @@ export default {
       default: '#fff',
     },
 
-    navigationCustom: Boolean,
-
   },
   data() {
     return {
       viewId: '1',
-      rectHeight: '45',
+      rectHeight: '45px',
     }
   },
   computed: {
     tabStyle() {
       if (!this.isRelative) {
-        return {
+        return ylxStyleObjectToString({
           position: 'fixed',
           left: 0,
-          top: 0,
+          top: this.isCustom ? `calc(${this.top}px)` : `calc(var(--window-top) + ${this.viewHeight}px)`,
           right: 0,
-          paddingTop: `calc(var(--window-top) + var(--status-bar-height))`,
           borderBottom: `1px solid #f4f4f4`,
           background: this.bgColor
-        }
+        })
+
       } else {
-        return {
+        return ylxStyleObjectToString({
           position: 'relative',
-          // borderBottom: `1px solid #f4f4f4`,
           background: this.bgColor
-        }
+        })
       }
     },
 
-    viewGapHeight() {
-      if (this.navigationCustom && Number(this.top) === 0) {
-        return 'view-gap-2'
-      } else {
-        return 'view-gap'
-
-      }
-    },
   },
   mounted() {
 
@@ -195,12 +194,5 @@ export default {
   }
 }
 
-.view-gap {
-  height: calc(var(--height) + var(--status-bar-height));
-}
-
-.view-gap-2 {
-  height: calc(var(--height) + var(--status-bar-height));
-}
 
 </style>

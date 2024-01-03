@@ -1,5 +1,5 @@
 <template>
-  <view class="zshu-navbar" :style="{'--navbar-height':navbarHeight+'px'}">
+  <view class="zshu-navbar" :style="{opacity:viewOpacity,'--navbar-height':navbarHeight+'px'}">
     <view class="zshu-navbar-wrap" :style="navbarStyle_">
       <view class="navbar-content__container">
         <view class="zshu-navbar-container" :style="zahuNavbarContainerStyle">
@@ -40,13 +40,13 @@ import pagesConfig from "@/pages.json";
 
 import mixinsPullDownRefresh from "@/mixins/mixinsPullDownRefresh";
 import mixinsNextPageManager from "@/mixins/mixinsNextPageManager";
-import {ylxNavigateTo, ylxStyleObjectToString,ylxFilterPath} from "@/utils/uniTools";
+import {ylxNavigateTo, ylxStyleObjectToString, ylxFilterPath} from "@/utils/uniTools";
 
 const {tabBar: {list: tabBarPages}} = pagesConfig
 let menuButtonInfoALI = null, systemInfo = null, pages = null;
 
 export default {
-  mixins:[mixinsPullDownRefresh,mixinsNextPageManager],
+  mixins: [mixinsPullDownRefresh, mixinsNextPageManager],
   props: {
     configNavBar: {
       type: Object,
@@ -60,24 +60,14 @@ export default {
         return {}
       }
     },
-    title: {
-      type: String,
-      default: '',
-    },
-    backgroundImage: {
-      type: String,
-      default: ''
-    },
-    iconSize: {
-      type: [String, Number],
-      default: '22'
-    },
-
     bgColor: {
       type: String,
       default: 'rgba(243,243,243,1)'
     },
-
+    title: {
+      type: String,
+      default: '',
+    },
     color: {
       type: String,
       default: '#303030'
@@ -87,7 +77,12 @@ export default {
       default: '16'
     },
 
-    // 用于显示跳转到首页的icon
+    iconSize: {
+      type: [String, Number],
+      default: '22'
+    },
+
+    // 直接下显示首页的icon
     showHomeIcon: Boolean
   },
   data() {
@@ -100,6 +95,7 @@ export default {
       statusBarHeight: 0,
       pageHierarchy: 1,
       currentPagePath: '',
+      viewOpacity: 0,
     }
   },
 
@@ -117,7 +113,8 @@ export default {
     navbarHeight() {
       // 10 标题到底部之间的距离
       let navbarHeight = this.bottomGap + this.menuButtonTop + this.statusBarHeight + this.menuButtonHeight
-      this.$emit('updateNavbarHeight', navbarHeight)
+      this.$emit('navbarHeight', navbarHeight)
+      this.viewOpacity = 1
       return navbarHeight
     },
 
@@ -209,6 +206,7 @@ export default {
 
     this.statusBarHeight = systemInfo.statusBarHeight;
     // #endif
+    this.$forceUpdate()
 
 
   },
@@ -218,20 +216,14 @@ export default {
     calculateIconColor(navbarStyle) {
       const cssKeyValuePairs = [
         {key: 'background', keyword: /linear-gradient|url/},
-        {key: 'backgroundImage', keyword: /url/},
-        {key: 'backgroundColor', keyword: /#fff/},
-        // 添加更多的属性和匹配关键字对
-
+        {key: 'backgroundImage', keyword: /linear-gradient|url/},
       ];
 
       for (const {key, keyword} of cssKeyValuePairs) {
-
         if (key in navbarStyle) {
           const cssValue = navbarStyle[key];
-          // console.log(key, cssValue)
-
           if (keyword.test(cssValue)) {
-            return '#313131';
+            return '#fff';
           }
         }
       }
@@ -263,6 +255,7 @@ export default {
 <style scoped lang="scss">
 .zshu-navbar {
   box-sizing: border-box;
+
 
 }
 

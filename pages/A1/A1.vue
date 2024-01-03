@@ -1,7 +1,8 @@
 <template>
   <view>
-    <zshu-navbar title="A!" size="16">
-      <!--      <template #center>
+    <zshu-navbar title="A!" size="16"
+                 :navbar-style="{backgroundImage: `linear-gradient(45deg, #ff9a9e 0%, #fad0c4 99%, #fad0c4 100%)`}">
+<!--            <template #center>
               <view style="width: 90%;background-color:royalblue;">444</view>
             </template>-->
 
@@ -17,9 +18,11 @@
 <script>
 import mixinsPullDownRefresh from "@/mixins/mixinsPullDownRefresh";
 import mixinsNextPageManager from "@/mixins/mixinsNextPageManager";
+
 function foo() {
   console.log('foo')
 }
+
 export default {
   mixins: [mixinsPullDownRefresh, mixinsNextPageManager],
   data() {
@@ -46,8 +49,8 @@ export default {
       // console.log(this.ylxNextPageManager.getDataList());
 
     },
-    callback(info){
-      console.log('A1',info)
+    callback(info) {
+      console.log('A1', info)
       uni.navigateBack()
     }
 
