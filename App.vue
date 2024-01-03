@@ -45,9 +45,14 @@ export default {
 </script>
 
 <style lang="scss">
-@import "@/uni_modules/uview-ui/index.scss";
+/* #ifndef APP-PLUS-NVUE*/
 
+@import "@/uni_modules/uview-ui/index.scss";
 @import '@/common/style/app.scss';
+
+/* #endif*/
+
+
 
 
 

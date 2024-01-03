@@ -7,8 +7,8 @@
 
     </zshu-navbar>
 
-    <view style="position: fixed;top: 50%;left:50%;background-color:#fff;z-index: 10;">
-      <button @click="ylxUniEmit('haha',callback)">xixi</button>
+    <view style="position: fixed;top: 50%;left:50%;transform:translateX(-50%);background-color:#fff;z-index: 10;">
+      <button @click="ylxUniEmit('haha',callback)">传参/返回上一页</button>
     </view>
 
   </view>
@@ -48,6 +48,7 @@ export default {
     },
     callback(info){
       console.log('A1',info)
+      uni.navigateBack()
     }
 
   }
