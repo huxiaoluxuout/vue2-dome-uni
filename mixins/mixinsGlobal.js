@@ -1,16 +1,16 @@
-import {ylxOnUni} from "@/utils/tools";
+import {ylxUniOn} from "@/utils/uniTools";
 
 export default {
     data() {
         return {
             currentEvenName: '',
-            proEvenName: '',
+            preEvenName: '',
             isPageReady: false,
         }
     },
     onLoad() {
-        let {currentEvenName, proEvenName} = ylxOnUni(this.ylxGetInfoFromChild)
-        this.proEvenName = proEvenName
+        let {currentEvenName, preEvenName} = ylxUniOn(this.ylxGetInfoFromChild)
+        this.preEvenName = preEvenName
         this.currentEvenName = currentEvenName
     },
     methods: {
@@ -18,7 +18,7 @@ export default {
             console.log('GetInfoFromChild', info)
         },
         ylxEmit(param) {
-            uni.$emit(this.proEvenName, param)
+            uni.$emit(this.preEvenName, param)
         },
         ylxOnShow() {
             console.log('ylxOnShow')

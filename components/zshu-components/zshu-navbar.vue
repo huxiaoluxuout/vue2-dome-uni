@@ -37,10 +37,10 @@
 </template>
 <script>
 import pagesConfig from "@/pages.json";
-import {filterPath, navigateTo} from "@/utils/tools";
-import {styleObjectToString} from "@/components/zshu-components/JS/tools";
+
 import mixinsPullDownRefresh from "@/mixins/mixinsPullDownRefresh";
 import mixinsNextPageManager from "@/mixins/mixinsNextPageManager";
+import {ylxNavigateTo, ylxStyleObjectToString,ylxFilterPath} from "@/utils/uniTools";
 
 const {tabBar: {list: tabBarPages}} = pagesConfig
 let menuButtonInfoALI = null, systemInfo = null, pages = null;
@@ -123,7 +123,7 @@ export default {
 
     configNavBar_() {
 
-      const isTabBarPage = tabBarPages.map(item => filterPath(item.pagePath)).includes(filterPath(this.currentPagePath));
+      const isTabBarPage = tabBarPages.map(item => ylxFilterPath(item.pagePath)).includes(ylxFilterPath(this.currentPagePath));
 
       return Object.assign({
         title: this.title,//标题名称
@@ -150,7 +150,7 @@ export default {
     },
 
     zahuNavbarContainerStyle() {
-      return styleObjectToString({
+      return ylxStyleObjectToString({
 
         position: 'absolute',
         top: this.defaultContentTop,
@@ -162,14 +162,14 @@ export default {
 
 
     navbarStyle_() {
-      return styleObjectToString({
+      return ylxStyleObjectToString({
         background: this.bgColor,
         height: `${this.navbarHeight}px`,
         ...this.navbarStyle
       })
     },
     titleStyle_() {
-      return styleObjectToString({
+      return ylxStyleObjectToString({
         'color': this.color,
         'fontSize': this.size + 'px',
 
@@ -246,7 +246,7 @@ export default {
         } else {
           // 首页
           const indexPagePath = pagesConfig.pages[0].path
-          navigateTo(indexPagePath);
+          ylxNavigateTo(indexPagePath);
         }
       } catch (error) {
         console.error('Error while handling leftIconClick:', error);

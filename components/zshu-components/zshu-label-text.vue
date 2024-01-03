@@ -18,25 +18,13 @@
 
     </template>
 
-    <view class="custom" v-if="customBtn">
-      <view v-if="!showAddBtn" class="custom-text" @click="showAddBtn=true">
-        <u-icon name="plus" color="#303030" size="16"></u-icon>
-        <text class="custom-content">自定义</text>
-      </view>
-
-      <u--input placeholder="请输入内容" border="bottom" v-else :focus="showAddBtn" v-model="inputVal">
-        <template slot="suffix">
-          <u-button type="primary" @click="addCustom">添加</u-button>
-        </template>
-      </u--input>
-    </view>
 
   </view>
 </template>
 <script>
 
-import {attributeStylers} from "@/components/zshu-components/JS/tools";
-import {uuid} from "@/utils/zshuTools";
+import {ylxAttributeStylers} from "@/utils/uniTools";
+
 
 export default {
   props: {
@@ -142,7 +130,7 @@ export default {
       }
 
 
-      return attributeStylers(customStylers, Object.keys(customStylers))
+      return ylxAttributeStylers(customStylers, Object.keys(customStylers))
     }
   },
   watch: {
@@ -200,15 +188,7 @@ export default {
         }
       }
     },
-    // 添加自定义
-    addCustom() {
-      this.labelList.push({
-        text: this.inputVal,
-        id: uuid(),
-        showClose: true
-      });
-      this.showAddBtn = false
-    },
+
     deleteLabel(index,id) {
       let idIndex = this.activeIds.findIndex(ID => id === ID);
       if (idIndex !== -1) {
@@ -260,57 +240,5 @@ export default {
 }
 
 
-</style>
-<style scoped>
-.custom {
-  width: 100%;
-  padding-right: 15px;
-  min-width: 33.33%;
-  max-width: 100%;
-  flex-shrink: 0;
-  display: flex;
-  box-sizing: border-box;
-  margin-top: 15px;
-  margin-bottom: 15px;
-}
-
-.custom-text {
-  --top-gap: 10px;
-  --right-gap: 10px;
-
-  height: 100%;
-  width: 100%;
-
-  color: #303033;
-  background: #F9F9FC;
-  padding: var(--top-gap) var(--right-gap);
-  text-align: center;
-  box-sizing: border-box;
-  position: relative;
-  display: inline-flex;
-  justify-content: center;
-  border: 1px solid #e7e7e7;
-  border-radius: 6px;
-  gap: 10px;
-}
-
-.custom-content {
-  font-size: 16px;
-}
-
-.custom >>> .u-input {
-  padding: unset !important;
-}
-
-.custom >>> .u-input__content__field-wrapper {
-  border: 1px solid #F2F2F2;
-  align-self: stretch;
-  padding-left: 5px;
-  border-radius: 6px;
-}
-
-.custom >>> .u-input__content__field-wrapper .u-input__content__field-wrapper__field {
-  height: 100%;
-}
 </style>
 

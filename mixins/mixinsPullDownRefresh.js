@@ -1,7 +1,7 @@
 import useDoQueue from "@/common/hooks/useDoQueue"
 
 import useCallbackOnDataReady from "@/common/hooks/useCallbackOnDataReady";
-import cellGroup from "@/uni_modules/uview-ui/libs/config/props/cellGroup";
+
 
 const {setFunction, addFunctions, DoFunQueue} = useDoQueue()
 

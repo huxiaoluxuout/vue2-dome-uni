@@ -48,7 +48,7 @@ export default {
 @import "@/uni_modules/uview-ui/index.scss";
 
 @import '@/common/style/app.scss';
-@import '@/common/style/free.css';
+
 
 
 </style>

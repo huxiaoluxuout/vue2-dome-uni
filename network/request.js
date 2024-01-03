@@ -2,11 +2,10 @@ import {BASE_URL} from "@/network/config";
 
 
 // 请求函数
-
 export const request = (options) => {
-    options.url = BASE_URL + options.url;
 
-    return new Promise((resolve, reject)=>{
+    return new Promise((resolve, reject) => {
+        options.url = BASE_URL + options.url;
 
         uni.request({
             ...options,
@@ -18,7 +17,7 @@ export const request = (options) => {
                     "success": 200,// 正常情况
                     "expired": 403,// token过期
                 }
-                if (response.data['code'] === mappingKey['success']||response.data['status'] === mappingKey['success']) {
+                if (response.data['code'] === mappingKey['success'] || response.data['status'] === mappingKey['success']) {
                     return resolve(response.data);
                 } else if (response.data['code'] === mappingKey['expired']) {
 
@@ -33,7 +32,6 @@ export const request = (options) => {
 
     })
 };
-
 
 
 /*

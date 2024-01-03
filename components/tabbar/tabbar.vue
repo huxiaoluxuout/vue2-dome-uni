@@ -2,15 +2,15 @@
   <view class="root-tabbar" :style="{ '--ios-bottom-height':iosBottomHeight +'px'}">
     <view class="tabbar-container">
       <view class="item-wrapper" v-for="(item, itemIndex) in list" :key="item.text"
-            @click="clickNavHandler(navigateTo,itemIndex)">
+            @click="clickNavHandler(ylxNavigateTo,itemIndex)">
 
         <view class="item-container">
 
           <image v-if="INDEX ===itemIndex" mode="aspectFit" class="icon-item" :class="{'icon-item-big':itemIndex===1}"
-                 :src="filterPath(item.selectedIconPath)"/>
+                 :src="'/'+item.selectedIconPath"/>
 
           <image v-else mode="aspectFit" class="icon-item" :class="{'icon-item-big':itemIndex===1}"
-                 :src="filterPath(item.iconPath)"/>
+                 :src="'/'+item.iconPath"/>
 
           <view class="foot-text" :style="{color:INDEX === itemIndex?selectedColor:color}">{{ item.text }}</view>
 
@@ -27,8 +27,9 @@
 import pagesConfig from "@/pages.json";
 
 const {tabBar: {list, color, selectedColor}} = pagesConfig
-import {navigateTo, filterPath} from '@/utils/tools';
-import {getIOSBottomHeight} from "@/components/zshu-components/JS/tools";
+
+
+import {ylxIOSBottomHeight, ylxNavigateTo} from "@/utils/uniTools";
 
 export default {
   props: {
@@ -39,7 +40,7 @@ export default {
   },
   data() {
     return {
-      iosBottomHeight: getIOSBottomHeight(),
+      iosBottomHeight: ylxIOSBottomHeight(),
       list,
       selectedColor,
       color
@@ -51,8 +52,7 @@ export default {
   },
 
   methods: {
-    navigateTo,
-    filterPath,
+    ylxNavigateTo,
 
     clickNavHandler(fun, itemIndex) {
       // console.log('itemIndex', itemIndex)

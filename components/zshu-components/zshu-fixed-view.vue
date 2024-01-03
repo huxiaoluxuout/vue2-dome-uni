@@ -14,7 +14,8 @@
 
 <script>
 
-import {getViewInfo} from "@/utils/tools";
+
+import {ylxViewInfo} from "@/utils/uniTools";
 
 export default {
   props: {
@@ -57,7 +58,7 @@ export default {
 
   },
   mounted() {
-    getViewInfo('.content-inner', (rect) => {
+    ylxViewInfo('.content-inner', (rect) => {
       this.rectHeight = Math.ceil(rect?.height);
     }, this)
   },

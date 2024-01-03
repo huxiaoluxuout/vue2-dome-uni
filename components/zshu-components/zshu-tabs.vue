@@ -98,9 +98,7 @@ export default {
     },
   },
   mounted() {
-    /*getViewInfo('.zshu-tabs', (rect) => {
-      this.rectHeight = Math.ceil(rect?.height);
-    }, this)*/
+
   },
 
   methods: {
@@ -196,13 +194,6 @@ export default {
 
   }
 }
-
-/*
-.view-gap {
-  height: calc(var(--height) + var(--window-top) + var(--status-bar-height));
-}
-*/
-
 
 .view-gap {
   height: calc(var(--height) + var(--status-bar-height));

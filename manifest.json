@@ -19,7 +19,8 @@
         /* 模块配置 */
         "modules" : {
             "LivePusher" : {},
-            "Camera" : {}
+            "Camera" : {},
+            "Geolocation" : {}
         },
         /* 应用发布信息 */
         "distribute" : {
@@ -46,7 +47,13 @@
             /* ios打包配置 */
             "ios" : {},
             /* SDK配置 */
-            "sdkConfigs" : {}
+            "sdkConfigs" : {
+                "geolocation" : {
+                    "system" : {
+                        "__platform__" : [ "ios", "android" ]
+                    }
+                }
+            }
         }
     },
     /* 快应用特有相关 */

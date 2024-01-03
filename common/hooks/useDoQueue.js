@@ -10,7 +10,7 @@ export default function useDoQueue() {
             const {func, args} = allHandlers.pop();
             func(...args)
         }
-        uni.stopPullDownRefresh();
+
 
     };
 

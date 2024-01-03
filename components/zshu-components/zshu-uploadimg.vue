@@ -34,7 +34,8 @@
 
 import {uploadImg} from "@/network/config"
 import ZshuScaleImg from "@/components/zshu-components/zshu-scale-img.vue";
-import {navigateTo} from "@/utils/tools";
+
+import {ylxNavigateTo} from "@/utils/uniTools";
 
 
 export default {
@@ -180,7 +181,7 @@ export default {
         uni.$off('imgUrl', this.getHandlerImgUrl)
         uni.$once('imgUrl', this.getHandlerImgUrl)
 
-        navigateTo('pages/custom-camera/custom-camera')
+        ylxNavigateTo('pages/custom-camera/custom-camera')
         return
         // #endif
 
