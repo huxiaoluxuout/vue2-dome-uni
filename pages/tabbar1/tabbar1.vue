@@ -6,11 +6,14 @@
                :list-tabs="listTabs"></zshu-tabs>
 
     <button @click="ylxNavigateTo('pages/A1/A1?aa=66',{})"> 页面1</button>
-    <button style="margin-top: 20px;font-size: 14px;" @click="$handlerEvent('ccc')">跳转到还未打开过的tabbar页面
-    </button>
+
     <button @click="handleClick('Button 1')">Button 1</button>
     <button @click="handleClick('Button 2',false)">Button 2</button>
     <button @click="handleClick('Button 3',true)">Button 3</button>
+
+
+    <button style="margin-top: 20px;font-size: 14px;" @click="toPage1">跳转到还未打开过的tabbar页面</button>
+
     <button style="margin-top: 20px;font-size: 14px;" @click="toPage2">tabbar页面已打开</button>
 
 
@@ -61,18 +64,22 @@ export default {
       }, 200)
     },
 
-    toPage(e) {
-      console.log('第一次向未打开的页面传参', e)
+    toPage1() {
+      console.log('第一次向未打开的页面传参')
       // 第一次向未打开的页面传参
-      // uni.$emit('APP', {eventName: 'tabbar2', param: 1})
-      // ylxNavigateTo('pages/tabbar2/tabbar2')
+      uni.$emit('APP', {eventName: 'tabbar2', param: 1})
+      ylxNavigateTo('pages/tabbar2/tabbar2')
     },
+
     toPage2() {
       // 页面已经打开
       uni.$emit('tabbar2', 1)
       ylxNavigateTo('pages/tabbar2/tabbar2')
 
     },
+
+
+
 
 
     handleSuccess(msg) {
