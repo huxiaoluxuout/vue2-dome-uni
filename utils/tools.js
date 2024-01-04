@@ -61,25 +61,45 @@ const uuid = () => {
 
 
 // 事件处理器函数，根据条件执行操作或回调
-const handlerEvent = (
-    {
-        isPass: isPass = true,
-        errorHandle: errorCallback = () => {
-        },
-        handler: handler = () => {
-        },
-    },
-    ...args) => {
+const handlerEvent = (isPass, errorHandle, handler, ...args) => {
     if (isPass) {
         // 执行操作函数
-
         handler(...args);
+    } else {
+        if (typeof errorHandle === 'function') {
+            errorHandle(...args)
+
+        }
+    }
+
+
+};
+/*const handlerEvent = ({isPass: isPass = true, errorHandle: errorCallback = () => {}, handler: handler = () => {},}, ...args) => {
+    console.log('handlerEvent')
+    if (isPass) {
+        // 执行操作函数
+        console.log('执行操作函数')
+        console.log(this);
+        console.log(handler);
+        // handler(...args);
     } else {
 
         // 调用错误回调
         errorCallback && errorCallback(...args);
     }
+};*/
+
+
+export const handleAction = (isSuccess, errorHandler, successHandler, ...args) => {
+    if (isSuccess) {
+        if (typeof successHandler === 'function') {
+            successHandler(...args);
+        }
+    } else if (typeof errorHandler === 'function') {
+        errorHandler(...args);
+    }
 };
+
 
 
 // 将参数转换为查询字符串
@@ -144,5 +164,6 @@ export {
     uuid,
     objectToString,
     removeElementsByIndex,
+
 }
 

@@ -6,8 +6,12 @@
                :list-tabs="listTabs"></zshu-tabs>
 
     <button @click="ylxNavigateTo('pages/A1/A1?aa=66',{})"> 页面1</button>
-    <button style="margin-top: 20px;font-size: 14px;" @click="handlerEvent({handler:toPage})">跳转到还未打开过的tabbar页面</button>
-    <button style="margin-top: 20px;font-size: 14px;" @click="handlerEvent({handler:toPage2})">tabbar页面已打开</button>
+    <button style="margin-top: 20px;font-size: 14px;" @click="$handlerEvent('ccc')">跳转到还未打开过的tabbar页面
+    </button>
+    <button @click="handleClick('Button 1')">Button 1</button>
+    <button @click="handleClick('Button 2',false)">Button 2</button>
+    <button @click="handleClick('Button 3',true)">Button 3</button>
+    <button style="margin-top: 20px;font-size: 14px;" @click="toPage2">tabbar页面已打开</button>
 
 
     <tabbar :INDEX="0"></tabbar>
@@ -19,7 +23,7 @@
 import ZshuNavbar from "@/components/zshu-components/zshu-navbar.vue";
 
 import {ylxNavigateTo} from "@/utils/uniTools";
-import {handlerEvent} from "@/utils/tools";
+import {handleAction, handlerEvent} from "@/utils/tools";
 
 export default {
   components: {ZshuNavbar},
@@ -48,7 +52,7 @@ export default {
     }
   },
   methods: {
-    handlerEvent,
+    $handlerEvent: handlerEvent,
     ylxNavigateTo,
     ylxGetInfoFromChild({params, callback}) {
       console.log(params)
@@ -57,16 +61,29 @@ export default {
       }, 200)
     },
 
-    toPage() {
+    toPage(e) {
+      console.log('第一次向未打开的页面传参', e)
       // 第一次向未打开的页面传参
-      uni.$emit('APP', {eventName: 'tabbar2', param: 1})
-      ylxNavigateTo('pages/tabbar2/tabbar2')
+      // uni.$emit('APP', {eventName: 'tabbar2', param: 1})
+      // ylxNavigateTo('pages/tabbar2/tabbar2')
     },
     toPage2() {
       // 页面已经打开
       uni.$emit('tabbar2', 1)
       ylxNavigateTo('pages/tabbar2/tabbar2')
 
+    },
+
+
+    handleSuccess(msg) {
+      console.log('Success:', msg);
+    },
+    handleError(msg) {
+      console.log('Error:', msg);
+    },
+    handleClick(btnText, isSuccess = true) {
+      // const isSuccess = false; // 根据具体情况设置成功或失败的条件
+      handleAction(isSuccess, this.handleError, this.handleSuccess, btnText);
     },
 
 
