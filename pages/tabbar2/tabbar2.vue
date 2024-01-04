@@ -3,40 +3,40 @@
     <!--    <zshu-tabs  :activeId="activeId" @updateActiveId="updateActiveId" :list-tabs="listTabs"></zshu-tabs>-->
 
 
-<!--    <zshu-fixed-view :top="top" :navigation-custom="false">
-      <template #content-inner>
-        <view class="zshu-fixed-inner">
-          <view class="tab-wrapper">
-            <zshu-tabs hide-pag isRelative :activeId="activeId" @updateActiveId="updateActiveId"
-                       :list-tabs="listTabs">
-            </zshu-tabs>
-            <view class="release-wrapper" style="position: relative">
-              <u-button type="primary" shape="circle" icon="edit-pen" text="发布"></u-button>
+    <!--    <zshu-fixed-view :top="top" :navigation-custom="false">
+          <template #content-inner>
+            <view class="zshu-fixed-inner">
+              <view class="tab-wrapper">
+                <zshu-tabs hide-pag isRelative :activeId="activeId" @updateActiveId="updateActiveId"
+                           :list-tabs="listTabs">
+                </zshu-tabs>
+                <view class="release-wrapper" style="position: relative">
+                  <u-button type="primary" shape="circle" icon="edit-pen" text="发布"></u-button>
+                </view>
+              </view>
+              <view class="dropdown-selection">
+
+                212212121
+
+
+              </view>
             </view>
-          </view>
-          <view class="dropdown-selection">
+          </template>
+        </zshu-fixed-view>
+        0000
 
-            212212121
+        <button @click="$refs.uploadImg.chooseFile()">上传图片</button>
 
+        <zshu-uploadimg ref="uploadImg" columnsLimit="2" gap="10px" scale="1.58" limit="13" hidden-upload-icon
+                        :_that_="_that_" img-width="150px" :fileImageList="fileImageList" only-camera
+        >
 
-          </view>
-        </view>
-      </template>
-    </zshu-fixed-view>
-    0000
-
-    <button @click="$refs.uploadImg.chooseFile()">上传图片</button>
-
-    <zshu-uploadimg ref="uploadImg" columnsLimit="2" gap="10px" scale="1.58" limit="13" hidden-upload-icon
-                    :_that_="_that_" img-width="150px" :fileImageList="fileImageList" only-camera
-    >
-
-    </zshu-uploadimg>
+        </zshu-uploadimg>
 
 
-    <view @click="handlerView">
-      <zshu-scale-img :url="urlImg" scale="1.78" stop-click @click="handlerImg"></zshu-scale-img>
-    </view>-->
+        <view @click="handlerView">
+          <zshu-scale-img :url="urlImg" scale="1.78" stop-click @click="handlerImg"></zshu-scale-img>
+        </view>-->
 
     <tabbar :INDEX="1"></tabbar>
 
@@ -99,6 +99,12 @@ export default {
       this.urlImg = val[val.length - 1].url
     }
   },
+  onLoad() {
+    // 页面第一次打开
+    uni.$emit('getAPP', this.emitCallbackTest)
+    // 页面已经打开
+    uni.$on('tabbar2', this.emitCallbackTest)
+  },
 
   methods: {
     updateActiveId(id) {
@@ -109,49 +115,18 @@ export default {
     },
     handlerView() {
       console.log('handlerView')
+    },
+    //   ---------------------------------------
+    emitCallbackTest(data){
+      console.log('emitCallbackTest',data)
     }
+
   }
 }
 </script>
 
 <style scoped>
-.zshu-fixed-inner {
-  box-sizing: border-box;
-  word-break: break-all;
-}
 
-.tab-wrapper {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  height: 100%;
-
-}
-
-.release-wrapper {
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 68px;
-  height: 100%;
-}
-
-.dropdown-selection {
-  padding-bottom: 10px;
-}
-
-.u-button--circle {
-  height: 28px;
-}
-
-.u-button__text {
-  font-size: 12px;
-}
-
-button:after {
-  border: none;
-}
 
 
 </style>

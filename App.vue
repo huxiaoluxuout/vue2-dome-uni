@@ -2,25 +2,15 @@
 
 
 import {getLogin} from "@/network/apis/test_api";
+import mixinsApp from "@/mixins/mixinsApp";
 
 export default {
+  mixins:[mixinsApp],
   onLaunch: function () {
     console.log('App Launch')
     this.loginApi()
-    uni.getSystemInfo({
-      success(res) {
-        // #ifdef MP
-        if (res.brand && res.brand !== "devtools" && process.env.NODE_ENV === 'development') {
-          // 打开调试
-          uni.setEnableDebug({
-            enableDebug: options.query?.isDebugger === '1'
-          })
-        }
-        // #endif
-
-      }
-    })
   },
+
   onShow: function () {
     console.log('App Show')
   },
@@ -39,7 +29,9 @@ export default {
           uni.setStorageSync('token', res.token)
         }
       })
-    }
+    },
+
+
   }
 }
 </script>

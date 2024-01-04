@@ -1,4 +1,3 @@
-
 /**
  * 节流
  * @param func
@@ -67,13 +66,14 @@ const handlerEvent = (
         isPass: isPass = true,
         errorHandle: errorCallback = () => {
         },
-        handle: handle
+        handler: handler = () => {
+        },
     },
     ...args) => {
     if (isPass) {
         // 执行操作函数
 
-        handle(...args);
+        handler(...args);
     } else {
 
         // 调用错误回调
@@ -110,7 +110,6 @@ const parseQueryString = (queryString) => {
 
     return params;
 };
-
 
 
 // 对象转成字符串 (style)
