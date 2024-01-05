@@ -64,7 +64,7 @@ export default {
     toPage1() {
       console.log('第一次向未打开的页面传参')
       // 第一次向未打开的页面传参
-      uni.$emit('APP', {eventName: 'tabbar2', param: 1})
+      uni.$emit('emitApp', {eventName: 'tabbar2', param: 1})
       ylxNavigateTo('pages/tabbar2/tabbar2')
     },
 
