@@ -184,11 +184,14 @@ export default {
     pages = getCurrentPages();
 
     // #ifdef MP-WEIXIN || MP-ALIPAY
-    menuButtonInfoALI = uni.getMenuButtonBoundingClientRect();
+    menuButtonInfoALI = uni.getStorageSync('menuButtonInfoALI') || uni.getMenuButtonBoundingClientRect();
+    uni.setStorageSync('menuButtonInfoALI', menuButtonInfoALI)
     // #endif
 
     // #ifdef APP-PLUS
-    systemInfo = uni.getSystemInfoSync();
+    systemInfo = uni.getStorageSync('systemInfo') || uni.getSystemInfoSync();
+    uni.setStorageSync('systemInfo', systemInfo)
+
     // #endif
 
   },
@@ -203,7 +206,6 @@ export default {
     // #endif
 
     // #ifdef APP-PLUS
-
     this.statusBarHeight = systemInfo.statusBarHeight;
     // #endif
 
