@@ -206,8 +206,6 @@ export default {
 
     this.statusBarHeight = systemInfo.statusBarHeight;
     // #endif
-    this.$forceUpdate()
-
 
   },
 

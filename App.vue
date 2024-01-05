@@ -2,10 +2,10 @@
 
 
 import {getLogin} from "@/network/apis/test_api";
-import mixinsApp from "@/mixins/mixinsApp";
+import appEventBus from "@/mixins/mixinsAppEventBus";
 
 export default {
-  mixins:[mixinsApp],
+  mixins:[appEventBus],
   onLaunch: function () {
     console.log('App Launch')
     this.loginApi()

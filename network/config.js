@@ -1,7 +1,7 @@
 const productionUrl = 'https://feiying.ahjinti.cn'
 const testURL = 'https://feiying.ahjinti.cn'
 
-export const devURL = 'http://192.168.0.16:3000/api'
+export const devURL = 'http://192.168.2.25:3000/api'
 export const uploadImg = devURL +'/upload'
 
 

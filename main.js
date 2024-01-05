@@ -11,9 +11,11 @@ import store from './store'
 
 Vue.prototype.$store = store
 
-import mixin from "./mixins/mixinsGlobal";
 
-Vue.mixin(mixin)
+import PageReadyShow from "./mixins/mixinsPageReadyShow";
+
+Vue.mixin(PageReadyShow)
+
 
 Vue.config.productionTip = false
 App.mpType = 'app'

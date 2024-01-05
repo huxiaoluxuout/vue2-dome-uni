@@ -47,9 +47,11 @@
 import ZshuTabs from "@/components/zshu-components/zshu-tabs.vue";
 import zshuUploadimg from "@/components/zshu-components/zshu-uploadimg.vue";
 
+import appUsageEventBus from "@/mixins/mixinsAppUsageEventBus";
 
 export default {
   components: {ZshuTabs, zshuUploadimg},
+  mixins: [appUsageEventBus],
   data() {
     return {
       activeId: 2,
@@ -85,8 +87,11 @@ export default {
       ],
 
       // urlImg: 'https://cdn.nlark.com/yuque/0/2023/png/21700210/1703754974325-6135ad2c-ba64-4ae6-8d19-82d7fc0b3df5.png'
-      urlImg: 'https://images-jinti.oss-cn-hangzhou.aliyuncs.com/5fa1201ea36ad.jpg'
+      urlImg: 'https://images-jinti.oss-cn-hangzhou.aliyuncs.com/5fa1201ea36ad.jpg',
 
+
+      eventBusName:'tabbar2',
+      eventBusEmit:'emitCallbackTest',
     }
   },
   computed: {
@@ -100,11 +105,9 @@ export default {
     }
   },
   onLoad() {
-    // 页面第一次打开
-    uni.$emit('getAPP', this.emitCallbackTest)
-    // 页面已经打开
-    uni.$on('tabbar2', this.emitCallbackTest)
+
   },
+
 
   methods: {
     updateActiveId(id) {
@@ -117,8 +120,11 @@ export default {
       console.log('handlerView')
     },
     //   ---------------------------------------
-    emitCallbackTest(data){
-      console.log('emitCallbackTest',data)
+
+    emitCallbackTest(data) {
+
+      console.log('emitCallbackTest', data)
+
     }
 
   }
@@ -126,7 +132,6 @@ export default {
 </script>
 
 <style scoped>
-
 
 
 </style>

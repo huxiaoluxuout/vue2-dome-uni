@@ -57,14 +57,13 @@ import {getMineOrderList} from "@/network/apis/test_api";
 import mixinsNextPageManager from "@/mixins/mixinsNextPageManager";
 import mixinsPullDownRefresh from "@/mixins/mixinsPullDownRefresh";
 
-import YlxSlider from "@/components/ylx-components/ylx-slider.vue";
 import ZshuTabs from "@/components/zshu-components/zshu-tabs.vue";
 
 import ZshuNavbar from "@/components/zshu-components/zshu-navbar.vue";
 
 
 export default {
-  components: {ZshuNavbar, ZshuTabs, YlxSlider},
+  components: {ZshuNavbar, ZshuTabs},
   mixins: [mixinsNextPageManager, mixinsPullDownRefresh],
   data() {
     return {
@@ -106,11 +105,6 @@ export default {
     console.log('tabbar 3')
   },
   methods: {
-    ylxOnShow() {
-      console.log('tabbar 3 ylxOnShow')
-    },
-
-
     ylxReloadCallback() {
 
       this.viewDataList = []

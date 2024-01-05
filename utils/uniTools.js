@@ -234,14 +234,14 @@ const ylxStyleObjectToString = (obj) => {
 
 const ylxUniOn = (uniCallback) => {
     let pages = getCurrentPages();
-    let currentEvenName = pages[pages.length - 1]['route'];
-    let preEvenName = '';
+    let currentEventName = pages[pages.length - 1]['route'];
+    let preEventName = '';
     if (pages.length > 1) {
-        preEvenName = pages[pages.length - 2]['route'];
+        preEventName = pages[pages.length - 2]['route'];
     }
 
-    uni.$on(currentEvenName, uniCallback)
-    return {currentEvenName, preEvenName}
+    uni.$on(currentEventName, uniCallback)
+    return {currentEventName, preEventName}
 
 }
 

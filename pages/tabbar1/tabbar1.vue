@@ -2,7 +2,7 @@
   <view>
 
 
-    <zshu-tabs :view-height="0" :activeId="activeId" @updateActiveId="(id)=>{activeId = id}"
+    <zshu-tabs :view-height="0" :active-id="activeId" @updateActiveId="id=>activeId = id"
                :list-tabs="listTabs"></zshu-tabs>
 
     <button @click="ylxNavigateTo('pages/A1/A1?aa=66',{})"> 页面1</button>
@@ -27,9 +27,11 @@ import ZshuNavbar from "@/components/zshu-components/zshu-navbar.vue";
 
 import {ylxNavigateTo} from "@/utils/uniTools";
 import {handleAction, handlerEvent} from "@/utils/tools";
+import mixinsYlxUniEventBus from "@/mixins/mixinsYlxUniEventBus";
 
 export default {
   components: {ZshuNavbar},
+  mixins: [mixinsYlxUniEventBus],
   data() {
     return {
       listTabs: [
@@ -57,12 +59,7 @@ export default {
   methods: {
     $handlerEvent: handlerEvent,
     ylxNavigateTo,
-    ylxGetInfoFromChild({params, callback}) {
-      console.log(params)
-      setTimeout(() => {
-        callback('hehehe')
-      }, 200)
-    },
+
 
     toPage1() {
       console.log('第一次向未打开的页面传参')
@@ -77,9 +74,6 @@ export default {
       ylxNavigateTo('pages/tabbar2/tabbar2')
 
     },
-
-
-
 
 
     handleSuccess(msg) {

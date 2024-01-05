@@ -2,9 +2,9 @@
   <view>
     <zshu-navbar title="A!" size="16"
                  :navbar-style="{backgroundImage: `linear-gradient(45deg, #ff9a9e 0%, #fad0c4 99%, #fad0c4 100%)`}">
-<!--            <template #center>
-              <view style="width: 90%;background-color:royalblue;">444</view>
-            </template>-->
+      <!--            <template #center>
+                    <view style="width: 90%;background-color:royalblue;">444</view>
+                  </template>-->
 
     </zshu-navbar>
 
@@ -17,42 +17,31 @@
 
 <script>
 import mixinsPullDownRefresh from "@/mixins/mixinsPullDownRefresh";
-import mixinsNextPageManager from "@/mixins/mixinsNextPageManager";
 
-function foo() {
-  console.log('foo')
-}
+import mixinsYlxUniEventBus from "@/mixins/mixinsYlxUniEventBus";
 
 export default {
-  mixins: [mixinsPullDownRefresh, mixinsNextPageManager],
+  mixins: [mixinsPullDownRefresh, mixinsYlxUniEventBus],
   data() {
     return {}
   },
-  onLoad() {
-    this.ylxPullDownRefresh.setEmitFunctions(foo)
 
-  },
   methods: {
 
     ylxOnPullDown() {
       console.log('1 onPullDown');
-
     },
+
     ylxPullDownCallBack() {
       console.log('2 pullDownCallBack');
 
     },
-    ylxOnReachBottom() {
-      console.log('ylxOnReachBottom');
-      // this.ylxNextPageManager.setDataList([])
-      // console.log(this.ylxNextPageManager.getPage());
-      // console.log(this.ylxNextPageManager.getDataList());
 
-    },
     callback(info) {
       console.log('A1', info)
       uni.navigateBack()
-    }
+    },
+
 
   }
 }
