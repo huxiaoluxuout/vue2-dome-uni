@@ -244,6 +244,21 @@ const ylxUniOn = (uniCallback) => {
     return {currentEventName, preEventName}
 
 }
+const ylxOpenWxDebug = (options) => {
+    uni.getSystemInfo({
+        success(res) {
+            // #ifdef MP
+            if (res.brand && res.brand !== "devtools" && process.env.NODE_ENV === 'development') {
+                // 打开调试
+                uni.setEnableDebug({
+                    enableDebug: options.query?.isDebugger === '1'
+                })
+            }
+            // #endif
+
+        }
+    })
+}
 
 export {
     ylxAttributeStylers,
@@ -259,7 +274,7 @@ export {
     ylxDebuggerMsg,
     ylxNavigateTo,
     ylxRedirectTo,
-
+    ylxOpenWxDebug,
     ylxToast,
     ylxUniOn,
 

@@ -1,23 +1,24 @@
 <template>
   <view>
-
-
+    babbar页面
   </view>
 </template>
 
 <script>
 
+
 export default {
 
   data() {
     return {
-      eventBusName:'tabbar2',
-      eventBusEmit:'emitCallbackTest',
+      eventBusName: 'tabbar2',
+      eventBusEmit: 'emitCallbackTest',
     }
   },
 
-  onLoad: function () {
-    const { eventBusName, eventBusEmit } = this;
+
+  onLoad() {
+    const {eventBusName, eventBusEmit} = this;
     if (typeof eventBusName === 'string' && typeof eventBusEmit === 'string' && eventBusName && eventBusEmit) {
       // 页面第一次打开
       uni.$emit('getAPP', this[eventBusEmit])
@@ -26,16 +27,11 @@ export default {
     }
   },
 
-  methods: {
-    emitCallbackTest(data) {
-      console.log('emitCallbackTest', data)
-    }
+  emitCallbackTest(data) {
+
+    console.log('emitCallbackTest', data)
 
   }
+
 }
 </script>
-
-<style scoped>
-
-
-</style>

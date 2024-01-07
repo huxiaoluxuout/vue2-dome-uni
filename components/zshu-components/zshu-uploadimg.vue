@@ -7,9 +7,9 @@
 
       <zshu-scale-img :url="item.thumb" :scale="scale" :width="widthImg" preview></zshu-scale-img>
 
-            <view class="del-icon" @click.stop="delImage(index)">
-              <uni-icons type="close" color="#ff3c3c" size="26"></uni-icons>
-            </view>
+      <view class="del-icon" @click.stop="delImage(index)">
+        <uni-icons type="close" color="#ff3c3c" size="26"></uni-icons>
+      </view>
 
 
       <!--            <view v-show="showDel" class="del-view">
@@ -22,7 +22,8 @@
     <!--图片 视频 上传-->
     <view v-show="isShowUpload" class="flex-item__view upload-icon-position" @click="chooseFile">
       <slot name="upload">
-        <image class="image-item upload-icon-default" mode="aspectFill" src="https://s11.ax1x.com/2023/12/25/piHL87n.png"/>
+        <image class="image-item upload-icon-default" mode="aspectFill"
+               src="https://s11.ax1x.com/2023/12/25/piHL87n.png"/>
       </slot>
     </view>
   </view>
@@ -32,7 +33,7 @@
 <script>
 
 
-import {uploadImg} from "@/network/config"
+import {uploadImgUrl} from "@/network/config"
 import ZshuScaleImg from "@/components/zshu-components/zshu-scale-img.vue";
 
 import {ylxNavigateTo} from "@/utils/uniTools";
@@ -81,15 +82,6 @@ export default {
       default: `30rpx`
     },
 
-    _that_: {
-      type: Object,
-      default: () => {
-      }
-    },
-    _fileImageList_: {
-      type: String,
-      default: 'fileImageList'
-    },
     fileType: {
       type: String,
       default: 'image' //文件类型，image/video/audio
@@ -177,7 +169,7 @@ export default {
 
       if (this.onlyCamera) {
         sourceTypes.splice(0, 1)
-        // #ifndef H5
+        // #ifdef APP-PLUS
         uni.$off('imgUrl', this.getHandlerImgUrl)
         uni.$once('imgUrl', this.getHandlerImgUrl)
 
@@ -209,7 +201,7 @@ export default {
         title: '确定删除吗?',
         success: function (res) {
           if (res.confirm) {
-            that._that_[that._fileImageList_].splice(index, 1)
+            that.$emit('updateFileImageList', {type: 'del', param: index})
           } else if (res.cancel) {
             console.log('用户点击取消');
           }
@@ -237,20 +229,29 @@ export default {
       let lists = [].concat(arrFile)
       let fileImageListLen = that.localFileList.length
       lists.map((item) => {
-        that._that_[that._fileImageList_].push({
-          ...item,
-          status: 'uploading',
-          message: '上传中'
+        that.$emit('updateFileImageList', {
+          type: 'uploading', param: {
+            ...item,
+            status: 'uploading',
+            message: '上传中'
+          }
         })
       })
       for (let i = 0; i < lists.length; i++) {
         const result = await that.uploadFilePromise(lists[i].url)
         let item = that.localFileList[fileImageListLen]
-        that._that_[that._fileImageList_].splice(fileImageListLen, 1, Object.assign(item, {
-          status: 'success',
-          message: '',
-          url: result
-        }))
+        that.$emit('updateFileImageList', {
+          type: 'success',
+          param: {
+            fileImageListLen,
+            num: 1,
+            itemAssign: Object.assign(item, {
+              status: 'success',
+              message: '',
+              url: result
+            })
+          }
+        });
         fileImageListLen++
       }
 
@@ -260,7 +261,7 @@ export default {
     uploadFilePromise(url) {
       return new Promise((resolve) => {
         uni.uploadFile({
-          url: uploadImg,
+          url: uploadImgUrl,
           filePath: url,
           fileType: this.fileType,
           name: 'file',
@@ -269,7 +270,7 @@ export default {
             if (resData.code === 200) {
               resolve(resData.data.url)
             } else {
-              console.error('', resData.msg)
+              console.error(resData.msg)
             }
           },
           complete: (complete) => {
@@ -290,7 +291,7 @@ export default {
 </script>
 
 <style scoped lang="scss">
-.hidden-view{
+.hidden-view {
   pointer-events: none;
   position: absolute;
   top: -10000px;
@@ -357,7 +358,6 @@ export default {
   //border: 1px solid #000;
 
 }
-
 
 
 </style>

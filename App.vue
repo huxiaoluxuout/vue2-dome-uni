@@ -8,7 +8,7 @@ export default {
   mixins:[appEventBus],
   onLaunch: function () {
     console.log('App Launch')
-    // this.loginApi()
+    this.loginApi()
   },
 
   onShow: function () {

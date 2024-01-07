@@ -1,23 +1,22 @@
 export default {
     globalData: {
-        param: {}
+        appParam: {}
     },
     onLaunch: function () {
-        uni.$on('getAPP', this.handlerGetApp)
-        uni.$on('APP', this.handlerApp)
+        uni.$on('getAPP', this.handleGetApp)
+        uni.$on('emitApp', this.handleApp)
     },
 
     methods: {
-        // 跳转到还未打开过的tabbar页面
-        // 向tabbar页面传参
-        handlerApp({eventName, param}) {
-            this.param = param
+
+        handleApp({eventName, param}) {
+            this.appParam = param
             uni.$emit(eventName, param)
-            uni.$once(eventName, this.handlerGetApp)
+            uni.$once(eventName, this.handleGetApp)
         },
-        handlerGetApp(handler) {
+        handleGetApp(handler) {
             if (typeof handler === 'function') {
-                handler(this.param)
+                handler(this.appParam)
             }
         },
     },

@@ -5,17 +5,18 @@
     <zshu-tabs :view-height="0" :active-id="activeId" @updateActiveId="id=>activeId = id"
                :list-tabs="listTabs"></zshu-tabs>
 
-    <button @click="ylxNavigateTo('pages/A1/A1?aa=66',{})"> 页面1</button>
-
-    <button @click="handleClick('Button 1')">Button 1</button>
-    <button @click="handleClick('Button 2',false)">Button 2</button>
-    <button @click="handleClick('Button 3',true)">Button 3</button>
-
+    <button style="margin-top: 20px;font-size: 14px;" @click="ylxNavigateTo('pages/A1/A1?aa=66',{})"> 页面1</button>
 
     <button style="margin-top: 20px;font-size: 14px;" @click="toPage1">跳转到还未打开过的tabbar页面</button>
+    <button style="margin-top: 20px;font-size: 14px;" @click="uploadImg">uploadImg</button>
 
-    <button style="margin-top: 20px;font-size: 14px;" @click="toPage2">tabbar页面已打开</button>
 
+    <zshu-uploadimg ref="uploadImg" columns-limit="2" gap="10px" scale="1.58" limit="13"
+                    hidden-upload-icon img-width="150px" only-camera
+                    :fileImageList="fileImageList" @updateFileImageList="updateFileImageList"
+    >
+
+    </zshu-uploadimg>
 
     <tabbar :INDEX="0"></tabbar>
 
@@ -26,8 +27,9 @@
 import ZshuNavbar from "@/components/zshu-components/zshu-navbar.vue";
 
 import {ylxNavigateTo} from "@/utils/uniTools";
-import {handleAction, handlerEvent} from "@/utils/tools";
+
 import mixinsYlxUniEventBus from "@/mixins/mixinsYlxUniEventBus";
+import index from "@/pages/index/index.vue";
 
 export default {
   components: {ZshuNavbar},
@@ -50,43 +52,43 @@ export default {
           text2: '大厅3',
         }
       ],
-
       activeId: 2,
+      //   ---------------------
+
+      fileImageList: [{
+        url: 'https://images-jinti.oss-cn-hangzhou.aliyuncs.com/5fa1201ea36ad.jpg'
+      }, {
+        url: 'https://app-jinti.oss-cn-hangzhou.aliyuncs.com/uploads/20240107/f790552571bb4888293896d289b00295.png'
+      }],
 
 
     }
   },
+  computed: {
+    _that_() {
+      return this
+    },
+  },
   methods: {
-    $handlerEvent: handlerEvent,
     ylxNavigateTo,
 
-
     toPage1() {
-      console.log('第一次向未打开的页面传参')
-      // 第一次向未打开的页面传参
       uni.$emit('emitApp', {eventName: 'tabbar2', param: 1})
       ylxNavigateTo('pages/tabbar2/tabbar2')
     },
-
-    toPage2() {
-      // 页面已经打开
-      uni.$emit('tabbar2', 1)
-      ylxNavigateTo('pages/tabbar2/tabbar2')
-
+    // 上传图片
+    uploadImg() {
+      this.$refs.uploadImg.chooseFile()
     },
-
-
-    handleSuccess(msg) {
-      console.log('Success:', msg);
-    },
-    handleError(msg) {
-      console.log('Error:', msg);
-    },
-    handleClick(btnText, isSuccess = true) {
-      // const isSuccess = false; // 根据具体情况设置成功或失败的条件
-      handleAction(isSuccess, this.handleError, this.handleSuccess, btnText);
-    },
-
+    updateFileImageList({type, param}) {
+      if (type === 'del') {
+        this.fileImageList.splice(param, 1)
+      } else if (type === 'uploading') {
+        this.fileImageList.push(param)
+      } else if (type === 'success') {
+        this.fileImageList.splice(param.fileImageListLen, param.num, param.itemAssign)
+      }
+    }
 
   }
 }
