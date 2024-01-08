@@ -29,7 +29,7 @@ import ZshuNavbar from "@/components/zshu-components/zshu-navbar.vue";
 import {ylxNavigateTo} from "@/utils/uniTools";
 
 import mixinsYlxUniEventBus from "@/mixins/mixinsYlxUniEventBus";
-import index from "@/pages/index/index.vue";
+
 
 export default {
   components: {ZshuNavbar},
