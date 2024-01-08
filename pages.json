@@ -51,12 +51,18 @@
       }
     },
     {
-    	"path" : "pages/login/login",
-    	"style" : 
-    	{
-    		"navigationBarTitleText" : "登录",
-    		"enablePullDownRefresh" : false
-    	}
+      "path": "pages/login/login",
+      "style": {
+        "navigationBarTitleText": "登录",
+        "enablePullDownRefresh": false
+      }
+    },
+    {
+      "path": "pages/A2/A2",
+      "style": {
+        "navigationBarTitleText": "",
+        "enablePullDownRefresh": true
+      }
     }
   ],
   "tabBar": {

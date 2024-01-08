@@ -1,11 +1,10 @@
 <template>
 
   <view class="ylx-slider" :style="heightSlider" @touchmove.capture="touchmove" @touchstart.capture="touchstart" @touchend.capture="touchend">
-    <swiper class="swiper-view-height" :current="currentIndex" :duration="200" @change="swiperChange">
-      <swiper-item v-for="(item,index) in displaySwiperList" :key="index">
+    <swiper class="swiper-view-height" :current="swiperCurrentIndex" :duration="200" :circular="true" @change="swiperChange">
+      <swiper-item v-for="(item,index) in swiperList" :key="index">
         <view class="wrap_content">
-          {{ index }} -{{ item }}
-          <view class="title">{{ originIndex + 1 }}/{{ originList.length }}</view>
+          {{ index }} --- {{ item }}
         </view>
       </swiper-item>
     </swiper>
@@ -17,6 +16,7 @@
 
 
 import {ylxStyleObjectToString} from "@/utils/uniTools";
+import index from "@/pages/index/index.vue";
 
 let startClientX = 0, startClientY = 0;
 let minOffset = 5, minTime = 100;//最小偏移量,最小间隔时间
@@ -73,19 +73,20 @@ export default {
   data() {
     return {
 
-      originList: [], // 源数据
-      displaySwiperList: [], // swiper需要的数据
-      displayIndex: 0, // 用于显示swiper的真正的下标数值只有：0，1，2。
-      originIndex: 0, // 记录源数据的下标
+      swiperList: [6,1,2], // swiper需要的数据
+      swiperCurrentIndex: 0, // 用于显示swiper的真正的下标数值只有：0，1，2。
+
+      originList: [1,2,3,4,5,6], // 源数据
+      originDataIndex: 0, // 记录源数据的下标
 
       disableTouch: false
     }
   },
   created() {
-    for (let i = 1; i <= 1300; i++) {
+    /*for (let i = 1; i <= 1300; i++) {
       this.originList.push(i);
-    }
-    this.initSwiperData();
+    }*/
+    // this.initSwiperData();
     // 5
     // 1 2 3 4 5
 
@@ -109,7 +110,7 @@ export default {
      * @originIndex  从源数据的哪个开始显示默认0，如从其他页面跳转进来，要显示第n个，这个参数就是他的下标
      */
     initSwiperData() {
-      const originListLength = this.originList.length; // 源数据长度
+  /*    const originListLength = this.originList.length; // 源数据长度
 
       let index = this.originIndex
       console.log({index})
@@ -126,11 +127,11 @@ export default {
         displayList[2] = this.originList[index + 1]
 
       }
-      this.displaySwiperList = displayList;
+      this.displaySwiperList = displayList;*/
     },
     setSwiperData() {
-      const originListLength = this.originList.length; // 源数据长度
-      let index = this.originIndex
+      const originListLen = this.originList.length; // 源数据长度
+      // let index = this.originIndex
       console.log({index})
 
     },
@@ -141,8 +142,17 @@ export default {
     swiperChange(event) {
       const {current} = event.detail;
       console.log(current)
-      this.originIndex = current
-      this.setSwiperData()
+      if(current===0){
+        // this.swiperList[]
+      }
+      /*if(current> this.swiperCurrentIndex){
+        console.log('左滑')
+      }else {
+        console.log('右滑')
+
+      }
+      this.swiperCurrentIndex = current
+      this.setSwiperData()*/
       /* const originListLength = this.originList.length; // 源数据长度
        // =============向后==========
        if (this.displayIndex - current == 2 || this.displayIndex - current == -1) {

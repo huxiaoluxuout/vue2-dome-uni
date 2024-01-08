@@ -60,7 +60,7 @@ export default {
   },
 
   onLoad() {
-    this.getMineOrderListApi()
+    // this.getMineOrderListApi()
     this.ylxNextPageManager.setEmitFunctions(this.getMineOrderListApi)
     this.ylxNextPageManager.reloadCallback(this.ylxReloadCallback)
     this.ylxPullDownRefresh.setEmitFunctions(this.ylxNextPageManager.reload)
