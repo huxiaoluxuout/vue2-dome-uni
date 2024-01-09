@@ -5,7 +5,7 @@ export const devURL = 'https://feiying.ahjinti.cn'
 export const proxyDevURL = 'http://192.168.0.16:3000/api'
 // export const devURL = 'https://h.longduosci.com'
 
-export const BASE_URL = devURL
+export const BASE_URL = proxyDevURL
 
 export const uploadImgUrl = proxyDevURL + '/common/api.common/upload'
 

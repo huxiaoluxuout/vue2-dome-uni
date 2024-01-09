@@ -8,8 +8,9 @@
     <zshu-tabs is-custom :top="navbarHeight" :activeId="activeId" @updateActiveId="(id)=>{activeId = id}"
                :list-tabs="listTabs"></zshu-tabs>
 
-    <ylx-slider :other-height="navbarHeight + 45"></ylx-slider>
-<!--    <ylx-slider :data-list="viewDataList" :other-height="navbarHeight + 45"></ylx-slider>-->
+    <ylx-slider :other-height="navbarHeight + 45" :data-list="viewDataList" :current-index="current"
+                @updateCurrent="handleCurrent" @setDataList="handleSetDataList"></ylx-slider>
+    <!--    <ylx-slider :data-list="viewDataList" :other-height="navbarHeight + 45"></ylx-slider>-->
 
 
     <tabbar :INDEX="2"></tabbar>
@@ -33,8 +34,6 @@ export default {
   data() {
     return {
 
-      viewDataList: [],
-
       listTabs: [
         {
           id: 2,
@@ -55,11 +54,37 @@ export default {
       activeId: 2,
 
       isLoading: true,
-      navbarHeight: 60
+
+
+      navbarHeight: 60,
+      current: 0,
+
+      viewDataList: [null, null, null],
     }
   },
+/*  computed: {
+    activeIdIndex(newId) {
+      return this.listTabs.findIndex(item => item.id === newId)
+    },
+  },*/
+  watch: {
+    activeId(newId) {
+      let index =this.listTabs.findIndex(item => item.id === newId)
+      let obj = {
+        0: 'xixi',
+        1: 'HAHA',
+        2: 'hei hei',
+      }
+      this.viewDataList[index] = {
+        name: obj[index]
+      }
+      this.current = index
+    },
+  },
+
 
   onLoad() {
+    this.viewDataList[this.current] = {name: 'XI XI'}
     // this.getMineOrderListApi()
     this.ylxNextPageManager.setEmitFunctions(this.getMineOrderListApi)
     this.ylxNextPageManager.reloadCallback(this.ylxReloadCallback)
@@ -70,10 +95,25 @@ export default {
     console.log('tabbar 3')
   },
   methods: {
+    handleSetDataList(index) {
+      let obj = {
+        0: 'xixi',
+        1: 'HAHA',
+        2: 'hei hei',
+      }
+      this.viewDataList[index] = {
+        name: obj[index]
+      }
+    },
+
+    handleCurrent(index) {
+      this.current = index
+    },
+
     ylxReloadCallback() {
 
-      this.viewDataList = []
-      this.getMineOrderListApi()
+      // this.viewDataList = []
+      // this.getMineOrderListApi()
     },
 
     getMineOrderListApi() {
