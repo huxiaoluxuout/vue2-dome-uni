@@ -1,7 +1,7 @@
 <template>
   <div class="content">
     <div class="title">{{ currentOriginIndex + 1 }}/{{ originList.length }}</div>
-    <swiper class="swiper" :circular="localCircular" :disable-touch="false" @change="handleSwiperChange"
+    <swiper class="swiper" :circular="true" :disable-touch="false" @change="handleSwiperChange"
             swiperDuration="250">
       <swiper-item v-for="(item, index) in displaySwiperList" :key="index">
         <div class="wrap_content">{{ item }}</div>
@@ -28,22 +28,23 @@ export default {
   //   },
   // },
   methods: {
-    /**
-     * 初始化Swiper数据
-     * @param {Number} originIndex 从原始数据的哪个索引开始显示，默认为0
-     */
-    initSwiperData(originIndex = this.currentOriginIndex) {
+
+    initSwiperData() {
       const originListLength = this.originList.length;
+      const currentDisplayIndex = this.currentDisplayIndex;
+      let originIndex = this.currentOriginIndex
+
       const displayList = [];
 
-      const currentDisplayIndex = this.currentDisplayIndex;
       const prevDisplayIndex = currentDisplayIndex === 0 ? 2 : currentDisplayIndex - 1;
       const nextDisplayIndex = currentDisplayIndex === 2 ? 0 : currentDisplayIndex + 1;
 
-      displayList[currentDisplayIndex] = this.originList[originIndex];
       displayList[prevDisplayIndex] = this.originList[originIndex === 0 ? originListLength - 1 : originIndex - 1];
+      displayList[currentDisplayIndex] = this.originList[originIndex];
       displayList[nextDisplayIndex] = this.originList[originIndex === originListLength - 1 ? 0 : originIndex + 1];
 
+      console.log(prevDisplayIndex,currentDisplayIndex, nextDisplayIndex)
+      console.log('displayList', displayList)
       this.displaySwiperList = displayList;
     },
 
@@ -58,25 +59,15 @@ export default {
 
       if (diff === 2 || diff === -1) {
         // 向后滑动，更新数据
-        console.log('向后滑动，更新数据', this.currentOriginIndex,originListLength-2)
-        if (!this.circular && this.currentOriginIndex === 0) {
-          console.log('2向后滑动，更新数据')
+        console.log('向后滑动，更新数据')
 
-          this.localCircular = true
-        }/* if (!this.circular && this.currentOriginIndex === originListLength - 2) {
-          console.log('2向后滑动，更新数据')
-
-          this.localCircular = false
-        }*/
         this.currentOriginIndex = (this.currentOriginIndex + 1) % originListLength;
         this.currentDisplayIndex = (this.currentDisplayIndex + 1) % 3;
         this.initSwiperData();
       } else if (diff === -2 || diff === 1) {
         // 向前滑动，更新数据
         // console.log('向前滑动，更新数据')
-        if (!this.circular && this.currentOriginIndex === 1) {
-          this.localCircular = false
-        }
+
         this.currentOriginIndex = (this.currentOriginIndex - 1 + originListLength) % originListLength;
         this.currentDisplayIndex = (this.currentDisplayIndex - 1 + 3) % 3;
         this.initSwiperData();

@@ -28,31 +28,9 @@ handle3('handle3'); // errCallback handle3
 
 
 */
-const createHandler = (isSuccess = true) => (errorHandler = null) => (successHandler = null) => (...args) => {
-    if (isSuccess) {
-        if (typeof successHandler === 'function') {
-            successHandler(...args);
-        }
-    } else if (typeof errorHandler === 'function') {
-        errorHandler(...args);
-    }
-};
 
-const handleSuccess = (data) => {
-    console.log('Success:', data);
-};
-
-const handleError = (error) => {
-    console.log('Error:', error);
-};
-
-const handle1 = createHandler()()(handleSuccess);
-handle1('handle1'); // Success: handle1
-
-const handle2 = createHandler(true)()(handleSuccess);
-handle2('handle2'); // Success: handle2
-
-const handle3 = createHandler(false)(handleError)();
-handle3('handle3'); // Error: handle3
-
-
+console.log(3%3)
+console.log(4%3)
+console.log(5%3)
+console.log(6%3)
+console.log(7%3)

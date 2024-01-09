@@ -7,6 +7,8 @@
 
     <button style="margin-top: 20px;font-size: 14px;" @click="ylxNavigateTo('pages/A1/A1?aa=66',{})"> 页面1</button>
     <button style="margin-top: 20px;font-size: 14px;" @click="ylxNavigateTo('pages/A2/A2?aa=66',{})"> 页面2</button>
+    <button style="margin-top: 20px;font-size: 14px;" @click="ylxNavigateTo('pages/A3/A3?aa=66',{})"> 页面3</button>
+    <button style="margin-top: 20px;font-size: 14px;" @click="ylxNavigateTo('pages/A4/A4?aa=66',{})"> 页面4</button>
 
     <button style="margin-top: 20px;font-size: 14px;" @click="toPage1">跳转到还未打开过的tabbar页面</button>
     <button style="margin-top: 20px;font-size: 14px;" @click="uploadImg">uploadImg</button>
