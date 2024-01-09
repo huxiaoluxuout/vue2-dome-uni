@@ -8,7 +8,7 @@
     <zshu-tabs is-custom :top="navbarHeight" :activeId="activeId" @updateActiveId="(id)=>{activeId = id}"
                :list-tabs="listTabs"></zshu-tabs>
 
-    <ylx-slider :other-height="navbarHeight + 45" :data-list="viewDataList" :current-index="current"
+    <ylx-slider :other-height="navbarHeight + 45" :dataList="viewDataList" :current-index="current"
                 @updateCurrent="handleCurrent" @setDataList="handleSetDataList"></ylx-slider>
     <!--    <ylx-slider :data-list="viewDataList" :other-height="navbarHeight + 45"></ylx-slider>-->
 
@@ -62,14 +62,14 @@ export default {
       viewDataList: [null, null, null],
     }
   },
-/*  computed: {
-    activeIdIndex(newId) {
-      return this.listTabs.findIndex(item => item.id === newId)
-    },
-  },*/
+  /*  computed: {
+      activeIdIndex(newId) {
+        return this.listTabs.findIndex(item => item.id === newId)
+      },
+    },*/
   watch: {
     activeId(newId) {
-      let index =this.listTabs.findIndex(item => item.id === newId)
+      let index = this.listTabs.findIndex(item => item.id === newId)
       let obj = {
         0: 'xixi',
         1: 'HAHA',
@@ -96,6 +96,7 @@ export default {
   },
   methods: {
     handleSetDataList(index) {
+      console.log(index)
       let obj = {
         0: 'xixi',
         1: 'HAHA',
@@ -104,6 +105,7 @@ export default {
       this.viewDataList[index] = {
         name: obj[index]
       }
+
     },
 
     handleCurrent(index) {

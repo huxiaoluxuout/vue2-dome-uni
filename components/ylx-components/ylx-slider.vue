@@ -5,6 +5,7 @@
     <swiper class="swiper-view-height" :current="currentIndex" :duration="200" :circular="false"
             @change="swiperChange">
       <swiper-item v-for="(item,index) in dataList" :key="index">
+
         <view class="wrap_content" v-if="item">
           {{ index }} --- {{ item.name }}
         </view>
@@ -33,7 +34,7 @@ export default {
   props: {
     dataList: {
       type: Array,
-      default: () => []
+      default: () => [null, null, null]
     },
 
     currentIndex: {
@@ -53,12 +54,16 @@ export default {
 
       })
     },
+    swiperDataList() {
+      return this.dataList
+    },
   },
 
 
   data() {
     return {
-      disableTouch: false
+      disableTouch: false,
+      dataList1:['','','',]
     }
   },
 
@@ -67,7 +72,7 @@ export default {
     swiperChange(event) {
       const {current} = event.detail;
       if (current > this.currentIndex) {
-        console.log('向左滑动', !this.dataList[current])
+        console.log('向左滑动',!this.dataList[current])
         if (!this.dataList[current]) {
           this.$emit('setDataList', current)
         }
