@@ -20,6 +20,7 @@
     >
 
     </zshu-uploadimg>
+    <button style="margin-top: 20px;font-size: 14px;" @click="clearStorage"> clearStorage</button>
 
     <tabbar :INDEX="0"></tabbar>
 
@@ -74,7 +75,9 @@ export default {
   },
   methods: {
     ylxNavigateTo,
-
+    clearStorage() {
+      uni.removeStorageSync('token')
+    },
     toPage1() {
       uni.$emit('emitApp', {eventName: 'tabbar2', param: 1})
       ylxNavigateTo('pages/tabbar2/tabbar2')

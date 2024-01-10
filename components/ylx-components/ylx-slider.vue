@@ -1,44 +1,55 @@
 <template>
 <!--  @touchmove.capture="touchmove" @touchstart.capture="touchstart"
   @touchend.capture="touchend"-->
-  <view class="ylx-slider" :style="heightSlider" >
-    <swiper class="swiper-view-height" :current="currentIndex" :duration="200" :circular="false"
+  <view class="ylx-slider" :style="heightSlider"
+        @touchmove.capture="touchmove" @touchstart.capture="touchstart" @touchend.capture="touchend">
+    <swiper class="swiper-view-height" :vertical="false"  :current="currentIndex" :duration="200" :circular="false"
             @change="swiperChange">
       <swiper-item v-for="(item,index) in dataList" :key="index">
 
         <view class="wrap_content" :style="heightSlider" v-if="item">
-          {{ index }}
-          {{ item.name }}---{{ item.order_sn }}
-          <view>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Blanditiis consequuntur culpa dicta ea earum exercitationem similique. Delectus dignissimos excepturi
-            expedita inventore perferendis, possimus quam quibusdam recusandae reiciendis reprehenderit tempora voluptatibus.
-          </view>
-          <view>A ad animi assumenda at commodi consectetur culpa debitis dolor doloremque doloribus eius eligendi exercitationem facere id inventore magnam maxime non omnis,
-            pariatur perferendis repudiandae rerum suscipit veritatis voluptates voluptatibus?
-          </view>
-          <view>Aperiam consectetur cum distinctio doloremque modi quaerat quam quo reiciendis voluptates. Aperiam consequatur dolor enim expedita impedit incidunt iusto quos
-            voluptates! Eaque eveniet facere hic incidunt quos, ratione voluptate voluptates!
-          </view>
-          <view>Accusantium beatae consectetur cupiditate dolore doloribus error ipsum iste iusto nihil, nobis nostrum qui quis sapiente suscipit vel veritatis voluptatem
-            voluptatum. Expedita id laudantium officia perspiciatis, quis rem totam voluptatibus!
-          </view>
-          <view>Aliquam atque magnam officiis quidem sapiente soluta vitae? Cum, cupiditate ea eius facilis hic illum incidunt ipsam iure iusto, neque non nostrum optio, quisquam
-            tempora temporibus totam ut velit veniam.
-          </view>
-          <view>Accusamus aperiam aspernatur aut blanditiis consequatur corporis cum debitis ducimus illum laudantium modi natus neque quae quas, quis quo reiciendis repellat
-            reprehenderit repudiandae sint. Consequatur expedita itaque magni maiores quisquam!
-          </view>
-          <view>Accusantium ad assumenda beatae cupiditate dicta dolor earum expedita fugiat in labore magni modi, necessitatibus neque nisi nobis nostrum odit officia perferendis
-            quas quasi quia reprehenderit soluta suscipit veritatis voluptas.
-          </view>
-          <view>Aperiam consectetur error fugiat modi sapiente veniam voluptatum! Adipisci eius ex exercitationem facilis laudantium quae saepe temporibus vel. Amet enim fugiat
-            nisi nulla praesentium quaerat reiciendis reprehenderit temporibus ullam voluptates.
-          </view>
-          <view>A adipisci animi asperiores blanditiis commodi consequatur corporis delectus excepturi, illum impedit ipsam laboriosam maiores nihil nisi nobis quidem ratione rerum
-            tempore ullam voluptate? Ab ducimus error facilis inventore quibusdam!
-          </view>
-          <view>Blanditiis dolorum ducimus eum optio quis ratione similique sit! Aliquid architecto blanditiis dicta enim esse facere laudantium magnam molestiae numquam possimus
-            quisquam sed, veniam veritatis! Eius iusto non numquam voluptate?
-          </view>
+          <scroll-view class="scroll-view" :scroll-y="true">
+            {{ item.name }}---{{ item.order_sn }}
+            <div>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusantium aliquid aut autem delectus dicta
+              doloremque eum fuga, in laborum laudantium minus odit officia omnis quo repellat reprehenderit sapiente
+              unde voluptatum.
+            </div>
+            <div>Ab atque distinctio, dolores modi molestias rem repellendus! Cum nemo repudiandae soluta. Asperiores,
+              autem dicta eius eos id laborum, molestiae nulla officia quidem quisquam reprehenderit sed ullam veritatis
+              vitae voluptatum.
+            </div>
+            <div>Blanditiis dicta doloribus eius id ipsa numquam perferendis reprehenderit voluptatem! Architecto
+              asperiores aut consectetur distinctio dolorum ea eaque fugiat inventore iusto maxime natus necessitatibus
+              possimus quo saepe, sed tenetur veritatis.
+            </div>
+            <div>Aperiam dolorem doloribus et eum fuga, harum, illo, in iure iusto maiores maxime modi nihil omnis
+              praesentium quaerat qui quia quidem quisquam quod ratione repellat sint soluta sunt totam veritatis?
+            </div>
+            <div>Cum cupiditate dolores error eum eveniet exercitationem facere fugiat ipsum magni mollitia nam nesciunt
+              nostrum odit optio pariatur provident, quaerat quisquam quo repellat rerum similique veniam vero
+              voluptatum. Libero, odio.
+            </div>
+            <div>Distinctio inventore nulla odit perspiciatis. Ab alias atque commodi cum debitis dolorem earum eligendi
+              eos error eveniet ex explicabo fugiat, ipsa modi nihil nostrum pariatur quis sed sunt voluptas
+              voluptatibus.
+            </div>
+            <div>Autem, consequatur consequuntur ea earum in nulla quae? Consequatur cum deserunt dicta dolor earum
+              explicabo incidunt ipsa labore minima minus molestiae officiis optio placeat quia quo recusandae
+              similique, voluptate voluptatem?
+            </div>
+            <div>Amet consequuntur dicta distinctio eos expedita explicabo minima nemo placeat repellendus saepe
+              voluptate, voluptates voluptatum! A, ab, aut debitis dicta eaque est, illo ipsam labore molestias
+              perferendis quaerat temporibus veritatis.
+            </div>
+            <div>Deleniti incidunt modi nulla provident sed. Aut blanditiis commodi quisquam tenetur. Aliquid architecto
+              assumenda aut beatae consequuntur dignissimos, illo nisi non, obcaecati optio perferendis praesentium qui
+              quod recusandae repudiandae sed.
+            </div>
+            <div>Ad animi consequuntur, cupiditate dolorem ea eaque facere facilis hic, laboriosam necessitatibus
+              nostrum omnis optio quam, recusandae rem sequi similique. Dicta explicabo facilis laboriosam magni
+              perspiciatis quam voluptatibus. Deleniti, necessitatibus.
+            </div>
+          </scroll-view>
         </view>
         <view class="empty-content" v-else-if="!item">
           <u-loading-page :loading="true"></u-loading-page>
@@ -114,6 +125,10 @@ export default {
     },
 
     // ======================================
+    touchmoveScrollView(event) {
+      event.stopPropagation()
+    },
+    // ======================================
 
     touchstart(e) {
       // console.log(e)
@@ -137,12 +152,12 @@ export default {
         // if (xYStart === 1) return
         xYStart = 2
         this.disableTouch = false
-        // console.log('左右滑动')
+        console.log('左右滑动')
       } else if (xYStart !== 2 && Math.abs(xOffset) < Math.abs(yOffset) && Math.abs(yOffset) >= minOffset) {
         // if (xYStart === 2) return
         xYStart = 1
         this.disableTouch = true
-        // console.log('上下滑动')
+        console.log('上下滑动')
       }
     },
   }
@@ -156,7 +171,6 @@ export default {
   flex-direction: column;
   box-sizing: border-box;
   position: relative;
-  border: 1px solid blue;
 
 }
 
@@ -166,6 +180,13 @@ export default {
   box-sizing: border-box;
 }
 .wrap_content{
-  overflow-y: auto;
+  overflow-y: hidden;
+}
+
+.scroll-view {
+  height: 100%;
+  box-sizing: border-box;
+  border: 1px solid blueviolet;
+
 }
 </style>

@@ -25,7 +25,7 @@
       "path": "pages/tabbar3/tabbar3",
       "style": {
         "navigationBarTitleText": "tabbar3",
-        "enablePullDownRefresh": true,
+        "enablePullDownRefresh": false,
         "navigationStyle": "custom"
       }
     },
