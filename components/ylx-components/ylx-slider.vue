@@ -1,16 +1,48 @@
 <template>
-
-  <view class="ylx-slider" :style="heightSlider" @touchmove.capture="touchmove" @touchstart.capture="touchstart"
-        @touchend.capture="touchend">
+<!--  @touchmove.capture="touchmove" @touchstart.capture="touchstart"
+  @touchend.capture="touchend"-->
+  <view class="ylx-slider" :style="heightSlider" >
     <swiper class="swiper-view-height" :current="currentIndex" :duration="200" :circular="false"
             @change="swiperChange">
       <swiper-item v-for="(item,index) in dataList" :key="index">
 
-        <view class="wrap_content" v-if="item">
-          {{ index }} --- {{ item.name }}
+        <view class="wrap_content" :style="heightSlider" v-if="item">
+          {{ index }}
+          {{ item.name }}---{{ item.order_sn }}
+          <view>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Blanditiis consequuntur culpa dicta ea earum exercitationem similique. Delectus dignissimos excepturi
+            expedita inventore perferendis, possimus quam quibusdam recusandae reiciendis reprehenderit tempora voluptatibus.
+          </view>
+          <view>A ad animi assumenda at commodi consectetur culpa debitis dolor doloremque doloribus eius eligendi exercitationem facere id inventore magnam maxime non omnis,
+            pariatur perferendis repudiandae rerum suscipit veritatis voluptates voluptatibus?
+          </view>
+          <view>Aperiam consectetur cum distinctio doloremque modi quaerat quam quo reiciendis voluptates. Aperiam consequatur dolor enim expedita impedit incidunt iusto quos
+            voluptates! Eaque eveniet facere hic incidunt quos, ratione voluptate voluptates!
+          </view>
+          <view>Accusantium beatae consectetur cupiditate dolore doloribus error ipsum iste iusto nihil, nobis nostrum qui quis sapiente suscipit vel veritatis voluptatem
+            voluptatum. Expedita id laudantium officia perspiciatis, quis rem totam voluptatibus!
+          </view>
+          <view>Aliquam atque magnam officiis quidem sapiente soluta vitae? Cum, cupiditate ea eius facilis hic illum incidunt ipsam iure iusto, neque non nostrum optio, quisquam
+            tempora temporibus totam ut velit veniam.
+          </view>
+          <view>Accusamus aperiam aspernatur aut blanditiis consequatur corporis cum debitis ducimus illum laudantium modi natus neque quae quas, quis quo reiciendis repellat
+            reprehenderit repudiandae sint. Consequatur expedita itaque magni maiores quisquam!
+          </view>
+          <view>Accusantium ad assumenda beatae cupiditate dicta dolor earum expedita fugiat in labore magni modi, necessitatibus neque nisi nobis nostrum odit officia perferendis
+            quas quasi quia reprehenderit soluta suscipit veritatis voluptas.
+          </view>
+          <view>Aperiam consectetur error fugiat modi sapiente veniam voluptatum! Adipisci eius ex exercitationem facilis laudantium quae saepe temporibus vel. Amet enim fugiat
+            nisi nulla praesentium quaerat reiciendis reprehenderit temporibus ullam voluptates.
+          </view>
+          <view>A adipisci animi asperiores blanditiis commodi consequatur corporis delectus excepturi, illum impedit ipsam laboriosam maiores nihil nisi nobis quidem ratione rerum
+            tempore ullam voluptate? Ab ducimus error facilis inventore quibusdam!
+          </view>
+          <view>Blanditiis dolorum ducimus eum optio quis ratione similique sit! Aliquid architecto blanditiis dicta enim esse facere laudantium magnam molestiae numquam possimus
+            quisquam sed, veniam veritatis! Eius iusto non numquam voluptate?
+          </view>
         </view>
         <view class="empty-content" v-else-if="!item">
-          empty
+          <u-loading-page :loading="true"></u-loading-page>
+
         </view>
       </swiper-item>
     </swiper>
@@ -54,16 +86,13 @@ export default {
 
       })
     },
-    swiperDataList() {
-      return this.dataList
-    },
+
   },
 
 
   data() {
     return {
       disableTouch: false,
-      dataList1:['','','',]
     }
   },
 
@@ -71,14 +100,14 @@ export default {
 
     swiperChange(event) {
       const {current} = event.detail;
-      if (current > this.currentIndex) {
+      /*if (current > this.currentIndex) {
         console.log('向左滑动',!this.dataList[current])
         if (!this.dataList[current]) {
-          this.$emit('setDataList', current)
+          // this.$emit('setDataList', current)
         }
       } else if (current < this.currentIndex) {
         console.log('向右滑动')
-      }
+      }*/
       this.$emit('updateCurrent', current)
 
 
@@ -135,5 +164,8 @@ export default {
   flex: 1;
   touch-action: none;
   box-sizing: border-box;
+}
+.wrap_content{
+  overflow-y: auto;
 }
 </style>

@@ -8,9 +8,8 @@
     <zshu-tabs is-custom :top="navbarHeight" :activeId="activeId" @updateActiveId="(id)=>{activeId = id}"
                :list-tabs="listTabs"></zshu-tabs>
 
-    <ylx-slider :other-height="navbarHeight + 45" :dataList="viewDataList" :current-index="current"
-                @updateCurrent="handleCurrent" @setDataList="handleSetDataList"></ylx-slider>
-    <!--    <ylx-slider :data-list="viewDataList" :other-height="navbarHeight + 45"></ylx-slider>-->
+    <ylx-slider :other-height="navbarHeight + 45" :dataList="viewDataList" :current-index="currentIndex"
+                @updateCurrent="index=>currentIndex=index"></ylx-slider>
 
 
     <tabbar :INDEX="2"></tabbar>
@@ -57,35 +56,44 @@ export default {
 
 
       navbarHeight: 60,
-      current: 0,
-
       viewDataList: [null, null, null],
+      originList: [],
     }
   },
-  /*  computed: {
-      activeIdIndex(newId) {
-        return this.listTabs.findIndex(item => item.id === newId)
+  computed: {
+    // 计算 index 基于 activeId
+    currentIndex: {
+      get() {
+        return this.listTabs.findIndex(item => item.id === this.activeId);
       },
-    },*/
-  watch: {
-    activeId(newId) {
-      let index = this.listTabs.findIndex(item => item.id === newId)
-      let obj = {
-        0: 'xixi',
-        1: 'HAHA',
-        2: 'hei hei',
+      set(value) {
+        this.activeId = this.listTabs[value].id;
       }
-      this.viewDataList[index] = {
-        name: obj[index]
-      }
-      this.current = index
     },
+    // 使用计算属性来寻找当前激活的索引
+    currentTabIndex() {
+      return this.listTabs.findIndex(item => item.id === this.activeId);
+    }
+  },
+  watch: {
+    // 监控 activeId 的变化
+    activeId(newId, oldId) {
+      // 仅当activeId发生变化并且newId不等于oldId时才执行更新
+      if (newId !== oldId) {
+        let index = this.currentTabIndex; // 使用计算属性获取当前索引
+
+        // 检查这个索引的数据是否已经加载
+        if (!this.viewDataList[index]) {
+          // 仅当需要时才更新
+          this.viewDataList[index] = this.originList[index];
+        }
+      }
+    }
   },
 
 
   onLoad() {
-    this.viewDataList[this.current] = {name: 'XI XI'}
-    // this.getMineOrderListApi()
+    this.getMineOrderListApi()
     this.ylxNextPageManager.setEmitFunctions(this.getMineOrderListApi)
     this.ylxNextPageManager.reloadCallback(this.ylxReloadCallback)
     this.ylxPullDownRefresh.setEmitFunctions(this.ylxNextPageManager.reload)
@@ -95,27 +103,9 @@ export default {
     console.log('tabbar 3')
   },
   methods: {
-    handleSetDataList(index) {
-      console.log(index)
-      let obj = {
-        0: 'xixi',
-        1: 'HAHA',
-        2: 'hei hei',
-      }
-      this.viewDataList[index] = {
-        name: obj[index]
-      }
-
-    },
-
-    handleCurrent(index) {
-      this.current = index
-    },
-
     ylxReloadCallback() {
-
-      // this.viewDataList = []
-      // this.getMineOrderListApi()
+      this.viewDataList = [null, null, null]
+      this.getMineOrderListApi()
     },
 
     getMineOrderListApi() {
@@ -123,11 +113,11 @@ export default {
       getMineOrderList({
         page: this.ylxNextPageManager.getPage(),
         page_size: this.ylxNextPageManager.getPageSize(),
-        status: 5
+        status: this.currentIndex
       }).then(res => {
 
-        this.viewDataList = this.ylxNextPageManager.setDataList(res.data.data)
-
+        this.originList = this.ylxNextPageManager.setDataList(res.data.data)
+        this.$set(this.viewDataList, this.currentIndex, this.originList[this.currentIndex])
         this.isLoading = false
 
       })
