@@ -5,6 +5,7 @@
                  :refresher-enabled="refresherEnabled"
                  :refresher-triggered="triggered"
                  :refresher-threshold="100"
+                 :lower-threshold="10"
                  refresher-background="transparent"
                  @refresherrefresh="onRefresh"
                  @refresherabort="onAbort"
@@ -106,7 +107,7 @@ export default {
     refresherEnabled: Boolean,
 
     disableScrollView: Boolean,
-    doFunction: {
+    setFunction: {
       type: Function,
       default: () => () => {
       }
@@ -121,30 +122,38 @@ export default {
   },
   data() {
     return {
-      onRefreshing: false,
       refresherTriggered: false,
       triggered: false,
-      triggeredTime: null
+      triggeredTime: null,
+      isLockScrollReachBottom: false,
     }
   },
 
 
   methods: {
+    // 底部触发
     onScrollReachBottom() {
-      console.log('底部触发')
+      // console.log('底部触发')
+      if (this.isLockScrollReachBottom) return
+      this.$emit('scrollReachBottom')
+      this.isLockScrollReachBottom = true;
+      setTimeout(() => {
+        this.isLockScrollReachBottom = false;
+      }, 1500);
     },
 
     // 下拉执行操作
     onRefresh() {
-      clearTimeout(this.triggeredTime)
-      this.triggeredTime = null
-      if (!this.triggered) {
-        //下拉刷新，先变true再变false才能关闭
-        this.triggered = true;
-        this.doFunction(()=>{
-          this.closeTriggered()
-        })
-      }
+      this.$emit('startPull', () => {
+        this.setFunction()
+        clearTimeout(this.triggeredTime)
+        this.triggeredTime = null
+        if (!this.triggered) {
+          //下拉刷新，先变true再变false才能关闭
+          this.triggered = true;
+        }
+      })
+
     },
 
     // 下拉操作执行完成
@@ -156,10 +165,12 @@ export default {
     },
 
     //关掉圈圈，需要先执行完刷新操作
-    closeTriggered() {
+
+    closeCircle() {
+      if (!this.triggered) return
       this.triggeredTime = setTimeout(() => {
         this.triggered = false;
-      }, 1000);
+      }, 100);
     },
 
     onAbort() {

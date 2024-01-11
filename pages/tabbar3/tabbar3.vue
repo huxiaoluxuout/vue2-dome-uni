@@ -8,8 +8,14 @@
     <zshu-tabs is-custom :top="navbarHeight" :activeId="activeId" @updateActiveId="(id)=>{activeId = id}"
                :list-tabs="listTabs"></zshu-tabs>
 
-    <ylx-slider :other-height="navbarHeight + 45" :dataList="viewDataList" :current-index="currentIndex"
-                @updateCurrent="index=>currentIndex=index"></ylx-slider>
+    <ylx-slider ref="refYlxSlider" :other-height="navbarHeight + 45" :dataList="viewDataList"
+                :current-index="currentIndex"
+                @updateCurrent="index=>currentIndex=index"
+                @scrollReachBottom="scrollReachBottom"
+                @startPull="startPull"
+                :set-function="getMineOrderListApi"
+
+    ></ylx-slider>
 
 
     <tabbar :INDEX="2"></tabbar>
@@ -107,6 +113,13 @@ export default {
       this.viewDataList = [null, null, null]
       this.getMineOrderListApi()
     },
+    scrollReachBottom() {
+      console.log('1111-0scrollReachBottom')
+    },
+    startPull(callback) {
+      this.$set(this.viewDataList, this.currentIndex, null)
+      callback && callback()
+    },
 
     getMineOrderListApi() {
       this.isLoading = true
@@ -116,9 +129,12 @@ export default {
         status: this.currentIndex
       }).then(res => {
 
-        this.originList = this.ylxNextPageManager.setDataList(res.data.data)
-        this.$set(this.viewDataList, this.currentIndex, this.originList[this.currentIndex])
+        // this.originList = this.ylxNextPageManager.setDataList(res.data.data)
+        let originList = res.data.data
+        this.originList = originList
+        this.$set(this.viewDataList, this.currentIndex, originList[this.currentIndex])
         this.isLoading = false
+        this.$refs.refYlxSlider.closeCircle()
 
       })
     },

@@ -1,19 +1,21 @@
 <template>
   <view class="ylx-slider" :style="heightSliderStyle">
-    <swiper class="swiper-view-height" :vertical="false" :current="currentIndex" :disable-touch="disableTouch" :duration="200" :circular="false" @change="onSwiperChange">
+    <swiper class="swiper-view-height" :vertical="false" :current="currentIndex" :disable-touch="disableTouch"
+            :duration="200" :circular="false" @change="onSwiperChange">
       <swiper-item v-for="(item,index) in dataList" :key="index">
 
-        <view class="wrap_content" :style="heightSliderStyle" v-if="item" @touchmove.capture="onTouchMove" @touchstart.capture="onTouchStart" @touchend.capture="onTouchEnd">
+        <view class="wrap_content" :style="heightSliderStyle" v-show="item" @touchmove.capture="onTouchMove"
+              @touchstart.capture="onTouchStart" @touchend.capture="onTouchEnd">
 
-          <!--          <scroll-view class="scroll-view" :scroll-y="true" :style="scrollViewStyle">
-                      {{ item.name }}-&#45;&#45;{{ item.order_sn }}
-
-
-                    </scroll-view>-->
-          <ylx-scroll-view :do-function="getApiData" refresher-enabled :disable-scroll-view="disableScrollView"></ylx-scroll-view>
+          <ylx-scroll-view :ref="'refYlxScrollView' + index" :refresher-enabled="!disableScrollView"
+                           :disable-scroll-view="disableScrollView"
+                           :set-function="setFunction"
+                           @scrollReachBottom="$emit('scrollReachBottom')"
+                           @startPull="startPull"
+          ></ylx-scroll-view>
 
         </view>
-        <view class="empty-content" v-else-if="!item">
+        <view class="empty-content" v-if="!item">
           <u-loading-page :loading="true"></u-loading-page>
         </view>
       </swiper-item>
@@ -46,7 +48,13 @@ export default {
     otherHeight: {
       type: Number,
       default: 0
-    }
+    },
+    setFunction: {
+      type: Function,
+      default: () => () => {
+      }
+    },
+
   },
   computed: {
 
@@ -76,7 +84,7 @@ export default {
       thresholdRatio: 0.3,
       // ------------------------------
 
-      //最小偏移量,最小间隔时间
+      //,最小间隔时间
       minTime: 100,
       //开始时的毫秒数
       startTime: 0,
@@ -88,20 +96,16 @@ export default {
 
 
   methods: {
-    getApiData(callback) {
-      setTimeout(() => {
-        console.log('获取到数据')
-        callback && callback()
-      }, 3000)
+    startPull(callback) {
+      this.$emit('startPull', callback)
+    },
+    // 关掉圈圈
+    closeCircle() {
+      this.$refs[`refYlxScrollView${this.currentIndex}`][0].closeCircle()
     },
     onSwiperChange(event) {
       const {current} = event.detail;
       this.$emit('updateCurrent', current)
-    },
-    scrollReachBottom() {
-      console.log('scrollReachBottom')
-
-
     },
 
     onTouchStart(e) {
@@ -154,37 +158,37 @@ export default {
       if (absDeltaX > this.thresholdRatio * absDeltaY && absDeltaY > this.thresholdRatio * absDeltaX) {
         // 对角线滑动
         if (deltaX > 0 && deltaY > 0) {
-          console.log('向右下滑动');
+          // console.log('向右下滑动');
           this.handleDisableScroll()
 
         } else if (deltaX > 0 && deltaY < 0) {
-          console.log('向右上滑动');
+          // console.log('向右上滑动');
           this.handleDisableScroll()
 
         } else if (deltaX < 0 && deltaY > 0) {
-          console.log('向左下滑动');
+          // console.log('向左下滑动');
           this.handleDisableSwiper()
 
         } else if (deltaX < 0 && deltaY < 0) {
-          console.log('向左上滑动');
+          // console.log('向左上滑动');
           this.handleDisableSwiper()
 
         }
       } else if (absDeltaX > absDeltaY) {
         // 横向滑动
         if (deltaX > 0) {
-          console.log('向右滑动');
+          // console.log('向右滑动');
         } else {
-          console.log('向左滑动');
+          // console.log('向左滑动');
         }
         this.handleDisableSwiper()
 
       } else {
         // 纵向滑动
         if (deltaY > 0) {
-          console.log('向下滑动');
+          // console.log('向下滑动');
         } else {
-          console.log('向上滑动');
+          // console.log('向上滑动');
         }
         this.handleDisableScroll()
       }
