@@ -1,14 +1,10 @@
 <template>
-<!--  @touchmove.capture="touchmove" @touchstart.capture="touchstart"
-  @touchend.capture="touchend"-->
-  <view class="ylx-slider" :style="heightSlider"
-        @touchmove.capture="touchmove" @touchstart.capture="touchstart" @touchend.capture="touchend">
-    <swiper class="swiper-view-height" :vertical="false"  :current="currentIndex" :duration="200" :circular="false"
-            @change="swiperChange">
+  <view class="ylx-slider" :style="heightSliderStyle">
+    <swiper class="swiper-view-height" :vertical="false" :current="currentIndex" :disable-touch="disableTouch" :duration="200" :circular="false" @change="onSwiperChange">
       <swiper-item v-for="(item,index) in dataList" :key="index">
 
-        <view class="wrap_content" :style="heightSlider" v-if="item">
-          <scroll-view class="scroll-view" :scroll-y="true">
+        <view class="wrap_content" :style="heightSliderStyle" v-if="item" @touchmove.capture="onTouchMove" @touchstart.capture="onTouchStart" @touchend.capture="onTouchEnd">
+          <scroll-view class="scroll-view" :scroll-y="true" :style=" scrollViewStyle">
             {{ item.name }}---{{ item.order_sn }}
             <div>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusantium aliquid aut autem delectus dicta
               doloremque eum fuga, in laborum laudantium minus odit officia omnis quo repellat reprehenderit sapiente
@@ -53,7 +49,6 @@
         </view>
         <view class="empty-content" v-else-if="!item">
           <u-loading-page :loading="true"></u-loading-page>
-
         </view>
       </swiper-item>
     </swiper>
@@ -66,11 +61,6 @@
 
 import {ylxStyleObjectToString} from "@/utils/uniTools";
 
-
-let startClientX = 0, startClientY = 0;
-let minOffset = 5, minTime = 100;//最小偏移量,最小间隔时间
-let startTime = 0;//开始时的毫秒数
-let xYStart = 0;//锁定滑动方向 1.上下滑动 2.左右滑动
 export default {
   name: 'ylx-slider',
 
@@ -91,11 +81,15 @@ export default {
     }
   },
   computed: {
-    heightSlider() {
+    heightSliderStyle() {
       return ylxStyleObjectToString({
         height: `calc(100vh - var(--tabbar-height) - ${this.otherHeight}px )`
-
       })
+    },
+
+    scrollViewStyle() {
+
+      return `height:${this.disableScrollView ? '1000%' : '100%'};`
     },
 
   },
@@ -104,61 +98,117 @@ export default {
   data() {
     return {
       disableTouch: false,
+      disableScrollView: false,
+
+      // ------------------------------
+      startX: 0,
+      startY: 0,
+      // 设置阈值，例如，当水平滑动和垂直滑动的比例小于该值时，判断为对角线滑动
+      thresholdRatio: 0.3,
+      // ------------------------------
+
+      //最小偏移量,最小间隔时间
+      minTime: 100,
+      //开始时的毫秒数
+      startTime: 0,
+      //当前滑动方向 1.上下滑动 2.左右滑动
+      currentTouchType: 0
+
     }
   },
 
+
   methods: {
-
-    swiperChange(event) {
+    onSwiperChange(event) {
       const {current} = event.detail;
-      /*if (current > this.currentIndex) {
-        console.log('向左滑动',!this.dataList[current])
-        if (!this.dataList[current]) {
-          // this.$emit('setDataList', current)
-        }
-      } else if (current < this.currentIndex) {
-        console.log('向右滑动')
-      }*/
       this.$emit('updateCurrent', current)
-
-
     },
 
-    // ======================================
-    touchmoveScrollView(event) {
-      event.stopPropagation()
-    },
-    // ======================================
+    onTouchStart(e) {
+      // 记录初始触摸位置
+      this.startX = e.touches[0].clientX;
+      this.startY = e.touches[0].clientY;
 
-    touchstart(e) {
-      // console.log(e)
-      startClientX = e.changedTouches[0].clientX
-      startClientY = e.changedTouches[0].clientY
-      startTime = new Date().getTime(); //获取毫秒数
+      this.startTime = new Date().getTime(); //获取毫秒数
+
     },
-    touchend() {
-      xYStart = 0
-      startClientX = 0
-      startClientY = 0
-      startTime = 0
-      this.disableTouch = false
+    onTouchEnd() {
+      this.startX = 0
+      this.startY = 0
+      this.startTime = 0
+      this.currentTouchType = 0
+      this.disableScrollView = false
     },
-    touchmove(e) {
-      let xOffset = e.changedTouches[0].clientX - startClientX
-      let yOffset = e.changedTouches[0].clientY - startClientY
-      let touchTime = new Date().getTime() - startTime
-      if (touchTime < minTime) return
-      if (xYStart !== 1 && Math.abs(xOffset) >= Math.abs(yOffset) && Math.abs(xOffset) >= minOffset) {
-        // if (xYStart === 1) return
-        xYStart = 2
-        this.disableTouch = false
-        console.log('左右滑动')
-      } else if (xYStart !== 2 && Math.abs(xOffset) < Math.abs(yOffset) && Math.abs(yOffset) >= minOffset) {
-        // if (xYStart === 2) return
-        xYStart = 1
-        this.disableTouch = true
-        console.log('上下滑动')
+    // 上下
+    handleDisableScroll() {
+      if (this.currentTouchType === 2) {
+        return;
       }
+      this.currentTouchType = 1
+      this.disableTouch = true
+      this.disableScrollView = false
+    },
+
+    // 左右
+    handleDisableSwiper() {
+      if (this.currentTouchType === 1) {
+        return;
+      }
+      this.currentTouchType = 2
+      this.disableTouch = false
+      this.disableScrollView = true
+    },
+    onTouchMove(e) {
+      let touchTime = new Date().getTime() - this.startTime
+      if (touchTime < this.minTime) return
+
+      // 计算当前触摸位置与初始触摸位置的差异
+      const deltaX = e.touches[0].clientX - this.startX;
+      const deltaY = e.touches[0].clientY - this.startY;
+
+      // 取绝对值来判断滑动的幅度大小
+      const absDeltaX = Math.abs(deltaX);
+      const absDeltaY = Math.abs(deltaY);
+
+      // 使用阈值比例来判断是否为对角线滑动
+      if (absDeltaX > this.thresholdRatio * absDeltaY && absDeltaY > this.thresholdRatio * absDeltaX) {
+        // 对角线滑动
+        if (deltaX > 0 && deltaY > 0) {
+          console.log('向右下滑动');
+          this.handleDisableScroll()
+
+        } else if (deltaX > 0 && deltaY < 0) {
+          console.log('向右上滑动');
+          this.handleDisableScroll()
+
+        } else if (deltaX < 0 && deltaY > 0) {
+          console.log('向左下滑动');
+          this.handleDisableSwiper()
+
+        } else if (deltaX < 0 && deltaY < 0) {
+          console.log('向左上滑动');
+          this.handleDisableSwiper()
+
+        }
+      } else if (absDeltaX > absDeltaY) {
+        // 横向滑动
+        if (deltaX > 0) {
+          console.log('向右滑动');
+        } else {
+          console.log('向左滑动');
+        }
+        this.handleDisableSwiper()
+
+      } else {
+        // 纵向滑动
+        if (deltaY > 0) {
+          console.log('向下滑动');
+        } else {
+          console.log('向上滑动');
+        }
+        this.handleDisableScroll()
+      }
+
     },
   }
 }
@@ -176,17 +226,16 @@ export default {
 
 .swiper-view-height {
   flex: 1;
-  touch-action: none;
   box-sizing: border-box;
 }
-.wrap_content{
-  overflow-y: hidden;
+
+.wrap_content {
+  //overflow-y: hidden;
 }
 
 .scroll-view {
-  height: 100%;
   box-sizing: border-box;
-  border: 1px solid blueviolet;
+  //border: 1px solid blueviolet;
 
 }
 </style>
