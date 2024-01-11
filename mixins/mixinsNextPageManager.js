@@ -137,6 +137,7 @@ export default {
 
     },
     onReachBottom() {
+        console.log('onReachBottom')
         console.log(nextPageManager.getLen1(), nextPageManager.getLen2())
         if (nextPageManager.getLen1() < nextPageManager.getLen2()) {
             nextPageManager.nexPageDoFunQueue()

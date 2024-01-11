@@ -1,9 +1,10 @@
 <template>
-  <view class="ylx-slider" :style="heightSliderStyle">
-    <swiper class="swiper-view-height" :vertical="false" :current="currentIndex" :disable-touch="disableTouch" :duration="200" :circular="false" @change="onSwiperChange">
+  <view class="ylx-slider" :style="heightSlider">
+    <swiper class="swiper-view-height" :vertical="false" :current="currentIndex" :disable-touch="disableTouch" :duration="200" :circular="false" @change="swiperChange">
       <swiper-item v-for="(item,index) in dataList" :key="index">
 
-        <view class="wrap_content" :style="heightSliderStyle" v-if="item" @touchmove.capture="onTouchMove" @touchstart.capture="onTouchStart" @touchend.capture="onTouchEnd">
+        <view class="wrap_content" :style="heightSlider" v-if="item" @touchmove.capture="touchmove" @touchstart.capture="touchstart" @touchend.capture="touchend">
+
           <scroll-view class="scroll-view" :scroll-y="true" :style=" scrollViewStyle">
             {{ item.name }}---{{ item.order_sn }}
             <div>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusantium aliquid aut autem delectus dicta
@@ -44,14 +45,12 @@
             <div>Ad animi consequuntur, cupiditate dolorem ea eaque facere facilis hic, laboriosam necessitatibus
               nostrum omnis optio quam, recusandae rem sequi similique. Dicta explicabo facilis laboriosam magni
               perspiciatis quam voluptatibus. Deleniti, necessitatibus.
-              zzzzzzz
             </div>
-
           </scroll-view>
-
         </view>
         <view class="empty-content" v-else-if="!item">
-          <u-loading-page :loading="true"></u-loading-page>
+          <!--          <u-loading-page :loading="true"></u-loading-page>-->
+          empty-content
         </view>
       </swiper-item>
     </swiper>
@@ -84,14 +83,14 @@ export default {
     }
   },
   computed: {
-    heightSliderStyle1() {
-      return ylxStyleObjectToString({
-        height: `calc(100vh - var(--tabbar-height) - ${this.otherHeight}px + 50px )`
-      })
-    }, heightSliderStyle() {
+    heightSlider() {
       return ylxStyleObjectToString({
         height: `calc(100vh - var(--tabbar-height) - ${this.otherHeight}px )`
+
       })
+    },
+    scrollViewHeight() {
+      return this.disableScrollView ? '1000%' : '100%'
     },
 
     scrollViewStyle() {
@@ -126,17 +125,12 @@ export default {
 
 
   methods: {
-    onSwiperChange(event) {
+    swiperChange(event) {
       const {current} = event.detail;
       this.$emit('updateCurrent', current)
     },
-    scrollReachBottom() {
-      console.log('scrollReachBottom')
 
-
-    },
-
-    onTouchStart(e) {
+    touchstart(e) {
       // 记录初始触摸位置
       this.startX = e.touches[0].clientX;
       this.startY = e.touches[0].clientY;
@@ -144,14 +138,13 @@ export default {
       this.startTime = new Date().getTime(); //获取毫秒数
 
     },
-    onTouchEnd() {
+    touchend() {
       this.startX = 0
       this.startY = 0
       this.startTime = 0
       this.currentTouchType = 0
       this.disableScrollView = false
     },
-    // 上下
     handleDisableScroll() {
       if (this.currentTouchType === 2) {
         return;
@@ -161,8 +154,7 @@ export default {
       this.disableScrollView = false
     },
 
-    // 左右
-    handleDisableSwiper() {
+    handleDisableTouch() {
       if (this.currentTouchType === 1) {
         return;
       }
@@ -170,7 +162,7 @@ export default {
       this.disableTouch = false
       this.disableScrollView = true
     },
-    onTouchMove(e) {
+    touchmove(e) {
       let touchTime = new Date().getTime() - this.startTime
       if (touchTime < this.minTime) return
 
@@ -195,11 +187,11 @@ export default {
 
         } else if (deltaX < 0 && deltaY > 0) {
           console.log('向左下滑动');
-          this.handleDisableSwiper()
+          this.handleDisableTouch()
 
         } else if (deltaX < 0 && deltaY < 0) {
           console.log('向左上滑动');
-          this.handleDisableSwiper()
+          this.handleDisableTouch()
 
         }
       } else if (absDeltaX > absDeltaY) {
@@ -209,7 +201,7 @@ export default {
         } else {
           console.log('向左滑动');
         }
-        this.handleDisableSwiper()
+        this.handleDisableTouch()
 
       } else {
         // 纵向滑动
@@ -247,7 +239,7 @@ export default {
 
 .scroll-view {
   box-sizing: border-box;
-  //border: 1px solid blueviolet;
+  border: 1px solid blueviolet;
 
 }
 </style>
