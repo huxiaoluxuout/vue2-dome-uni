@@ -4,20 +4,28 @@
             :duration="200" :circular="false" @change="onSwiperChange">
       <swiper-item v-for="(item,index) in dataList" :key="index">
 
-        <view class="wrap_content" :style="heightSliderStyle" v-show="item" @touchmove.capture="onTouchMove"
+        <view class="wrap_content" :style="heightSliderStyle" @touchmove.capture="onTouchMove"
               @touchstart.capture="onTouchStart" @touchend.capture="onTouchEnd">
 
           <ylx-scroll-view :ref="'refYlxScrollView' + index" :refresher-enabled="!disableScrollView"
                            :disable-scroll-view="disableScrollView"
                            :set-function="setFunction"
+                           :is-loading="isLoading"
+                           :is-empty="isEmpty"
                            @scrollReachBottom="$emit('scrollReachBottom')"
                            @startPull="startPull"
-          ></ylx-scroll-view>
+                           :item="item"
+          >
+
+            <template #default>
+              <slot name="default" :item="item"></slot>
+            </template>
+
+          </ylx-scroll-view>
 
         </view>
-        <view class="empty-content" v-if="!item">
-          <u-loading-page :loading="true"></u-loading-page>
-        </view>
+
+
       </swiper-item>
     </swiper>
 
@@ -55,6 +63,15 @@ export default {
       }
     },
 
+    isEmpty: {
+      type: Boolean,
+      default: false
+    },
+    isLoading: {
+      type: [Boolean],
+      default: true
+    },
+
   },
   computed: {
 
@@ -68,12 +85,12 @@ export default {
 
       return `height:${this.disableScrollView ? '1000%' : '100%'};`
     },
-
   },
-
 
   data() {
     return {
+
+
       disableTouch: false,
       disableScrollView: false,
 

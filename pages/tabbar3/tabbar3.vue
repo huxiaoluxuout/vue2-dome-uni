@@ -14,8 +14,15 @@
                 @scrollReachBottom="scrollReachBottom"
                 @startPull="startPull"
                 :set-function="getMineOrderListApi"
+                :isEmpty="isEmpty" :isLoading="isLoading"
 
-    ></ylx-slider>
+    >
+      <template v-slot:default="item">
+       {{currentIndex}}
+        {{item}}
+
+      </template>
+    </ylx-slider>
 
 
     <tabbar :INDEX="2"></tabbar>
@@ -58,12 +65,14 @@ export default {
 
       activeId: 2,
 
-      isLoading: true,
 
 
       navbarHeight: 60,
       viewDataList: [null, null, null],
       originList: [],
+      isEmpty: false,
+      isLoading: true,
+
     }
   },
   computed: {
@@ -118,11 +127,13 @@ export default {
     },
     startPull(callback) {
       this.$set(this.viewDataList, this.currentIndex, null)
+
       callback && callback()
     },
 
     getMineOrderListApi() {
       this.isLoading = true
+
       getMineOrderList({
         page: this.ylxNextPageManager.getPage(),
         page_size: this.ylxNextPageManager.getPageSize(),
@@ -133,6 +144,8 @@ export default {
         let originList = res.data.data
         this.originList = originList
         this.$set(this.viewDataList, this.currentIndex, originList[this.currentIndex])
+
+        this.isEmpty = !originList[this.currentIndex]
         this.isLoading = false
         this.$refs.refYlxSlider.closeCircle()
 

@@ -244,10 +244,7 @@ export default {
         console.error('Error while handling leftIconClick:', error);
       }
     },
-
   },
-
-
 }
 
 </script>
