@@ -2,7 +2,7 @@
   <view class="ylx-scroll-view">
     <scroll-view class="scroll-view" :style="scrollViewStyle"
                  :scroll-y="true"
-                 :refresher-enabled="refresherEnabled"
+                 :refresher-enabled="!refresherEnabled"
                  :refresher-triggered="triggered"
                  :refresher-threshold="100"
                  :lower-threshold="10"
@@ -72,7 +72,8 @@ export default {
   },
   computed: {
     scrollViewStyle() {
-      return `height:${this.disableScrollView ? '1000%' : '100%'};`
+      return `height:100%}`
+      // return `height:${this.disableScrollView ? '1000%' : '100%'};`
     },
 
   },
@@ -89,7 +90,8 @@ export default {
   methods: {
     // 底部触发
     onScrollReachBottom() {
-      // console.log('底部触发')
+ return;
+      console.log('底部触发')
       if (this.isLockScrollReachBottom) return
       this.$emit('scrollReachBottom')
       this.isLockScrollReachBottom = true;
@@ -100,6 +102,7 @@ export default {
 
     // 下拉执行操作
     onRefresh() {
+      return
       this.$emit('startPull', () => {
         this.setFunction()
         clearTimeout(this.triggeredTime)

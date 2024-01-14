@@ -1,60 +1,35 @@
 <template>
   <view>
-    <!--    <zshu-tabs  :activeId="activeId" @updateActiveId="updateActiveId" :list-tabs="listTabs"></zshu-tabs>-->
+    <z-paging ref="paging" v-model="dataList" use-cache cache-key="goodsList" :default-page-no="2"  @query="queryList" @listChange="listChange">
+      <view slot="top">
+        <zshu-tabs  :activeId="activeId" @updateActiveId="(id)=>{activeId = id}"
+                   :list-tabs="listTabs"></zshu-tabs>
+      </view>
+      <view class="dome-test" v-for="(item,index) in dataList" :key="index">
+        <view class="dome-test-item">{{ item.id }}</view>
+        <view class="dome-test-item">{{ item.name }}</view>
+        <view class="dome-test-item">{{ item.take_time_text }}</view>
+      </view>
 
+      <view slot="bottom">
+        <tabbar :INDEX="1"></tabbar>
+      </view>
+    </z-paging>
 
-    <!--    <zshu-fixed-view :top="top" :navigation-custom="false">
-          <template #content-inner>
-            <view class="zshu-fixed-inner">
-              <view class="tab-wrapper">
-                <zshu-tabs hide-pag isRelative :activeId="activeId" @updateActiveId="updateActiveId"
-                           :list-tabs="listTabs">
-                </zshu-tabs>
-                <view class="release-wrapper" style="position: relative">
-                  <u-button type="primary" shape="circle" icon="edit-pen" text="发布"></u-button>
-                </view>
-              </view>
-              <view class="dropdown-selection">
-
-                212212121
-
-
-              </view>
-            </view>
-          </template>
-        </zshu-fixed-view>
-        0000
-
-        <button @click="$refs.uploadImg.chooseFile()">上传图片</button>
-
-        <zshu-uploadimg ref="uploadImg" columnsLimit="2" gap="10px" scale="1.58" limit="13" hidden-upload-icon
-                        :_that_="_that_" img-width="150px" :fileImageList="fileImageList" only-camera
-        >
-
-        </zshu-uploadimg>
-
-
-        <view @click="handlerView">
-          <zshu-scale-img :url="urlImg" scale="1.78" stop-click @click="handlerImg"></zshu-scale-img>
-        </view>-->
-
-    <tabbar :INDEX="1"></tabbar>
 
   </view>
 </template>
 
 <script>
 import ZshuTabs from "@/components/zshu-components/zshu-tabs.vue";
-import zshuUploadimg from "@/components/zshu-components/zshu-uploadimg.vue";
-
-import appUsageEventBus from "@/mixins/mixinsAppUsageEventBus";
+import {getMineOrderList} from "@/network/apis/test_api";
 
 export default {
-  components: {ZshuTabs, zshuUploadimg},
-  mixins: [appUsageEventBus],
+  components: {ZshuTabs},
+
   data() {
     return {
-      activeId: 2,
+      dataList: [],
       listTabs: [
         {
           id: 2,
@@ -72,66 +47,55 @@ export default {
         }
       ],
 
-      rectHeight: 55,
-      top: 0,
-      cc: 0,
-
-      fileImageList: [
-        {
-          url: 'https://images-jinti.oss-cn-hangzhou.aliyuncs.com/5fa1201ea36ad.jpg'
-        },
-        {
-          url: 'https://images-jinti.oss-cn-hangzhou.aliyuncs.com/5fa1201ea36ad.jpg'
-        },
-
-      ],
-
-      // urlImg: 'https://cdn.nlark.com/yuque/0/2023/png/21700210/1703754974325-6135ad2c-ba64-4ae6-8d19-82d7fc0b3df5.png'
-      urlImg: 'https://images-jinti.oss-cn-hangzhou.aliyuncs.com/5fa1201ea36ad.jpg',
-
-
-      eventBusName:'tabbar2',
-      eventBusEmit:'emitCallbackTest',
+      activeId: 2,
+      navbarHeight: 60,
     }
   },
-  computed: {
-    _that_() {
-      return this
-    }
-  },
-  watch: {
-    fileImageList(val) {
-      this.urlImg = val[val.length - 1].url
-    }
-  },
+
   onLoad() {
 
   },
 
-
   methods: {
-    updateActiveId(id) {
-      this.activeId = id
-    },
-    handlerImg() {
-      console.log('2213231231231')
-    },
-    handlerView() {
-      console.log('handlerView')
-    },
-    //   ---------------------------------------
 
-    emitCallbackTest(data) {
+    queryList(pageNo, pageSize,form) {
+      console.log(pageNo, pageSize,form)
+      getMineOrderList({
+        page: pageNo,
+        page_size: pageSize,
+        status: 0
+      }).then(res => {
+        this.$refs.paging.complete(res.data.data);
+        // this.$refs.paging.setLocalPaging(res.data.data);
+      }).catch(() => {
+        this.$refs.paging.complete(false);
+      })
 
-      console.log('emitCallbackTest', data)
+    },
+    listChange() {
 
-    }
+    },
+    // 下拉刷新被触发
+    onRefresh() {
+      // 告知z-paging下拉刷新结束，这样才可以开始下一次的下拉刷新
+      setTimeout(() => {
+        // 1.5秒之后停止刷新动画
+        this.$refs.paging.complete();
+      }, 1500)
+    },
 
   }
 }
 </script>
 
 <style scoped>
+.dome-test {
+  border: 1px solid red;
+  margin-bottom: 10px;
+}
 
+.dome-test-item {
+  line-height: 2.5;
+}
 
 </style>

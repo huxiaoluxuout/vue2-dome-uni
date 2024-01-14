@@ -11,5 +11,19 @@
   "license": "ISC",
   "devDependencies": {
 
+  },
+  "uni-app": {
+    "scripts": {
+      "mp-dingtalk": {
+        "title":"运行到chrome浏览器",
+        "browser":"chrome",
+        "env": {
+          "UNI_PLATFORM": "h5"
+        },
+        "define": {
+          "CUSTOM-CONST": true
+        }
+      }
+    }
   }
 }

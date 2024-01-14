@@ -71,6 +71,10 @@ export default {
       type: [Boolean],
       default: true
     },
+    usePageScroll: {
+      type: [Boolean],
+      default: true
+    },
 
   },
   computed: {
@@ -232,6 +236,7 @@ export default {
 
 .wrap_content {
   //overflow-y: hidden;
+  border: 1px solid teal;
 }
 
 .scroll-view {
