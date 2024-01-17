@@ -1,10 +1,5 @@
-import Vue from 'vue'
-import Vuex from 'vuex'
-
-Vue.use(Vuex)
-import cart from "@/store/modules/cart";
-const store = new Vuex.Store({
-    /*state: {
+export default {
+    state: {
         list: [
             {
                 id: 1,
@@ -81,11 +76,5 @@ const store = new Vuex.Store({
                 context.commit('inc', n)
             }, 800)
         },
-    }*/
-    modules:{
-        cart
     }
-
-})
-
-export default store
+}

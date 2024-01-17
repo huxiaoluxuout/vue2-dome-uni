@@ -5,11 +5,7 @@
     <zshu-tabs :view-height="0" :active-id="activeId" @updateActiveId="id=>activeId = id"
                :list-tabs="listTabs"></zshu-tabs>
 
-    <zshu-slider ></zshu-slider>
-
-
-
-
+    <zshu-slider></zshu-slider>
 
 
     <button style="margin-top: 20px;font-size: 14px;" @click="ylxNavigateTo('pages/A1/A1?aa=66',{})"> 页面1</button>
@@ -41,10 +37,10 @@ import {ylxNavigateTo} from "@/utils/uniTools";
 
 import mixinsYlxUniEventBus from "@/mixins/mixinsYlxUniEventBus";
 
-
+import {mapState, mapGetters, mapMutations,mapActions} from "vuex"
 
 export default {
-  components: { ZshuNavbar},
+  components: {ZshuNavbar},
   mixins: [mixinsYlxUniEventBus],
   data() {
     return {
@@ -76,12 +72,51 @@ export default {
 
     }
   },
+  onLoad() {
+    // console.log(this.$store.state.list)
+    // console.log(this.list)
+    console.log('xixi',this.xixi)
+    // console.log(this.haha)
+    // console.log(this.getList1)
+    // console.log(this.getValueById1(1))
+    // this.asyncInc1(6)
+    // this.out(3)
+    // this.out(4)
+    // console.log(this.list1)
+    // console.log(this.list2)
+    // console.log(this.newList)
+  },
   computed: {
-    _that_() {
-      return this
-    },
+    /*...mapState({
+      list1: state => state.list,
+      list2: 'list',
+      newList({list}) {
+        return list.filter(item => item.status)
+      },
+
+
+    }),*/
+    // ...mapState(['list']),
+    // ...mapGetters(['activeList','unActiveList'])
+    // 起别名
+    ...mapGetters({
+      xixi: 'activeList',
+      // haha: 'unActiveList',
+      // getList1: 'getList',
+      // getValueById1: 'getValueById',
+    })
+
+
   },
   methods: {
+    // ...mapMutations(['inc']),
+    /*...mapMutations({
+      out:'inc'
+    }),
+    ...mapActions({
+      asyncInc1:'asyncInc'
+    }),*/
+
     ylxNavigateTo,
     clearStorage() {
       uni.removeStorageSync('token')

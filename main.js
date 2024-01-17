@@ -20,6 +20,7 @@ Vue.mixin(PageReadyShow)
 Vue.config.productionTip = false
 App.mpType = 'app'
 const app = new Vue({
+    store,
     ...App
 })
 app.$mount()
