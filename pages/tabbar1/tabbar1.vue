@@ -5,8 +5,12 @@
     <zshu-tabs :view-height="0" :active-id="activeId" @updateActiveId="id=>activeId = id"
                :list-tabs="listTabs"></zshu-tabs>
 
-    <zshu-slider></zshu-slider>
-
+<!--    <zshu-slider></zshu-slider>-->
+    {{ number }}
+<button @click="asyncInc1(2)">++</button>
+    <hr>
+<button @click="inA(2)">--</button>
+<button @click="inb(3)">--</button>
 
     <button style="margin-top: 20px;font-size: 14px;" @click="ylxNavigateTo('pages/A1/A1?aa=66',{})"> 页面1</button>
     <button style="margin-top: 20px;font-size: 14px;" @click="ylxNavigateTo('pages/A2/A2?aa=66',{})"> 页面2</button>
@@ -76,6 +80,7 @@ export default {
     // console.log(this.$store.state.list)
     // console.log(this.list)
     console.log('xixi',this.xixi)
+
     // console.log(this.haha)
     // console.log(this.getList1)
     // console.log(this.getValueById1(1))
@@ -98,25 +103,31 @@ export default {
     }),*/
     // ...mapState(['list']),
     // ...mapGetters(['activeList','unActiveList'])
+    ...mapState({
+      number:  state => state.cart.number,
+    }),
     // 起别名
     ...mapGetters({
       xixi: 'activeList',
       // haha: 'unActiveList',
       // getList1: 'getList',
       // getValueById1: 'getValueById',
-    })
+    }),
+
 
 
   },
   methods: {
-    // ...mapMutations(['inc']),
-    /*...mapMutations({
-      out:'inc'
+
+    ...mapMutations({
+      inA:'inA'
     }),
     ...mapActions({
       asyncInc1:'asyncInc'
-    }),*/
-
+    }),
+    inb() {
+      this.$store.commit('inB',2)
+    },
     ylxNavigateTo,
     clearStorage() {
       uni.removeStorageSync('token')

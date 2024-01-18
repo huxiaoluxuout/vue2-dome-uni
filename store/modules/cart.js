@@ -64,6 +64,16 @@ export default {
             console.log(state.number)
 
         },
+        inA(state, n) {
+            state.number -= n
+            console.log(state.number)
+
+        },
+        inB(state, n) {
+            state.number -= n*2
+            console.log(state.number)
+
+        },
     },
     // 异步方法
     // dispatch
@@ -71,10 +81,7 @@ export default {
 
     actions: {
         asyncInc(context,n) {
-
-            setInterval(() => {
-                context.commit('inc', n)
-            }, 800)
+            context.commit('inc', n)
         },
     }
 }
