@@ -1,14 +1,14 @@
 <template>
   <view>
-    <z-paging ref="paging" v-model="dataList" use-cache cache-key="goodsList" :default-page-no="2"  @query="queryList" @listChange="listChange">
-      <view slot="top">
-        <zshu-tabs  :activeId="activeId" @updateActiveId="(id)=>{activeId = id}"
-                   :list-tabs="listTabs"></zshu-tabs>
-      </view>
+    <z-paging ref="paging" v-model="dataList" use-page-scroll  @query="queryList">
+<!--      <view slot="top">
+        <zshu-tabs  :activeId="activeId" @updateActiveId="(id)=>{activeId = id}" :list-tabs="listTabs"></zshu-tabs>
+      </view>-->
       <view class="dome-test" v-for="(item,index) in dataList" :key="index">
         <view class="dome-test-item">{{ item.id }}</view>
         <view class="dome-test-item">{{ item.name }}</view>
         <view class="dome-test-item">{{ item.take_time_text }}</view>
+        <view class="dome-test-item">{{ item.fault }}</view>
       </view>
 
       <view slot="bottom">
@@ -23,31 +23,28 @@
 <script>
 import ZshuTabs from "@/components/zshu-components/zshu-tabs.vue";
 import {getMineOrderList} from "@/network/apis/test_api";
-
+import ZPMixin from '@/uni_modules/z-paging/components/z-paging/js/z-paging-mixin'
 export default {
   components: {ZshuTabs},
-
+  mixins: [ZPMixin],
   data() {
     return {
       dataList: [],
       listTabs: [
         {
-          id: 2,
-          text: '派送',
-          text2: '大厅',
+          id: 1,
+          text: '全部',
+          // text2: '大厅',
         },
         {
-          id: 1,
-          text: '抢单',
-          text2: '大厅',
-        }, {
-          id: 3,
-          text: '抢单3',
-          text2: '大厅3',
+          id: 5,
+          text: '已完成',
+          // text2: '大厅',
         }
+
       ],
 
-      activeId: 2,
+      activeId: 1,
       navbarHeight: 60,
     }
   },
@@ -55,21 +52,30 @@ export default {
   onLoad() {
 
   },
+  watch: {
+    activeId() {
+      this.$refs.paging.reload()
+    },
+  },
 
   methods: {
+    getMineOrderListHandle(pageNo,pageSize) {
 
-    queryList(pageNo, pageSize,form) {
-      console.log(pageNo, pageSize,form)
       getMineOrderList({
-        page: pageNo,
+        page:pageNo,
         page_size: pageSize,
-        status: 0
+        status: this.activeId-1
       }).then(res => {
         this.$refs.paging.complete(res.data.data);
-        // this.$refs.paging.setLocalPaging(res.data.data);
+
       }).catch(() => {
         this.$refs.paging.complete(false);
       })
+    },
+
+    queryList(pageNo, pageSize,form) {
+
+      this.getMineOrderListHandle(pageNo, pageSize)
 
     },
     listChange() {
