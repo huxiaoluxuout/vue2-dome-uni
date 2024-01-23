@@ -1,6 +1,5 @@
 import pagesConfig from "@/pages.json";
-import permision from "@/js_sdk/wa-permission/permission";
-
+import {uniChooseImage, uniChooseLocation, uniGetLocation} from "@/common/js/uniApi";
 
 const {tabBar: {list: tabBarPages}} = pagesConfig
 
@@ -23,96 +22,77 @@ const ylxLoginCode = () => {
     });
 };
 
-//微信支付
+
+//调起支付 app
 const ylxPayMoney = function (data) {
+    /*let 参数 = {
+        "provider": "wxpay",
+        "orderInfo": {
+            "prepayid": "wx161633121422715bc756fb68a4efb60000",
+            "appid": "wxf383752c90a2a994",
+            "partnerid": "1601225378",
+            "package": "Sign=WXPay",
+            "noncestr": "c1af7c1b65f860f830b3307dfa9",
+            "timestamp": 1705393992,
+            "sign": "OBidYj/ccaONa7Eg8YOPLwYKTAhHSDyweKihCxX0mqGOkFXjb96ozMASjwyLqsjaPr9q6NNb4opJxtQp7WW/owN4iPkaTTVO1Keql9YKrJ4hVl2FfLUSfroUiyrKOohzfRpvLgskivA16Z9SD1U46pJqN9X00tQc8D628SZUUQbDtVbef25JExG/v4Kq4miJz7br7NOyi8SJvSrKJGLyVDmLFlU8Jult0jRTgeyCgy6m2IXJm6lgxlB3Q76HCMqAFqBax4N7425ENEgBiSVOxVsJzW144PA+XqZ5vUpHbZGVzlz3kGN6jLMXs+uMTx0HAemNg1ZiNqCxSHiU+Ordzg=="
+        }
+    }*/
+
     return new Promise((resolve, reject) => {
-        uni.requestPayment({
-            timeStamp: data.timeStamp,
-            nonceStr: data.nonceStr,
-            package: data.package,
-            signType: data.signType,
-            paySign: data.paySign,
-            success: function (success) {
-                resolve(success);
-            },
-            fail: function (fail) {
-                reject(fail);
+        // #ifndef H5
+        uni.getProvider({
+            service: 'payment',
+            success: resp => {
+                uni.requestPayment({
+                    provider: data.provider,
+                    orderInfo: data.orderInfo,
+                    success: function (success) {
+                        resolve(success);
+                    },
+                    fail: function (fail) {
+                        reject(fail);
+                    }
+                });
             }
         });
+        // #endif
     })
 }
 
 // 获取当前位置
-const ylxMyLocation = () => {
-    return new Promise((resolve, reject) => {
-        let resultLocation = permision.checkSystemEnableLocation();
-        if (resultLocation) {
-            uni.getLocation({
-                type: 'gcj02',
-                isHighAccuracy: 'true',
-                geocode: 'true',
-                success: (res) => {
-                    console.log('res', res)
-                    resolve(res);
-                },
-                fail: (fail) => {
-                    console.log(fail)
-                    resolve(fail);
+const ylxMyLocation = async () => {
+    try {
+        await uniGetLocation()
 
-                }
-            })
-        } else {
-            uni.showModal({
-                title: '请先开启GPS定位服务',
-                success: function (res) {
-                    if (res.confirm) {
-                        permision.gotoAppPermissionSetting()
-                    } else if (res.cancel) {
-
-                    }
-                }
-            });
-        }
-
-    });
+    } catch (err) {
+        console.error(err)
+    }
 
 }
 
 // 打开地图选择位置
-const ylxChooseLocation = () => {
-    return new Promise((resolve, reject) => {
-        let resultLocation = permision.checkSystemEnableLocation();
-        if (resultLocation) {
-            uni.chooseLocation({
-                success: (res) => {
-                    const addressInfo = {
+const ylxChooseLocation = async () => {
 
-                        province: res.address.slice(0, res.address.indexOf('省') + 1),
-                        city: res.address.slice(res.address.indexOf('省') + 1, res.address.indexOf('市') + 1),
-                        area: res.address.slice(res.address.indexOf('市') + 1, res.address.indexOf('区') + 1)
-                    }
-                    resolve(Object.assign(res, addressInfo));
-                },
-                fail: function (err) {
-                    reject(err);
-                }
-            });
-        } else {
-            uni.showModal({
-                title: '请先开启GPS定位服务',
+    try {
+        await uniChooseLocation()
 
-                success: function (res) {
-                    if (res.confirm) {
-                        permision.gotoAppPermissionSetting()
-                    } else if (res.cancel) {
+    } catch (err) {
+        console.error(err)
+    }
 
-                    }
-                }
-            });
-        }
-
-    });
 }
+
+// 选择图片/拍摄
+const ylxChooseImage = async () => {
+    try {
+        await uniChooseImage()
+
+    } catch (err) {
+        console.error(err)
+    }
+
+}
+
 
 // IOS 底部兼容
 const ylxIOSBottomHeight = () => {
@@ -231,7 +211,6 @@ const ylxStyleObjectToString = (obj) => {
 }
 
 
-
 const ylxUniOn = (uniCallback) => {
     let pages = getCurrentPages();
     let currentEventName = pages[pages.length - 1]['route'];
@@ -269,8 +248,8 @@ export {
     ylxPayMoney,
     ylxMyLocation,
     ylxChooseLocation,
+    ylxChooseImage,
     ylxViewInfo,
-
     ylxDebuggerMsg,
     ylxNavigateTo,
     ylxRedirectTo,

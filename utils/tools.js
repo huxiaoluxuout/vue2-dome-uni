@@ -1,56 +1,3 @@
-/**
- * 节流
- * @param func
- * @param delay
- * @returns {(function(): void)|*}
- */
-const throttle = (func, delay = 200) => {
-    // console.log('throttle')
-    let timerId;
-
-    return function () {
-        if (!timerId) {
-            timerId = setTimeout(() => {
-                func.apply(this, arguments);
-                timerId = null;
-            }, delay);
-        }
-    };
-}
-
-/**
- * 防抖
- * @param func
- * @param delay
- * @returns {(function(): void)|*}
- */
-
-const debounce = (func, delay = 500, immediate = true) => {
-    let timerId;
-
-    return function () {
-        const context = this;
-        const args = arguments;
-
-        const later = function () {
-            timerId = null;
-
-            if (!immediate) {
-                func.apply(context, args);
-            }
-        };
-
-        const callNow = immediate && !timerId;
-
-        clearTimeout(timerId);
-        timerId = setTimeout(later, delay);
-
-        if (callNow) {
-            func.apply(context, args);
-        }
-    };
-}
-
 const uuid = () => {
     return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
         var r = Math.random() * 16 | 0,
@@ -58,37 +5,6 @@ const uuid = () => {
         return v.toString(16);
     });
 }
-
-
-// 事件处理器函数，根据条件执行操作或回调
-const handlerEvent = (isPass, errorHandle, handler, ...args) => {
-    if (isPass) {
-        // 执行操作函数
-        handler(...args);
-    } else {
-        if (typeof errorHandle === 'function') {
-            errorHandle(...args)
-
-        }
-    }
-
-
-};
-/*const handlerEvent = ({isPass: isPass = true, errorHandle: errorCallback = () => {}, handler: handler = () => {},}, ...args) => {
-    console.log('handlerEvent')
-    if (isPass) {
-        // 执行操作函数
-        console.log('执行操作函数')
-        console.log(this);
-        console.log(handler);
-        // handler(...args);
-    } else {
-
-        // 调用错误回调
-        errorCallback && errorCallback(...args);
-    }
-};*/
-
 
 export const handleAction = (isSuccess, errorHandler, successHandler, ...args) => {
     if (isSuccess) {
@@ -156,11 +72,8 @@ function removeElementsByIndex(arr, indexes, callback) {
 }
 
 export {
-    throttle,
-    debounce,
     objectToQueryString,
     parseQueryString,
-    handlerEvent,
     uuid,
     objectToString,
     removeElementsByIndex,
