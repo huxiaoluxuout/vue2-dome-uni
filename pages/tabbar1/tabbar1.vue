@@ -5,12 +5,12 @@
     <zshu-tabs :view-height="0" :active-id="activeId" @updateActiveId="id=>activeId = id"
                :list-tabs="listTabs"></zshu-tabs>
 
-<!--    <zshu-slider></zshu-slider>-->
+    <!--    <zshu-slider></zshu-slider>-->
     {{ number }}
-<button @click="asyncInc1(2)">++</button>
+    <button @click="asyncInc1(2)">++</button>
     <hr>
-<button @click="inA(2)">--</button>
-<button @click="inb(3)">--</button>
+    <button @click="inA(2)">--</button>
+    <button @click="inb(3)">--</button>
 
     <button style="margin-top: 20px;font-size: 14px;" @click="ylxNavigateTo('pages/A1/A1?aa=66',{})"> 页面1</button>
     <button style="margin-top: 20px;font-size: 14px;" @click="ylxNavigateTo('pages/A2/A2?aa=66',{})"> 页面2</button>
@@ -21,12 +21,20 @@
     <button style="margin-top: 20px;font-size: 14px;" @click="uploadImg">uploadImg</button>
 
 
-    <zshu-uploadimg ref="uploadImg" columns-limit="2" gap="10px" scale="1.58" limit="13"
-                    hidden-upload-icon img-width="150px" only-camera
-                    :fileImageList="fileImageList" @updateFileImageList="updateFileImageList"
-    >
+    <view class="image-container">
+      <image class="blurred-image" :src="fileImageList[0].url"/>
 
-    </zshu-uploadimg>
+      <image class="image" :src="fileImageList[0].url"/>
+
+
+      <!--      <zshu-uploadimg ref="uploadImg" columns-limit="2" gap="10px" scale="1.58" limit="13"
+                            hidden-upload-icon img-width="150px" only-camera
+                            :fileImageList="fileImageList" @updateFileImageList="updateFileImageList"
+            >
+
+            </zshu-uploadimg>-->
+    </view>
+
     <button style="margin-top: 20px;font-size: 14px;" @click="clearStorage"> clearStorage</button>
 
     <tabbar :INDEX="0"></tabbar>
@@ -41,7 +49,7 @@ import {ylxNavigateTo} from "@/utils/uniTools";
 
 import mixinsYlxUniEventBus from "@/mixins/mixinsYlxUniEventBus";
 
-import {mapState, mapGetters, mapMutations,mapActions} from "vuex"
+import {mapState, mapGetters, mapMutations, mapActions} from "vuex"
 
 export default {
   components: {ZshuNavbar},
@@ -69,9 +77,9 @@ export default {
 
       fileImageList: [{
         url: 'https://images-jinti.oss-cn-hangzhou.aliyuncs.com/5fa1201ea36ad.jpg'
-      }, {
+      },/* {
         url: 'https://app-jinti.oss-cn-hangzhou.aliyuncs.com/uploads/20240107/f790552571bb4888293896d289b00295.png'
-      }],
+      }*/],
 
 
     }
@@ -79,7 +87,7 @@ export default {
   onLoad() {
     // console.log(this.$store.state.list)
     // console.log(this.list)
-    console.log('xixi',this.xixi)
+    console.log('xixi', this.xixi)
 
     // console.log(this.haha)
     // console.log(this.getList1)
@@ -104,7 +112,7 @@ export default {
     // ...mapState(['list']),
     // ...mapGetters(['activeList','unActiveList'])
     ...mapState({
-      number:  state => state.cart.number,
+      number: state => state.cart.number,
     }),
     // 起别名
     ...mapGetters({
@@ -115,18 +123,17 @@ export default {
     }),
 
 
-
   },
   methods: {
 
     ...mapMutations({
-      inA:'inA'
+      inA: 'inA'
     }),
     ...mapActions({
-      asyncInc1:'asyncInc'
+      asyncInc1: 'asyncInc'
     }),
     inb() {
-      this.$store.commit('inB',2)
+      this.$store.commit('inB', 2)
     },
     ylxNavigateTo,
     clearStorage() {
@@ -155,5 +162,31 @@ export default {
 </script>
 
 <style>
+.image-container {
+  position: relative;
+  width: 750rpx;
+  height: 375rpx; /* Or the height you want */
+  overflow: hidden;
 
+  box-sizing: border-box;
+  display: flex;
+  justify-content: center;
+  padding: 20px;
+  align-items: center;
+}
+
+.blurred-image {
+  width: 600%;
+  height: 600%;
+  position: absolute;
+  filter: blur(200px);
+  transform: scale(.5);
+
+
+}
+
+.image {
+  width: 150px;
+  height: 150px;
+}
 </style>
