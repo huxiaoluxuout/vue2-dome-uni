@@ -6,6 +6,10 @@
                :list-tabs="listTabs"></zshu-tabs>
 
     <!--    <zshu-slider></zshu-slider>-->
+    <button id="renderjs-view" :msg1="msg"  :change:msg1="test.receiveNumber" @click="test.emitData">test</button>
+    {{msg}}
+    <button  @click="changeMsg">haah</button>
+
     {{ number }}
     <button @click="asyncInc1(2)">++</button>
     <hr>
@@ -56,6 +60,8 @@ export default {
   mixins: [mixinsYlxUniEventBus],
   data() {
     return {
+      msg: 'msg',
+      msg2: 'msg2',
       listTabs: [
         {
           id: 2,
@@ -155,10 +161,26 @@ export default {
       } else if (type === 'success') {
         this.fileImageList.splice(param.fileImageListLen, param.num, param.itemAssign)
       }
-    }
+    },
+    // 改变数据，触发renderjs
+    changeMsg() {
+      this.msg = 'hello renderjs' + Math.random() * 10;
+    },
+// 接收renderjs传递的数据
+    receiveRenderData(val) {
+      console.log('receiveRenderData-->', val);
+      this.msg = val + Math.random() * 10;
 
+    }
   }
 }
+</script>
+
+<script module="test" lang="renderjs">
+import ChartMethods from './renderjs.js';
+export default ChartMethods;
+
+
 </script>
 
 <style>
