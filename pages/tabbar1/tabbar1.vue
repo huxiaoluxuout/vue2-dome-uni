@@ -2,42 +2,33 @@
   <view>
 
 
-    <zshu-tabs :view-height="0" :active-id="activeId" @updateActiveId="id=>activeId = id"
-               :list-tabs="listTabs"></zshu-tabs>
-
-    <!--    <zshu-slider></zshu-slider>-->
-    <button id="renderjs-view" :msg1="msg"  :change:msg1="test.receiveNumber" @click="test.emitData">test</button>
-    {{msg}}
-    <button  @click="changeMsg">haah</button>
-
-    {{ number }}
-    <button @click="asyncInc1(2)">++</button>
-    <hr>
-    <button @click="inA(2)">--</button>
-    <button @click="inb(3)">--</button>
-
-    <button style="margin-top: 20px;font-size: 14px;" @click="ylxNavigateTo('pages/A1/A1?aa=66',{})"> 页面1</button>
-    <button style="margin-top: 20px;font-size: 14px;" @click="ylxNavigateTo('pages/A2/A2?aa=66',{})"> 页面2</button>
-    <button style="margin-top: 20px;font-size: 14px;" @click="ylxNavigateTo('pages/A3/A3?aa=66',{})"> 页面3</button>
-    <button style="margin-top: 20px;font-size: 14px;" @click="ylxNavigateTo('pages/A4/A4?aa=66',{})"> 页面4</button>
-
-    <button style="margin-top: 20px;font-size: 14px;" @click="toPage1">跳转到还未打开过的tabbar页面</button>
     <button style="margin-top: 20px;font-size: 14px;" @click="uploadImg">uploadImg</button>
 
+    <zshu-uploadimg ref="uploadImg" columns-limit="2" gap="10px" scale="1.58" limit="13"
+                    hidden-upload-icon img-width="150px" only-camera
+                    :fileImageList="fileImageList" @updateFileImageList="updateFileImageList"
+    >
 
-    <view class="image-container">
-      <image class="blurred-image" :src="fileImageList[0].url"/>
+    </zshu-uploadimg>
+    <uni-file-picker
+        v-model="imageValue"
+        fileMediatype="image"
+        mode="grid"
+        @select="select"
+        @progress="progress"
+        @success="success"
+        @fail="fail"
+    />
 
-      <image class="image" :src="fileImageList[0].url"/>
+    <button style="margin-top: 20px;font-size: 14px;" @click="uploadImgUniChoose">上传图片</button>
 
-
-      <!--      <zshu-uploadimg ref="uploadImg" columns-limit="2" gap="10px" scale="1.58" limit="13"
-                            hidden-upload-icon img-width="150px" only-camera
-                            :fileImageList="fileImageList" @updateFileImageList="updateFileImageList"
-            >
-
-            </zshu-uploadimg>-->
+    <view style="display:flex; gap: 20px;flex-wrap: wrap;">
+      <image style="width: 100px;height: 100px;" :src="item.path" v-for="(item,index) in uniChooseImageValue"
+             :key="index"/>
     </view>
+
+    <button style="margin-top: 20px;font-size: 14px;" @click="confirmUploadImg">确认上传</button>
+
 
     <button style="margin-top: 20px;font-size: 14px;" @click="clearStorage"> clearStorage</button>
 
@@ -53,31 +44,16 @@ import {ylxNavigateTo} from "@/utils/uniTools";
 
 import mixinsYlxUniEventBus from "@/mixins/mixinsYlxUniEventBus";
 
-import {mapState, mapGetters, mapMutations, mapActions} from "vuex"
+
+import ZshuUploadimg from "@/components/zshu-components/zshu-uploadimg.vue";
+import {uniChooseImage} from "@/common/js/uniApi";
 
 export default {
-  components: {ZshuNavbar},
+  components: {ZshuNavbar, ZshuUploadimg},
   mixins: [mixinsYlxUniEventBus],
   data() {
     return {
-      msg: 'msg',
-      msg2: 'msg2',
-      listTabs: [
-        {
-          id: 2,
-          text: '派送',
-          text2: '大厅',
-        },
-        {
-          id: 1,
-          text: '抢单',
-          text2: '大厅',
-        }, {
-          id: 3,
-          text: '抢单3',
-          text2: '大厅3',
-        }
-      ],
+
       activeId: 2,
       //   ---------------------
 
@@ -86,69 +62,40 @@ export default {
       },/* {
         url: 'https://app-jinti.oss-cn-hangzhou.aliyuncs.com/uploads/20240107/f790552571bb4888293896d289b00295.png'
       }*/],
-
+      // -------------------------------------
+      imageValue: [],
+      uniChooseImageValue: [],
 
     }
   },
   onLoad() {
-    // console.log(this.$store.state.list)
-    // console.log(this.list)
-    console.log('xixi', this.xixi)
-
-    // console.log(this.haha)
-    // console.log(this.getList1)
-    // console.log(this.getValueById1(1))
-    // this.asyncInc1(6)
-    // this.out(3)
-    // this.out(4)
-    // console.log(this.list1)
-    // console.log(this.list2)
-    // console.log(this.newList)
   },
-  computed: {
-    /*...mapState({
-      list1: state => state.list,
-      list2: 'list',
-      newList({list}) {
-        return list.filter(item => item.status)
-      },
-
-
-    }),*/
-    // ...mapState(['list']),
-    // ...mapGetters(['activeList','unActiveList'])
-    ...mapState({
-      number: state => state.cart.number,
-    }),
-    // 起别名
-    ...mapGetters({
-      xixi: 'activeList',
-      // haha: 'unActiveList',
-      // getList1: 'getList',
-      // getValueById1: 'getValueById',
-    }),
-
-
-  },
+  computed: {},
   methods: {
-
-    ...mapMutations({
-      inA: 'inA'
-    }),
-    ...mapActions({
-      asyncInc1: 'asyncInc'
-    }),
-    inb() {
-      this.$store.commit('inB', 2)
+    // 获取上传状态
+    select(e) {
+      console.log('选择文件：', e)
     },
+    // 获取上传进度
+    progress(e) {
+      console.log('上传进度：', e)
+    },
+
+    // 上传成功
+    success(e) {
+      console.log('上传成功')
+    },
+
+    // 上传失败
+    fail(e) {
+      console.log('上传失败：', e)
+    },
+    // -------------------------------
     ylxNavigateTo,
     clearStorage() {
       uni.removeStorageSync('token')
     },
-    toPage1() {
-      uni.$emit('emitApp', {eventName: 'tabbar2', param: 1})
-      ylxNavigateTo('pages/tabbar2/tabbar2')
-    },
+    // ---------------------------------------------
     // 上传图片
     uploadImg() {
       this.$refs.uploadImg.chooseFile()
@@ -162,53 +109,38 @@ export default {
         this.fileImageList.splice(param.fileImageListLen, param.num, param.itemAssign)
       }
     },
-    // 改变数据，触发renderjs
-    changeMsg() {
-      this.msg = 'hello renderjs' + Math.random() * 10;
-    },
-// 接收renderjs传递的数据
-    receiveRenderData(val) {
-      console.log('receiveRenderData-->', val);
-      this.msg = val + Math.random() * 10;
+    // ---------------------------------------------
+    uploadImgUniChoose() {
+      uniChooseImage().then(res => {
+        console.log('uniChooseImage', res)
+        this.uniChooseImageValue = res.tempFiles
 
-    }
+      })
+    },
+    confirmUploadImg() {
+      let newArr = this.uniChooseImageValue.map(async item => {
+        return await this.uploadFile()
+
+      })
+      Promise.all(newArr).then(res => {
+        console.log('1111', res)
+      })
+    },
+    uploadFile(item) {
+      return uniCloud.uploadFile({
+        filePath: item.path,
+        cloudPath: item.name
+      }).then(res => {
+        console.log('上传-uniCloud', res)
+      })
+    },
+
+
   }
 }
 </script>
 
-<script module="test" lang="renderjs">
-import ChartMethods from './renderjs.js';
-export default ChartMethods;
-
-
-</script>
 
 <style>
-.image-container {
-  position: relative;
-  width: 750rpx;
-  height: 375rpx; /* Or the height you want */
-  overflow: hidden;
 
-  box-sizing: border-box;
-  display: flex;
-  justify-content: center;
-  padding: 20px;
-  align-items: center;
-}
-
-.blurred-image {
-  width: 600%;
-  height: 600%;
-  position: absolute;
-  filter: blur(200px);
-  transform: scale(.5);
-
-
-}
-
-.image {
-  width: 150px;
-  height: 150px;
-}
 </style>
