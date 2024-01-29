@@ -1,8 +1,0 @@
-MD5: 43:D3:61:EB:01:18:0E:24:30:02:95:C8:0D:A0:28:DB
-SHA1: 52:5B:BB:39:30:24:99:A4:04:56:42:47:9A:8B:2B:0C:C8:FD:E1:FA
-SHA256: AC:B1:02:E9:2E:B1:D8:50:97:9D:5D:F1:D6:B9:62:E7:4A:83:3A:16:C6:45:52:82:74:07:AE:F5:D7:53:CA:7A
-
-包名：com.tieba.ahjinti.com
-别名：jintitb
-密码：jintitb!@#
-uniapp AppKey: 952d9e3cc107bc4c91a7f6c140d22ecb

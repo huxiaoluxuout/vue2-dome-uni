@@ -1,0 +1,11 @@
+SHA1: 53:15:01:F5:0D:F4:D5:2D:18:58:E7:C1:52:ED:25:41:73:17:EF:D6
+SHA256: 91:9A:D5:C2:AD:3F:83:85:57:AA:7F:0D:73:1F:A9:83:8A:2D:F4:DD:C3:60:B7:CA:F1:66:2F:83:F6:72:F5:04
+MD5: 8E:15:52:46:3B:7E:BE:65:8B:A0:FB:54:5F:3D:3A:D2
+
+证书别名 Alias: demo.alias
+证书私钥密码 Keystore password: 123123
+证书别名密码 Key password for alias: 123123
+
+
+uniapp 离线key: e0df108ab4a61797f859ad905b1f9e0c
+appid: __UNI__89D6275
