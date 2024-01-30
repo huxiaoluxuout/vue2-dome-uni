@@ -3,12 +3,15 @@
 
 import {getLogin} from "@/network/apis/test_api";
 import appEventBus from "@/mixins/mixinsAppEventBus";
+import {getCID} from "@/utils/test";
 
 export default {
   mixins: [appEventBus],
+
   onLaunch: function () {
     console.log('App Launch')
     this.loginApi()
+    getCID()
   },
 
   onShow: function () {
