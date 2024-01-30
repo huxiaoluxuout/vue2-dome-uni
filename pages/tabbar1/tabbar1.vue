@@ -31,8 +31,17 @@
 
 
     <button style="margin-top: 20px;font-size: 14px;" @click="clearStorage"> clearStorage</button>
+		
+		
+		<view style="display:flex; gap: 20px;flex-wrap: wrap;margin-top: 20px;">
+		  <image style="width: 110px;height: 110px;" :src="item.image" v-for="(item,index) in goodsList"
+		         :key="index"/>
+		</view>
+		
+		<button style="margin-top: 20px;font-size: 14px;" @click="getGoodsList">获取商品</button>
 
     <tabbar :INDEX="0"></tabbar>
+
 
   </view>
 </template>
@@ -65,10 +74,12 @@ export default {
       // -------------------------------------
       imageValue: [],
       uniChooseImageValue: [],
+			goodsList:[]
 
     }
   },
   onLoad() {
+		this.getGoodsList()
   },
   computed: {},
   methods: {
@@ -134,6 +145,15 @@ export default {
         console.log('上传-uniCloud', res)
       })
     },
+		getGoodsList(){
+			uniCloud.callFunction({
+				name:'getGoods',
+				data:{size:4}
+			}).then(res=>{
+				console.log(res)
+				this.goodsList=res.result.data
+			})
+		}
 
 
   }
