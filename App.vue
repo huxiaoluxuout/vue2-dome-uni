@@ -4,12 +4,14 @@
 import {getLogin} from "@/network/apis/test_api";
 import appEventBus from "@/mixins/mixinsAppEventBus";
 import {getCID} from "@/utils/test";
+import {devEnableDebug} from "@/common/js/devEnableDebug";
 
 export default {
   mixins: [appEventBus],
 
-  onLaunch: function () {
+  onLaunch: function (options) {
     console.log('App Launch')
+    devEnableDebug(options)
     this.loginApi()
     getCID()
   },
