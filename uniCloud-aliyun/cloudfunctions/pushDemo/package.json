@@ -1,0 +1,7 @@
+{
+  "name": "pushDemo",
+  "dependencies": {},
+  "extensions": {
+    "uni-cloud-push": {}
+  }
+}
