@@ -12,7 +12,7 @@
 
 
 
-    <u-button type="primary" :plain="true" text="仿抖音页面" @click="$u.route('/subPackagesPages/rechargePartner/rechargePartner')"></u-button>
+    <u-button type="primary" :plain="true" text="仿抖音页面" @click="$u.route('/pages/dou_yin/dou_yin')"></u-button>
 
     <tabbar :INDEX="0"></tabbar>
 

@@ -221,6 +221,14 @@
         "enablePullDownRefresh": false,
         "navigationBarTitleText": "实名认证"
       }
+    },
+    {
+    	"path" : "pages/dou_yin/dou_yin",
+    	"style" : 
+    	{
+    		"navigationBarTitleText" : "仿抖音页面",
+    		"enablePullDownRefresh" : false
+    	}
     }
   ],
   "tabBar": {
