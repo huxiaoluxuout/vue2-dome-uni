@@ -28,7 +28,7 @@
 <script>
 
 
-import {objectToString} from "@/utils/tools";
+import {objectStyleToString} from "@/utils/tools";
 
 
 export default {
@@ -76,7 +76,7 @@ export default {
     },
 
     customStyles() {
-      return objectToString({
+      return objectStyleToString({
         '--scale': Number(this.scale),
         '--item-width': this.localStyleViewWidth,
       })
