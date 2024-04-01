@@ -1,7 +1,7 @@
 <template>
   <view class="page-swiper">
     <!--swiper实现整屏划动播放视频-->
-    <swiper class="content-wrapper" :render-whole="true" :circular="false" vertical :duration="200" @change="swiperChanged" @animationfinish="animationfinish">
+    <swiper class="content-wrapper" :render-whole="true" :circular="false" vertical :duration="200" @change="swiperChanged">
 
       <swiper-item class="content-wrapper swiper-item" v-for="(item,index) in originList" :key="item.id">
         <view class="content-wrapper video-box">
@@ -306,9 +306,7 @@ export default {
         videoContexts[current].play();
       }
     },
-    animationfinish() {
 
-    },
     swiperChanged({detail: {current}}) {
       console.log('swiperChanged-current', current)
 

@@ -15,6 +15,7 @@
     <u-button type="primary" :plain="true" text="仿抖音页面" @click="$u.route('/pages/dou_yin/dou_yin')"></u-button>
 
     <u-button type="primary" :plain="true" text="N-仿抖音页面" @click="$u.route('/pages/n_dou_yin/n_dou_yin')"></u-button>
+    <u-button type="primary" :plain="true" text="N-仿抖音页面2" @click="$u.route('/pages/n_dou_yin/n_dou_yin_2')"></u-button>
 
 <!--    <u-button type="primary" :plain="true" text="BindingX" @click="$u.route('/pages/n_BindingX/n_BindingX')"></u-button>-->
 
