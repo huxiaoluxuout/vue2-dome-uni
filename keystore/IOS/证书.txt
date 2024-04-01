@@ -1,3 +1,0 @@
-师傅驿站
-Bundle ID:com.yizhan.ahjinti.com
-证书密码：jinti

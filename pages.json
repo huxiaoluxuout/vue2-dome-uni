@@ -229,6 +229,30 @@
     		"navigationBarTitleText" : "仿抖音页面",
     		"enablePullDownRefresh" : false
     	}
+    },
+    {
+    	"path" : "pages/n_dou_yin/n_dou_yin",
+    	"style" : 
+    	{
+    		"navigationBarTitleText" : "n_dou_yin",
+    		"enablePullDownRefresh" : false
+    	}
+    },
+    {
+    	"path" : "pages/collect_cards/collect_cards",
+    	"style" : 
+    	{
+    		"navigationBarTitleText" : "集卡",
+    		"enablePullDownRefresh" : false
+    	}
+    },
+    {
+    	"path" : "pages/n_BindingX/n_BindingX",
+    	"style" : 
+    	{
+    		"navigationBarTitleText" : "BindingX",
+    		"enablePullDownRefresh" : false
+    	}
     }
   ],
   "tabBar": {

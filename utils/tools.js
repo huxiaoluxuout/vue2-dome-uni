@@ -136,20 +136,20 @@ function arrayEquals(arr1, arr2) {
     return true;
 }
 
-/*// 使用示例
+// 使用示例
 let obj1 = { a: 1, b: 2, c: { d: 3 } };
 let obj2 = { a: 1, b: 2, c: { d: 3 } };
 let obj3 = { a: 1, b: 2, c: { d: 4 } };
 
-console.log(deepEqual(obj1, obj2)); // 输出 true
-console.log(deepEqual(obj1, obj3)); // 输出 false
+// console.log(deepEqual(obj1, obj2)); // 输出 true
+// console.log(deepEqual(obj1, obj3)); // 输出 false
 
 let arr1 = [1, 2, [3, 4]];
 let arr2 = [1, 2, [3, 4]];
 let arr3 = [1, 2, [3, 5]];
 
 console.log(arrayEquals(arr1, arr2)); // 输出 true
-console.log(arrayEquals(arr1, arr3)); // 输出 false*/
+console.log(arrayEquals(arr1, arr3)); // 输出 false
 
 
 

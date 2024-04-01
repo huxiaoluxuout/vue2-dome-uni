@@ -12,7 +12,7 @@ export default {
   onLaunch: function (options) {
     console.log('App Launch')
     devEnableDebug(options)
-    this.loginApi()
+    // this.loginApi()
 
   },
 
