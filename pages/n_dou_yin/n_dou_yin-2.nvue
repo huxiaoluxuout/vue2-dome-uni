@@ -1,49 +1,52 @@
 <template>
   <view class="page-swiper">
     <!--swiper实现整屏划动播放视频-->
-    <swiper class="content-wrapper" :render-whole="true" :circular="false" :disableTouch="disableTouch" vertical :duration="200" @change="swiperChanged"
-            @animationfinish="animationfinish">
+    <swiper class="content-wrapper" :render-whole="true" :circular="false" vertical :duration="200" @change="swiperChanged" @animationfinish="animationfinish">
 
       <swiper-item class="content-wrapper swiper-item" v-for="(item,index) in originList" :key="item.id">
         <view class="content-wrapper video-box">
 
-          <video :id="'video'+index" class="content-wrapper" v-if="index===showVideoIndex" :src="item.playurl"
-                 :autoplay="false" :controls="true" :custom-cache="false" :loop="false"
+          <video :id="'video'+index" class="content-wrapper" v-if="!cachePlay?index===showVideoIndex:item.show" :src="item.playurl"
+                 :autoplay="!cachePlay" :controls="true" :custom-cache="false" :loop="false"
                  :enable-play-gesture="true" :enable-progress-gesture="true" play-btn-position="center"
                  :show-center-play-btn="true"
                  :poster="item.picurl"
           >
 
           </video>
-
           <template v-if="index!==showVideoIndex">
 
-            <template v-if="index===showVideoIndex-1">
-              <video :id="'video'+index" class="content-wrapper" :src="item.playurl"
-                     :autoplay="false" :controls="true" :custom-cache="false" :loop="false"
-                     :enable-play-gesture="true" :enable-progress-gesture="true" play-btn-position="center"
-                     :show-center-play-btn="true"
-                     :poster="item.picurl"
-              >
-              </video>
-              <!--模拟视频封面-->
-<!--              <image class="content-wrapper picurl-img" :src="originList[index].picurl" mode="widthFix"></image>-->
+            <video :id="'video'+index" class="content-wrapper" v-if="index===showVideoIndex-1" :src="item.playurl"
+                   :autoplay="false" :controls="true" :custom-cache="false" :loop="false"
+                   :enable-play-gesture="true" :enable-progress-gesture="true" play-btn-position="center"
+                   :show-center-play-btn="true"
+                   :poster="item.picurl"
+            >
 
-            </template>
-            <template v-if="index===showVideoIndex+1">
-              <video :id="'video'+index" class="content-wrapper" :src="item.playurl"
-                     :autoplay="false" :controls="true" :custom-cache="false" :loop="false"
-                     :enable-play-gesture="true" :enable-progress-gesture="true" play-btn-position="center"
-                     :show-center-play-btn="true"
-                     :poster="item.picurl"
-              >
-              </video>
+            </video>
+            <video :id="'video'+index" class="content-wrapper" v-if="index===showVideoIndex+1" :src="item.playurl"
+                   :autoplay="false" :controls="true" :custom-cache="false" :loop="false"
+                   :enable-play-gesture="true" :enable-progress-gesture="true" play-btn-position="center"
+                   :show-center-play-btn="true"
+                   :poster="item.picurl"
+            >
 
-              <!--模拟视频封面-->
-<!--              <image class="content-wrapper picurl-img" :src="originList[index].picurl" mode="widthFix"></image>-->
+            </video>
+          </template>
 
-            </template>
 
+
+          <!--          <view class="icon-play" @change="playVideo">
+                      <uni-icons type="videocam-filled" :size="40" color="#fff"/>
+                    </view>-->
+
+          <!--模拟视频封面-->
+
+          <template v-if="!cachePlay&&index!==showVideoIndex">
+            <view class="picurl-box">
+              <image class="content-wrapper picurl-img" v-if="index===showVideoIndex-1" :src="originList[index].picurl" mode="widthFix"></image>
+              <image class="content-wrapper picurl-img" v-if="index===showVideoIndex+1" :src="originList[index].picurl" mode="widthFix"></image>
+            </view>
           </template>
 
           <!-- 文本标题 -->
@@ -229,7 +232,11 @@ export default {
 
       ],
 
-      disableTouch: false
+      cachePlay: false,
+
+
+      currentPage: 1,
+      dataList: []
 
     }
   },
@@ -237,14 +244,19 @@ export default {
   onLoad() {
     this.getVideoList()
   },
-  onReady() {
+  onReady: function (res) {
+    if (!this.cachePlay) return
+
     this.setVideoContext(0)
+
     this.videoContext.play()
   },
   computed: {
     videoContext() {
       return videoContexts[this.showVideoIndex]
     },
+
+
   },
 
 
@@ -284,6 +296,7 @@ export default {
     },
 
     setVideoContext(current) {
+      if (!this.cachePlay) return
       let videoId = 'video' + current
       let videoContext = uni.createVideoContext(videoId)
       if (videoContexts.length === current) {
@@ -292,6 +305,8 @@ export default {
 
     },
     setVideoShow(current) {
+      if (!this.cachePlay) return
+
       if (current === 0) {
         this.$set(this.originList, current, {...this.originList[current], show: true});
         this.$set(this.originList, current + 1, {...this.originList[current + 1], show: true});
@@ -302,12 +317,16 @@ export default {
         if (heideIndex !== -1) {
           console.log('setShow-ok')
           this.$set(this.originList, heideIndex, {...this.originList[heideIndex], show: true});
+
         }
       }
+
     },
 
     changePlay(current, type) {
+      // console.log('current', current, 'type', type)
 
+      if (!this.cachePlay) return
       if (type === 'toPre') {
         let len = this.originList.length
         if (current !== len) {
@@ -318,46 +337,62 @@ export default {
         videoContexts[current - 1].pause()
         videoContexts[current].play();
       }
-
     },
     animationfinish({detail: {current}}) {
+      console.log('{detail: {current}}', current, this.showVideoIndex)
+
       let updateNum = ((this.page - 1) * this.pageSize) - 2
       let currentNum = current + 1
-      // this.disableTouch=true
+
       // 向下一个滑动
       if (current > this.showVideoIndex) {
         this.showVideoIndex = current;
+        // this.changePlay(current, 'toNext')
+
         if (currentNum === updateNum) {
           console.log('更新数据',)
           this.getVideoList()
+
+
         }
       }
       // 向上一个滑动
       else {
         this.showVideoIndex = current;
+        // this.changePlay(current, 'toPre')
       }
-      // setTimeout(()=>{
-      //   this.disableTouch=false
-      // },200)
-
     },
 
     swiperChanged({detail: {current}}) {
+      console.log('swiperChanged-current', current)
+
+      let updateNum = ((this.page - 1) * this.pageSize) - 2
+      let currentNum = current + 1
+
       // 向下一个滑动
       if (current > this.showVideoIndex) {
+        // this.showVideoIndex = current;
         this.setVideoShow(current)
+
         this.$nextTick(() => {
           this.setVideoContext(current)
         })
 
-        setTimeout(() => {
+        setTimeout(()=>{
           this.changePlay(current, 'toNext')
-        }, 200)
+        },500)
 
+/*
+        if (currentNum === updateNum) {
+          console.log('更新数据',)
+          this.getVideoList()
+
+
+        }*/
       }
       // 向上一个滑动
       else {
-
+        // this.showVideoIndex = current;
         this.changePlay(current, 'toPre')
       }
 
@@ -482,8 +517,7 @@ export default {
   align-items: center;
   justify-content: center;
 }
-
-.picurl-img {
+.picurl-img{
 
 }
 

@@ -1,9 +1,10 @@
 <template>
-  <view class="page-swiper">
+  <view class="currentPage-swiper">
     <!--swiper实现整屏划动播放视频-->
+    {{ paginatedData.length }}
     <swiper class="content-wrapper" :render-whole="true" :circular="false" vertical :duration="200" @change="swiperChanged">
 
-      <swiper-item class="content-wrapper swiper-item" v-for="(item,index) in originList" :key="item.id">
+      <swiper-item class="content-wrapper swiper-item" v-for="(item,index) in paginatedData" :key="item.id">
         <view class="content-wrapper video-box">
 
           <video :id="'video'+index" class="content-wrapper" v-if="cachePlay?item.show:index===showVideoIndex" :src="item.playurl"
@@ -20,18 +21,17 @@
 
           <!--模拟视频封面-->
           <!--          <template v-if="index!==showVideoIndex">
-                      <image class="content-wrapper picurl" v-if="index===showVideoIndex-1" :src="originList[index].picurl" mode="widthFix"></image>
-                      <image class="content-wrapper picurl" v-if="index===showVideoIndex+1" :src="originList[index].picurl" mode="widthFix"></image>
+                      <image class="content-wrapper picurl" v-if="index===showVideoIndex-1" :src="paginatedData[index].picurl" mode="widthFix"></image>
+                      <image class="content-wrapper picurl" v-if="index===showVideoIndex+1" :src="paginatedData[index].picurl" mode="widthFix"></image>
                     </template>-->
 
           <!-- 文本标题 -->
           <view class="video-text">
-            <text class="tips">{{ index + 1 }} / {{ originList.length }} {{ item.title }}</text>
+            <text class="tips">{{ index + 1 }} / {{ paginatedData.length }} {{ item.title }}</text>
           </view>
         </view>
 
       </swiper-item>
-
 
 
     </swiper>
@@ -64,10 +64,10 @@ export default {
   data() {
     return {
 
-      originList: [], // 源数据
+      // paginatedData: [], // 源数据
       showVideoIndex: 0, //控制video是否渲染
 
-      page: 1, // 视频分页
+      currentPage: 1, // 视频分页
       pageSize: 5,
 
 
@@ -107,7 +107,9 @@ export default {
 
       ],
 
-      cachePlay: true
+      cachePlay: true,
+
+      dataList: [] // 假定这里是从外部获取的数据列表
 
     }
   },
@@ -121,15 +123,23 @@ export default {
     this.setVideoContext()
 
     this.videoContext.play()
+
   },
   computed: {
     videoContext() {
       return videoContexts[this.showVideoIndex]
     },
+
+    paginatedData() {
+      const start = (this.currentPage - 2) * this.pageSize;
+      const end = start + this.pageSize;
+      return this.dataList.slice(start, end);
+    }
   },
 
 
   methods: {
+
 
     /* 获取视频数据 */
     getVideoList() {
@@ -146,7 +156,8 @@ export default {
               "picuser": "https://vi3.6rooms.com/live/2021/12/31/00/1003v1640883024264589121.jpg",
               "picurl": "https://vi3.6rooms.com/live/2020/06/05/16/1032v1591346452727634477_l.jpg",
               "playurl": "https://minivideo.xiu123.cn/original/ca685b093649466a98cddfcdcb63bad6/6ccf6d3-17283a3bedb.mp4",
-              "sec": "140"
+              "sec": "140",
+              "show": false
             },
             {
               "id": 5,
@@ -236,34 +247,48 @@ export default {
       let res = JSON.parse(JSON.stringify(resData))
       res.result.list.forEach(item => item.id = uuid())
       if (res.code === 200) {
-        let len = this.originList.length
+        let len = this.paginatedData.length
 
-        this.originList = this.originList.concat(res.result.list)
+        this.dataList =  res.result.list;
 
         if (len === 0) {
           this.setVideoShow(0)
 
         }
-        console.log(this.originList)
+        this.currentPage++
 
-        this.page++
       }
 
       return
       uni.request({
-        url: 'https://api.apiopen.top/api/getMiniVideo?page=' + this.page + '&pageSize=' + this.pageSize, // 请求数据接口
+        url: 'https://api.apiopen.top/api/getMiniVideo?currentPage=' + this.currentPage + '&pageSize=' + this.pageSize, // 请求数据接口
         data: {},
         success: (res) => {
           if (res.data.code === 200) {
-            this.originList = res.data.result.list
-            this.page++
+            this.paginatedData = res.data.result.list
+            this.currentPage++
           }
         }
       })
 
 
     },
+    changePage() {
+      // 翻页逻辑，确保页码的有效性
+      const newPage = this.currentPage + 1;
+      if (newPage > 0 && (newPage - 1) * this.pageSize < this.dataList.length) {
+        this.currentPage = newPage;
+      }
+    },
+    updateItem(current) {
+      // 计算在dataList中的实际索引
+      const actualIndex = (this.currentPage - 1) * this.pageSize + current;
+      // 确保索引有效
+      if (actualIndex >= 0 && actualIndex < this.dataList.length) {
+        this.$set(this.dataList, actualIndex, {...this.dataList[actualIndex], show: true});
+      }
 
+    },
     setVideoContext() {
       if (!this.cachePlay) return
       let videoId = 'video' + this.showVideoIndex
@@ -277,15 +302,16 @@ export default {
       if (!this.cachePlay) return
 
       if (current === 0) {
-        this.$set(this.originList, current, {...this.originList[current], show: true});
-        this.$set(this.originList, current + 1, {...this.originList[current + 1], show: true});
-        this.$set(this.originList, current + 2, {...this.originList[current + 2], show: true});
+        this.updateItem(current)
+        this.updateItem(current + 1)
+        this.updateItem(current + 2)
 
       } else {
-        let heideIndex = this.originList.findIndex(item => !item.show);
+        let heideIndex = this.paginatedData.findIndex(item => !item.show);
         if (heideIndex !== -1) {
           console.log('setShow-ok')
-          this.$set(this.originList, heideIndex, {...this.originList[heideIndex], show: true});
+          this.updateItem(heideIndex)
+
         }
       }
 
@@ -296,7 +322,7 @@ export default {
 
       if (!this.cachePlay) return
       if (type === 'toPre') {
-        let len = this.originList.length
+        let len = this.paginatedData.length
         if (current !== len) {
           videoContexts[current + 1].pause();
         }
@@ -310,7 +336,7 @@ export default {
     swiperChanged({detail: {current}}) {
       console.log('swiperChanged-current', current)
 
-      let updateNum = ((this.page - 1) * this.pageSize) - 2
+      let updateNum = ((this.currentPage - 1) * this.pageSize) - 2
       let currentNum = current + 1
 
       // 向下一个滑动
@@ -345,7 +371,7 @@ export default {
 
 
       return
-      // this.originList[heideIndex].show = true
+      // this.paginatedData[heideIndex].show = true
 
       if (index === 0) {
         this.videoContext.play()
@@ -373,7 +399,7 @@ export default {
 </script>
 
 <style scoped>
-.page-swiper {
+.currentPage-swiper {
   width: 750rpx;
   display: flex;
   flex-direction: column;

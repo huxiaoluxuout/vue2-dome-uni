@@ -2,14 +2,13 @@
   <view class="page">
 
 
-<!--    <zshu-uploadimg ref="uploadImg" columns-limit="2" gap="10px" scale="1.58" limit="13"
-                    hidden-upload-icon img-width="150px"
-                    :fileImageList="fileImageList" @updateFileImageList="updateFileImageList"
-    >
-    </zshu-uploadimg>
+    <!--    <zshu-uploadimg ref="uploadImg" columns-limit="2" gap="10px" scale="1.58" limit="13"
+                        hidden-upload-icon img-width="150px"
+                        :fileImageList="fileImageList" @updateFileImageList="updateFileImageList"
+        >
+        </zshu-uploadimg>
 
-    <u-button type="primary" :plain="true" text="zshu-uploadimg" @click="openUploadImg"></u-button>-->
-
+        <u-button type="primary" :plain="true" text="zshu-uploadimg" @click="openUploadImg"></u-button>-->
 
 
     <u-button type="primary" :plain="true" text="仿抖音页面" @click="$u.route('/pages/dou_yin/dou_yin')"></u-button>
@@ -17,9 +16,13 @@
     <u-button type="primary" :plain="true" text="N-仿抖音页面" @click="$u.route('/pages/n_dou_yin/n_dou_yin')"></u-button>
     <u-button type="primary" :plain="true" text="N-仿抖音页面2" @click="$u.route('/pages/n_dou_yin/n_dou_yin_2')"></u-button>
 
-<!--    <u-button type="primary" :plain="true" text="BindingX" @click="$u.route('/pages/n_BindingX/n_BindingX')"></u-button>-->
 
-    <tabbar :INDEX="0"></tabbar>
+    <!--    <u-button type="primary" :plain="true" text="BindingX" @click="$u.route('/pages/n_BindingX/n_BindingX')"></u-button>-->
+
+    <view style="position: fixed;bottom: 0;">
+      <tabbar :INDEX="0"></tabbar>
+
+    </view>
 
 
   </view>
