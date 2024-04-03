@@ -1,26 +1,38 @@
 <template>
 
   <view class="page-swiper">
-    <swiper class="content-wrapper" :render-whole="true"
-            :circular="false" :disable-touch="disableTouch" vertical easing-function="easeInOutCubic"
-            @change="swiperChanged" @animationfinish="animationfinish">
+    <swiper class="content-wrapper" :render-whole="true" :autoplay="false"  interval="400" :circular="false" :disable-touch="disableTouch" vertical :duration="200"
+            @change="swiperChanged"
+            @animationfinish="animationfinish">
 
-      <template v-for="(item,index) in originList">
-        <swiper-item class="content-wrapper swiper-item" :key="item.id">
-          <view class="content-wrapper video-box">
+      <swiper-item class="content-wrapper swiper-item" v-for="(item,index) in originList" :key="item.id" :item-id="item.id">
+        <view class="content-wrapper video-box">
 
-            <video :id="'video'+index" class="content-wrapper" v-if="index===showVideoIndex" :src="item.playurl"
-                   :autoplay="false" :controls="true" :custom-cache="false" :loop="false"
-                   :enable-play-gesture="true" :enable-progress-gesture="true" :http-cache="true" play-btn-position="center"
-                   :show-center-play-btn="true"
-                   :poster="item.picurl"
-            >
+          <video :id="'video'+index" class="content-wrapper" v-if="index===showVideoIndex" :src="item.playurl"
+                 :autoplay="false" :controls="true" :custom-cache="false" :loop="false"
+                 :enable-play-gesture="true" :enable-progress-gesture="true" :http-cache="true" play-btn-position="center"
+                 :show-center-play-btn="true"
+                 :poster="item.picurl"
+          >
 
-            </video>
+          </video>
 
-            <template v-if="index!==showVideoIndex">
+          <template v-if="index!==showVideoIndex">
 
-              <video v-if="index===showVideoIndex-1" :id="'video'+index" class="content-wrapper" :src="item.playurl"
+            <template v-if="index===showVideoIndex-1">
+              <video :id="'video'+index" class="content-wrapper" :src="item.playurl"
+                     :autoplay="false" :controls="true" :custom-cache="false" :loop="false"
+                     :enable-play-gesture="true" :enable-progress-gesture="true" :http-cache="true" play-btn-position="center"
+                     :show-center-play-btn="true"
+                     :poster="item.picurl"
+              >
+              </video>
+              <!--模拟视频封面-->
+              <!--              <image class="content-wrapper picurl-img" :src="originList[index].picurl" mode="widthFix"></image>-->
+
+            </template>
+            <template v-if="index===showVideoIndex+1">
+              <video :id="'video'+index" class="content-wrapper" :src="item.playurl"
                      :autoplay="false" :controls="true" :custom-cache="false" :loop="false"
                      :enable-play-gesture="true" :enable-progress-gesture="true" :http-cache="true" play-btn-position="center"
                      :show-center-play-btn="true"
@@ -28,43 +40,24 @@
               >
               </video>
 
-              <video v-if="index===showVideoIndex+1" :id="'video'+index" class="content-wrapper" :src="item.playurl"
-                     :autoplay="false" :controls="true" :custom-cache="false" :loop="false"
-                     :enable-play-gesture="true" :enable-progress-gesture="true" :http-cache="true" play-btn-position="center"
-                     :show-center-play-btn="true"
-                     :poster="item.picurl"
-              >
-              </video>
-
+              <!--模拟视频封面-->
+              <!--              <image class="content-wrapper picurl-img" :src="originList[index].picurl" mode="widthFix"></image>-->
 
             </template>
 
-            <!-- 文本标题 -->
-            <view class="video-text">
-              <text class="tips">{{ index + 1 }} / {{ originList.length }} {{ item.title }}</text>
-            </view>
-          </view>
+          </template>
 
-        </swiper-item>
-      </template>
+          <!-- 文本标题 -->
+          <view class="video-text">
+            <text class="tips">{{ index + 1 }} / {{ originList.length }} {{ item.title }}</text>
+          </view>
+        </view>
+
+      </swiper-item>
+
+
     </swiper>
 
-    <view class="fixed-right">
-      <uni-grid :column="4" :highlight="true">
-        <uni-grid-item v-for="(item, index) in list" :index="index" :key="index">
-          <view class="grid-item-box" @click="changeGrid(index)">
-            <uni-icons :type="item.type" :size="34" color="#fff"/>
-            <text class="fixed-right-text">{{ item.text }}</text>
-          </view>
-        </uni-grid-item>
-      </uni-grid>
-    </view>
-
-    <uni-popup ref="popup" border-radius="10px 10px 0 0">
-      <view class="popup-container">
-        <text>底部弹出 Popup 自定义圆角</text>
-      </view>
-    </uni-popup>
   </view>
 </template>
 
@@ -72,59 +65,23 @@
 
 import {uuid} from "@/utils/tools";
 
-const videoContexts = []
-let cacheList = []
+let videoContexts = []
+
 export default {
   data() {
     return {
 
       originList: [], // 源数据
-      originList2: [], // 源数据
       showVideoIndex: 0, //控制video是否渲染
 
       page: 1, // 视频分页
       pageSize: 10,
 
 
-      list: [
-        {
-          text: '播放',
-          badge: '0',
-          type: "heart-filled"
-        }, {
-          text: '暂停',
-          badge: '0',
-          type: "heart-filled"
-        }, {
-          text: '停止',
-          badge: '0',
-          type: "heart-filled"
-        }, {
-          text: 'Grid 1',
-          badge: '0',
-          type: "heart-filled"
-        },
-        {
-          text: 'Grid 2',
-          badge: '1',
-          type: "hand-up-filled"
-        },
-        {
-          text: 'Grid 3',
-          badge: '99',
-          type: "chat-filled"
-        },
-        {
-          text: 'Grid 4',
-          badge: '2',
-          type: "redo-filled"
-        },
-
-      ],
-
       disableTouch: false,
       currentIndex: 0,
       autoplay: true,
+      videoId: ''
 
     }
   },
@@ -156,18 +113,15 @@ export default {
 
           if (res.data.code === 200) {
 
+            this.originList = [...this.originList, ...res.data.result.list]
+
             if (this.page === 1) {
-              this.originList = [...this.originList, ...res.data.result.list]
               this.setVideoShow(0)
               this.setVideoContext(0)
+
               this.$nextTick(() => {
                 this.videoContext.play()
               })
-            } else {
-              this.$nextTick(() => {
-                this.originList = [...this.originList, ...res.data.result.list];
-              });
-
             }
 
             this.page++
@@ -175,26 +129,25 @@ export default {
         }
       })
 
-    },
-    updated() {
-      if (cacheList.length === 0) return
-      let data = cacheList.splice(0, 3)
-      this.$nextTick(() => {
-        this.originList = [...this.originList, ...data];
-      });
+
     },
 
     setVideoContext(current) {
+      this.$nextTick(() => {
+        try {
+          if (videoContexts.length === current) {
+            let videoId = 'video' + current
+            let videoContext = uni.createVideoContext(videoId)
+            videoContexts.push(videoContext)
+          }
+        }catch (err){
+          console.log('err',err)
+          this.autoplay = false
 
-      try {
-        if (videoContexts.length === current) {
-          let videoId = 'video' + current
-          let videoContext = uni.createVideoContext(videoId)
-          videoContexts.push(videoContext)
         }
-      } catch (err) {
-        console.log('err', err)
-      }
+
+      })
+
 
     },
 
@@ -207,17 +160,17 @@ export default {
         let heideIndex = this.originList.findIndex(item => !item.show);
         if (heideIndex !== -1) {
           console.log('setShow-ok')
-          this.$nextTick(() => {
-            this.$set(this.originList, heideIndex, {...this.originList[heideIndex], show: true});
-
-          })
+          this.$set(this.originList, heideIndex, {...this.originList[heideIndex], show: true});
         }
       }
+
+      this.$forceUpdate()
+
 
     },
 
     changePlay(current, type) {
-
+      console.log(videoContexts.length)
       if (type === 'toPre') {
         let len = this.originList.length
         try {
@@ -226,8 +179,8 @@ export default {
           }
           videoContexts[current].play();
         } catch (error) {
-
-          console.error('01:捕获到错误:', error);
+          this.autoplay = false
+          console.error('01:捕获到错误:', error, this.videoId);
         }
 
       } else if (type === 'toNext') {
@@ -237,7 +190,8 @@ export default {
           videoContexts[current].play();
         } catch (error) {
           this.autoplay = false
-          console.error('02:捕获到错误:', current, error);
+
+          console.error('02:捕获到错误:', current,error);
 
         }
 
@@ -247,44 +201,43 @@ export default {
     },
 
     animationfinish({detail: {current}}) {
+      let updateNum = ((this.page - 1) * this.pageSize) - 2
+      let currentNum = current + 1
+
       // 向下一个滑动
       if (current > this.showVideoIndex) {
         this.showVideoIndex = current;
         this.changePlay(current, 'toNext')
+        if (currentNum === updateNum) {
+          console.log('更新数据',)
+          this.getVideoList()
+          this.$forceUpdate()
+        }
       }
       // 向上一个滑动
       else {
         this.showVideoIndex = current;
-        this.changePlay(current, 'toPre')
       }
 
       this.disableTouch = false
+
+
     },
 
     swiperChanged({detail: {current}}) {
       this.disableTouch = true
       // 向下一个滑动
       if (current > this.showVideoIndex) {
-        let updateNum = ((this.page - 1) * this.pageSize) - 2
-        let currentNum = current + 1
-        if (currentNum === updateNum) {
-          console.log('更新数据')
-          this.getVideoList()
-        }
-
-        // this.updated()
         this.setVideoShow(current)
         this.$nextTick(() => {
           this.setVideoContext(current)
         })
 
       }
-
-    },
-
-
-    changeGrid(index) {
-      console.log('changeGrid', index)
+      // 向上一个滑动
+      else {
+        this.changePlay(current, 'toPre')
+      }
 
     },
 
@@ -311,8 +264,7 @@ export default {
 }
 
 .swiper-item {
-  background-color: #000000;
-
+  transform: translateY(100px);
 }
 
 .video-box {
