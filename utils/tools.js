@@ -42,22 +42,20 @@ const objectStyleToString = (obj) => {
     }
     return str;
 }
-/**
- * 从 URL 中?分割出路径和查询字符串
- * @param  {String} url 完整的 URL
- * @return {Object}     包含路径和查询字符串的对象
- */
-function splitQueryUrl(url) {
+
+
+function splitQueryUrl(pathUrl) {
     // 以问号 (?) 分割 URL，获取路径和查询字符串
+    let url = /^\//.test(pathUrl) ? pathUrl : '/' + pathUrl
     let parts = url.split('?');
     let path = parts[0];
     let query = parts[1];
     return {
         path,
-        query: query ? '?' + query : ''
+        query: query ? '?' + query : '',
+        startStr: query ? '&' : '?',
     }
 }
-
 
 
 // 根据传入的索引批量删除
@@ -127,6 +125,26 @@ function startTimer(callback, delay=20, ...args) {
         clearTimeout(timer);
     }, delay);
 }
+
+function simulateOperation() {
+    return new Promise((resolve, reject) => {
+        const delay = Math.floor(Math.random() * (5000 - 1000 + 1)) + 1000;
+        console.log('延时',delay)
+        const operationShouldFail = Math.random() < 0.3;// 假设有30%的概率失败
+        setTimeout(() => {
+            if (operationShouldFail) {
+                reject('失败');
+            } else {
+                resolve('成功');
+            }
+        }, delay);
+    });
+}
+
+
+// ------------------------------------------
+
+
 function arrayEquals(arr1, arr2) {
     if (!arr2) return false;
     if (arr1.length !== arr2.length) return false;
@@ -167,7 +185,8 @@ export {
     removeElementsByIndex,
     isEmptyData,
     splitQueryUrl,
-    startTimer
+    startTimer,
+    simulateOperation
 
 }
 

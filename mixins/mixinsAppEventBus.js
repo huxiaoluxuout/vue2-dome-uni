@@ -1,29 +1,17 @@
-// 向tabbar页面传参
+import {splitQueryUrl} from "@/utils/tools";
+
+// 向未打卡的页面传参(tabbar)
+
 export default {
-    data() {
-        return {
-            appParam: {}
-        }
-    },
     onLaunch: function () {
-        uni.$on('getAPP', this.handleGetApp)
-        uni.$on('emitApp', this.handleApp)
-    },
-
-    methods: {
-        handleApp({eventName, param}) {
-            this.appParam = param
-            uni.$emit(eventName, param)
-            uni.$once(eventName, this.handleGetApp)
-        },
-        handleGetApp(handler) {
-            if (typeof handler === 'function') {
-                handler(this.appParam)
+        uni.$on('OnGlobEvent', ({eventName, isPath = true, handler}) => {
+            uni.$once(eventName, handler)
+            if (isPath) {
+                const {path, query, startStr} = splitQueryUrl(eventName)
+                uni.navigateTo({url: path + query + (startStr + 'eventName=' + eventName)})
             }
-        },
+        })
     },
-
-
 }
 
 

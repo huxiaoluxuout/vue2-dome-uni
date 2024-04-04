@@ -38,8 +38,20 @@ export default {
       pageSize: 5
     }
   },
-  onLoad() {
-    this.getPageID()
+
+  onLoad(options) {
+    // console.log(options)
+    /*let pages = getCurrentPages();
+    let currentEventName = '/' + pages[pages.length - 1]['route'];
+    console.log('currentEventName', currentEventName)*/
+
+    this.$EventBus.emit(options.eventName, (prams) => {
+      console.log('options.eventName', prams)
+    })
+
+    // this.getPageID()
+
+
   },
 
   methods: {
