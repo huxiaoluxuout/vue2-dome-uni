@@ -1,8 +1,8 @@
 <template>
 
   <view class="page-swiper">
-    <swiper class="content-wrapper" :render-whole="true"
-            :circular="false" :disable-touch="disableTouch" vertical easing-function="easeInOutCubic"
+    <swiper class="content-wrapper" :render-whole="true" :autoplay="false" :circular="false"
+            :disable-touch="disableTouch" vertical easing-function="easeInOutCubic"
             @change="swiperChanged" @animationfinish="animationfinish">
 
       <template v-for="(item,index) in originList">
@@ -21,19 +21,11 @@
             <template v-if="index!==showVideoIndex">
 
               <video v-if="index===showVideoIndex-1" :id="'video'+index" class="content-wrapper" :src="item.playurl"
-                     :autoplay="false" :controls="true" :custom-cache="false" :loop="false"
-                     :enable-play-gesture="true" :enable-progress-gesture="true" :http-cache="true" play-btn-position="center"
-                     :show-center-play-btn="true"
-                     :poster="item.picurl"
-              >
+                     :autoplay="false" play-btn-position="center" :poster="item.picurl">
               </video>
 
               <video v-if="index===showVideoIndex+1" :id="'video'+index" class="content-wrapper" :src="item.playurl"
-                     :autoplay="false" :controls="true" :custom-cache="false" :loop="false"
-                     :enable-play-gesture="true" :enable-progress-gesture="true" :http-cache="true" play-btn-position="center"
-                     :show-center-play-btn="true"
-                     :poster="item.picurl"
-              >
+                     :autoplay="false" play-btn-position="center" :poster="item.picurl">
               </video>
 
 
