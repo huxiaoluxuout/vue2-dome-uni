@@ -121,6 +121,12 @@ function deepEqual(obj1, obj2) {
     return true;
 }
 
+function startTimer(callback, delay=20, ...args) {
+    let timer = setTimeout(() => {
+        callback(...args);
+        clearTimeout(timer);
+    }, delay);
+}
 function arrayEquals(arr1, arr2) {
     if (!arr2) return false;
     if (arr1.length !== arr2.length) return false;
@@ -160,7 +166,8 @@ export {
     objectStyleToString,
     removeElementsByIndex,
     isEmptyData,
-    splitQueryUrl
+    splitQueryUrl,
+    startTimer
 
 }
 

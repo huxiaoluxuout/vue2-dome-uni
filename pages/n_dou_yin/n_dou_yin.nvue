@@ -62,7 +62,7 @@
 
 <script>
 
-import {uuid} from "@/utils/tools";
+import {startTimer, uuid} from "@/utils/tools";
 
 const videoContexts = []
 let cacheList = []
@@ -153,7 +153,9 @@ export default {
               this.setVideoShow(0)
               this.setVideoContext(0)
               this.$nextTick(() => {
-                this.videoContext.play()
+                startTimer(() => {
+                  this.videoContext.play()
+                }, 200)
               })
             } else {
               this.$nextTick(() => {
@@ -216,7 +218,11 @@ export default {
           if (current !== len) {
             videoContexts[current + 1].pause();
           }
-          videoContexts[current].play();
+
+
+          startTimer(() => {
+            videoContexts[current].play();
+          }, 200)
         } catch (error) {
 
           console.error('01:捕获到错误:', error);
@@ -226,7 +232,9 @@ export default {
 
         try {
           videoContexts[current - 1].pause()
-          videoContexts[current].play();
+          startTimer(() => {
+            videoContexts[current].play();
+          }, 200)
         } catch (error) {
           this.autoplay = false
           console.error('02:捕获到错误:', current, error);
