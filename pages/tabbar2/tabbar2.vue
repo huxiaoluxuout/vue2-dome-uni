@@ -1,21 +1,22 @@
 <template>
   <view>
-    <z-paging ref="paging" v-model="dataList" use-page-scroll  @query="queryList">
-<!--      <view slot="top">
-        <zshu-tabs  :activeId="activeId" @updateActiveId="(id)=>{activeId = id}" :list-tabs="listTabs"></zshu-tabs>
-      </view>-->
-      <view class="dome-test" v-for="(item,index) in dataList" :key="index">
-        <view class="dome-test-item">{{ item.id }}</view>
-        <view class="dome-test-item">{{ item.name }}</view>
-        <view class="dome-test-item">{{ item.take_time_text }}</view>
-        <view class="dome-test-item">{{ item.fault }}</view>
-      </view>
+    <!--    <z-paging ref="paging" v-model="dataList" use-page-scroll  @query="queryList">-->
+    <!--      <view slot="top">
+            <zshu-tabs  :activeId="activeId" @updateActiveId="(id)=>{activeId = id}" :list-tabs="listTabs"></zshu-tabs>
+          </view>-->
+    <view class="dome-test" v-for="(item,index) in dataList" :key="index">
+      <view class="dome-test-item">{{ item.id }}</view>
+      <view class="dome-test-item">{{ item.name }}</view>
+      <view class="dome-test-item">{{ item.take_time_text }}</view>
+      <view class="dome-test-item">{{ item.fault }}</view>
+    </view>
 
-      <view slot="bottom">
-        <tabbar :INDEX="1"></tabbar>
-      </view>
-    </z-paging>
+    <view slot="bottom">
+      <tabbar :INDEX="1"></tabbar>
+    </view>
+    <!--    </z-paging>-->
 
+    <tabbar :INDEX="1"></tabbar>
 
   </view>
 </template>
@@ -24,6 +25,7 @@
 import ZshuTabs from "@/components/zshu-components/zshu-tabs.vue";
 import {getMineOrderList} from "@/network/apis/test_api";
 import ZPMixin from '@/uni_modules/z-paging/components/z-paging/js/z-paging-mixin'
+
 export default {
   components: {ZshuTabs},
   mixins: [ZPMixin],
@@ -49,22 +51,32 @@ export default {
     }
   },
 
-  onLoad() {
+  onLoad(options) {
+
+    const eventName = '/pages/tabbar2/tabbar2'
+
+    uni.$on(eventName, (handler) => {
+      handler((callbackPrams) => {
+        console.log('$on-tabbar2', callbackPrams)
+      })
+    })
+    uni.$emit('GlobEvent' + eventName)
 
   },
+
   watch: {
     activeId() {
-      this.$refs.paging.reload()
+      // this.$refs.paging.reload()
     },
   },
 
   methods: {
-    getMineOrderListHandle(pageNo,pageSize) {
+    getMineOrderListHandle(pageNo, pageSize) {
 
       getMineOrderList({
-        page:pageNo,
+        page: pageNo,
         page_size: pageSize,
-        status: this.activeId-1
+        status: this.activeId - 1
       }).then(res => {
         this.$refs.paging.complete(res.data.data);
 
@@ -73,7 +85,7 @@ export default {
       })
     },
 
-    queryList(pageNo, pageSize,form) {
+    queryList(pageNo, pageSize, form) {
 
       this.getMineOrderListHandle(pageNo, pageSize)
 

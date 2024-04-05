@@ -4,11 +4,21 @@ import {splitQueryUrl} from "@/utils/tools";
 
 export default {
     onLaunch: function () {
-        uni.$on('OnGlobEvent', ({eventName, isPath = true, handler}) => {
-            uni.$once(eventName, handler)
+
+        uni.$on('OnGlobEvent', ({type = 'navigateTo', eventName, isPath = true, handler}) => {
+            uni.$emit(eventName, handler)
+            uni.$once('GlobEvent' + eventName, ()=> {
+                uni.$emit(eventName, handler)
+            })
+            if(type==='navigateTo'){
+
+            }else if(type==='switchTab'){
+
+            }
+
             if (isPath) {
                 const {path, query, startStr} = splitQueryUrl(eventName)
-                uni.navigateTo({url: path + query + (startStr + 'eventName=' + eventName)})
+                uni[type]({url: path + query + (startStr + 'eventName=' + eventName)})
             }
         })
     },

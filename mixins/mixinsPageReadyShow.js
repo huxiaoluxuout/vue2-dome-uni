@@ -7,7 +7,7 @@ export default {
 
     methods: {
         ylxOnPageReadyShow() {
-            console.log('ylxOnPageReadyShow')
+            // console.log('ylxOnPageReadyShow')
         },
     },
     onShow() {

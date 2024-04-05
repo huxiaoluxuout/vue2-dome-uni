@@ -154,15 +154,24 @@ export default {
   },
 
   onLoad() {
-    this.getMineOrderListApi()
+    const eventName = '/pages/tabbar3/tabbar3'
+
+
+    uni.$on(eventName, (handler) => {
+      handler((callbackPrams) => {
+        console.log('$on-tabbar3', callbackPrams)
+      })
+    })
+    uni.$emit('GlobEvent' + eventName)
+
+
+    /*this.getMineOrderListApi()
     this.ylxNextPageManager.setEmitFunctions(this.getMineOrderListApi)
     this.ylxNextPageManager.reloadCallback(this.ylxReloadCallback)
-    this.ylxPullDownRefresh.setEmitFunctions(this.ylxNextPageManager.reload)
+    this.ylxPullDownRefresh.setEmitFunctions(this.ylxNextPageManager.reload)*/
 
   },
-  onShow() {
-    console.log('tabbar 3')
-  },
+
   methods: {
     ylxReloadCallback() {
       this.viewDataList = [null, null, null]

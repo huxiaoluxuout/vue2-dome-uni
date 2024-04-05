@@ -13,9 +13,22 @@
 
     <u-button type="primary" :plain="true" text="仿抖音页面" @click="$u.route('/pages/dou_yin/dou_yin')"></u-button>
 
-    <u-button type="primary" :plain="true" text="N-仿抖音页面" @click="$u.route('/pages/n_dou_yin/n_dou_yin')"></u-button>
-------------------------------
-    <u-button type="primary" :plain="true" text="EventBus" @click="EventBusClick"></u-button>
+    <u-button type="primary" :plain="true" text="N-仿抖音页面"
+              @click="$u.route('/pages/n_dou_yin/n_dou_yin')"></u-button>
+    ------------------------------
+    <u-button type="primary" :plain="true" text="OnGlobEventtabbar2" @click="OnGlobEventtabbar2"></u-button>
+
+    <u-button type="primary" :plain="true" text="tabbar2" @click="tabbar2"></u-button>
+
+    <u-button type="primary" :plain="true" text="OnGlobEventtabbar3" @click="OnGlobEventtabbar3"></u-button>
+
+    <u-button type="primary" :plain="true" text="tabbar3" @click="tabbar3"></u-button>
+
+    <u-button type="primary" :plain="true" text="OnGlobEventA1" @click="OnGlobEventA1"></u-button>
+
+    <u-button type="primary" :plain="true" text="A1" @click="A1"></u-button>
+
+
     <!--    <u-button type="primary" :plain="true" text="EventBusClick2" @click="EventBusClick2"></u-button>-->
     <!--    <u-button type="primary" :plain="true" text="N-仿抖音页面2" @click="$u.route('/pages/n_dou_yin/n_dou_yin_2')"></u-button>-->
 
@@ -35,18 +48,19 @@ import ZshuNavbar from "@/components/zshu-components/zshu-navbar.vue";
 
 import {ylxNavigateTo} from "@/utils/uniTools";
 
-import mixinsYlxUniEventBus from "@/mixins/mixinsYlxUniEventBus";
+// import mixinsYlxUniEventBus from "@/mixins/mixinsYlxUniEventBus";
 
 
 import ZshuUploadimg from "@/components/zshu-components/zshu-uploadimg.vue";
 
 import {data} from "test/data.json"
 import {startTimer, uuid, simulateOperation} from "@/utils/tools";
+import mixinsOnRegisterEvent from "@/mixins/mixinsOnRegisterEvent";
 
 
 export default {
   components: {ZshuNavbar, ZshuUploadimg},
-  mixins: [mixinsYlxUniEventBus],
+  mixins: [mixinsOnRegisterEvent],
   data() {
     return {
 
@@ -97,9 +111,8 @@ export default {
     // ---------------------------------------------
     getVideoList(callback) {
       console.log('getVideoList',)
+      typeof callback === 'function' && callback('getVideoList')
 
-      typeof callback === 'function' && callback('hello ')
-      console.log('getVideoList-11111111')
       return
       simulateOperation().then(res => {
         console.log('res', res)
@@ -161,6 +174,73 @@ export default {
 
       this.$EventBus.emit('OnGlobEvent', {eventName: '/pages/dou_yin/dou_yin', handler: this.getVideoList})
     },
+
+
+    OnGlobEventtabbar2() {
+
+      uni.$emit('OnGlobEvent', {
+        type: 'switchTab',
+        eventName: '/pages/tabbar2/tabbar2',
+        handler: this.getVideoList
+      })
+
+    },
+
+    OnGlobEventtabbar3() {
+
+      uni.$emit('OnGlobEvent', {
+        type: 'switchTab',
+        eventName: '/pages/tabbar3/tabbar3',
+        handler: this.getVideoListgetVideoList
+      })
+
+    },
+    OnGlobEventA1() {
+
+      uni.$emit('OnGlobEvent', {
+        // type: 'switchTab',
+        eventName: '/pages/A1/A1',
+        handler: this.getVideoListgetVideoList
+      })
+
+    },
+
+    // ------
+    tabbar2() {
+
+      uni.$emit('/pages/tabbar2/tabbar2', this.getVideoList)
+      uni.switchTab({
+        url: '/pages/tabbar2/tabbar2'
+      });
+
+    },
+    getVideoListgetVideoList(callback) {
+      console.log('getVideoListgetVideoList',)
+
+      typeof callback === 'function' && callback('getVideoListgetVideoList ')
+
+    },
+    tabbar3() {
+
+      uni.$emit('/pages/tabbar3/tabbar3', this.getVideoListgetVideoList)
+      uni.switchTab({
+        url: '/pages/tabbar3/tabbar3'
+      });
+
+    },
+    A1() {
+
+      uni.$emit('/pages/A1/A1', this.getVideoListgetVideoList)
+      uni.navigateTo({
+        url: '/pages/A1/A1'
+      });
+
+    },
+
+    ylxOnCurrentPageHandler(callback) {
+      typeof callback === 'function' && callback()
+    },
+
   }
 }
 </script>
