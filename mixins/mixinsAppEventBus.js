@@ -1,6 +1,6 @@
 import {splitQueryUrl} from "@/utils/tools";
 
-// 向未打卡的页面传参(tabbar)
+// 向未打开的页面传参(tabbar)
 
 export default {
     onLaunch: function () {
@@ -10,11 +10,6 @@ export default {
             uni.$once('GlobEvent' + eventName, ()=> {
                 uni.$emit(eventName, handler)
             })
-            if(type==='navigateTo'){
-
-            }else if(type==='switchTab'){
-
-            }
 
             if (isPath) {
                 const {path, query, startStr} = splitQueryUrl(eventName)
