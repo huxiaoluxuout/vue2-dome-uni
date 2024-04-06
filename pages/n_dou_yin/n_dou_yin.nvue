@@ -1,13 +1,13 @@
 <template>
 
-  <view class="page-swiper">
+  <div class="page-swiper">
     <swiper class="content-wrapper" :render-whole="true" :autoplay="false" :circular="false"
             :disable-touch="disableTouch" vertical easing-function="easeInOutCubic"
             @change="swiperChanged" @animationfinish="animationfinish">
 
       <template v-for="(item,index) in originList">
         <swiper-item class="content-wrapper swiper-item" :key="item.id">
-          <view class="content-wrapper video-box">
+          <div class="content-wrapper video-box">
 
             <video :id="'video'+index" class="content-wrapper" v-if="index===showVideoIndex" :src="item.playurl"
                    :autoplay="false" :controls="true" :custom-cache="false" :loop="false"
@@ -32,16 +32,16 @@
             </template>
 
             <!-- 文本标题 -->
-            <view class="video-text">
+            <div class="video-text">
               <text class="tips">{{ index + 1 }} / {{ originList.length }} {{ item.title }}</text>
-            </view>
-          </view>
+            </div>
+          </div>
 
         </swiper-item>
       </template>
     </swiper>
 
-    <view class="fixed-right">
+    <div class="fixed-right">
       <uni-grid :column="4" :highlight="true">
         <uni-grid-item v-for="(item, index) in list" :index="index" :key="index">
           <view class="grid-item-box" @click="changeGrid(index)">
@@ -50,14 +50,14 @@
           </view>
         </uni-grid-item>
       </uni-grid>
-    </view>
+    </div>
 
     <uni-popup ref="popup" border-radius="10px 10px 0 0">
       <view class="popup-container">
         <text>底部弹出 Popup 自定义圆角</text>
       </view>
     </uni-popup>
-  </view>
+  </div>
 </template>
 
 <script>
@@ -124,13 +124,14 @@ export default {
 
   onLoad(options) {
     console.log(options)
-    // this.getVideoList()
+
     if(options.eventName){
       uni.$emit(options.eventName, (prams) => {
         console.log('options.eventName', prams)
       })
     }
 
+    this.getVideoList()
 
   },
   onReady() {

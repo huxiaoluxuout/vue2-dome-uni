@@ -256,6 +256,14 @@
         "navigationBarTitleText": "BindingX",
         "enablePullDownRefresh": false
       }
+    },
+    {
+    	"path" : "pages/dingWei/dingWei",
+    	"style" : 
+    	{
+    		"navigationBarTitleText" : "定位",
+    		"enablePullDownRefresh" : false
+    	}
     }
   ],
   "tabBar": {

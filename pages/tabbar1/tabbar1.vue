@@ -11,26 +11,25 @@
         <u-button type="primary" :plain="true" text="zshu-uploadimg" @click="openUploadImg"></u-button>-->
 
 
-    <u-button type="primary" :plain="true" text="仿抖音页面" @click="$u.route('/pages/dou_yin/dou_yin')"></u-button>
+    <!--    <u-button type="primary" :plain="true" text="仿抖音页面" @click="$u.route('/pages/dou_yin/dou_yin')"></u-button>-->
 
-    <u-button type="primary" :plain="true" text="N-仿抖音页面"
-              @click="$u.route('/pages/n_dou_yin/n_dou_yin')"></u-button>
-    ------------------------------
-    <u-button type="primary" :plain="true" text="OnGlobEventtabbar2" @click="OnGlobEventtabbar2"></u-button>
+    <u-button type="primary" :plain="true" text="N-仿抖音页面1" @click="$u.route('/pages/n_dou_yin/n_dou_yin')"></u-button>
+    <u-button type="primary" :plain="true" text="N-仿抖音页面2" @click="OnGlobEventDouYin"></u-button>
 
-    <u-button type="primary" :plain="true" text="tabbar2" @click="tabbar2"></u-button>
+    <!--    <u-button type="primary" :plain="true" text="OnGlobEventtabbar2" @click="OnGlobEventtabbar2"></u-button>-->
 
-    <u-button type="primary" :plain="true" text="OnGlobEventtabbar3" @click="OnGlobEventtabbar3"></u-button>
+    <!--    <u-button type="primary" :plain="true" text="tabbar2" @click="tabbar2"></u-button>-->
 
-    <u-button type="primary" :plain="true" text="tabbar3" @click="tabbar3"></u-button>
+    <!--    <u-button type="primary" :plain="true" text="OnGlobEventtabbar3" @click="OnGlobEventtabbar3"></u-button>-->
 
-    <u-button type="primary" :plain="true" text="OnGlobEventA1" @click="OnGlobEventA1"></u-button>
+    <!--    <u-button type="primary" :plain="true" text="tabbar3" @click="tabbar3"></u-button>-->
 
-    <u-button type="primary" :plain="true" text="A1" @click="A1"></u-button>
+    <!--    <u-button type="primary" :plain="true" text="OnGlobEventA1" @click="OnGlobEventA1"></u-button>-->
 
+    <!--    <u-button type="primary" :plain="true" text="A1" @click="A1"></u-button>-->
 
-    <!--    <u-button type="primary" :plain="true" text="EventBusClick2" @click="EventBusClick2"></u-button>-->
-    <!--    <u-button type="primary" :plain="true" text="N-仿抖音页面2" @click="$u.route('/pages/n_dou_yin/n_dou_yin_2')"></u-button>-->
+    <!--    <u-button type="primary" :plain="true" text="定位" @click="$u.route('/pages/dingWei/dingWei')"></u-button>-->
+
 
     <!--    <u-button type="primary" :plain="true" text="BindingX" @click="$u.route('/pages/n_BindingX/n_BindingX')"></u-button>-->
 
@@ -84,13 +83,13 @@ export default {
   onLoad() {
     // 注册事件监听器
     this.$EventBus.on('myEvent', this.listener);
-	
-	let myObject = {
-	  data: 'value'
-	};
-	
-	// 现在myObject和所有其他对象都有了globalMethod这个方法
-	// myObject.globalMethod(); // 输出: This is a global method
+
+    let myObject = {
+      data: 'value'
+    };
+
+    // 现在myObject和所有其他对象都有了globalMethod这个方法
+    // myObject.globalMethod(); // 输出: This is a global method
   },
   computed: {},
   methods: {
@@ -243,6 +242,15 @@ export default {
 
     ylxOnGetInfoHandler(callback) {
       typeof callback === 'function' && callback()
+    },
+
+    // 仿抖音
+    OnGlobEventDouYin() {
+      uni.$emit('OnGlobEvent', {
+        eventName: '/pages/n_dou_yin/n_dou_yin',
+        handler: this.getVideoListgetVideoList
+      })
+
     },
 
   }

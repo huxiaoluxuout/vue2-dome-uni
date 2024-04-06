@@ -210,6 +210,7 @@ export const uniChooseLocation = async ({latitude, longitude, keyword} = {}) => 
 const startLocationUpdate = () => {
     return new Promise((resolve, reject) => {
         uni.startLocationUpdate({
+            type:'wgs84',
             success(startRes) {
                 resolve(startRes)
             },
