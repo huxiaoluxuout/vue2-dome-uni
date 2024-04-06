@@ -20,13 +20,11 @@
 
 <script>
 import mixinsPullDownRefresh from "@/mixins/mixinsPullDownRefresh";
-import mixinsUseAppEventBus from "@/mixins/mixinsUseAppEventBus";
-import mixinsOnRegisterEvent from "@/mixins/mixinsOnRegisterEvent";
-
-// import mixinsYlxUniEventBus from "@/mixins/mixinsYlxUniEventBus";
+import mixinsEventBusUse from "@/mixins/mixinsEventBusUse";
+import mixinsEventBusRegister from "@/mixins/mixinsEventBusRegister";
 
 export default {
-  mixins: [mixinsPullDownRefresh,mixinsUseAppEventBus,mixinsOnRegisterEvent],
+  mixins: [mixinsPullDownRefresh,mixinsEventBusUse,mixinsEventBusRegister],
   data() {
     return {}
   },
@@ -56,11 +54,11 @@ export default {
 
     toPrePage() {
       console.log('A1')
-      uni.$emit(this.preEventName,()=>{
+      uni.$emit(this.ylxPrevEventName,()=>{
         uni.navigateBack()
       })
     },
-    ylxOnCurrentPageHandler(callback) {
+    ylxOnGetInfoHandler(callback) {
       console.log(callback)
       typeof callback === 'function' && callback()
     },

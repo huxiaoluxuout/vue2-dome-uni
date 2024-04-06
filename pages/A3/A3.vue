@@ -7,7 +7,7 @@
 </template>
 
 <script>
-import mixinsOnRegisterEvent from "@/mixins/mixinsOnRegisterEvent";
+import mixinsOnRegisterEvent from "@/mixins/mixinsEventBusRegister";
 
 export default {
   mixins:[mixinsOnRegisterEvent],
@@ -23,8 +23,8 @@ export default {
 
     },
     ccc() {
-      console.log('this.preEventName',this.preEventName)
-      uni.$emit(this.preEventName,()=>{
+      console.log('this.ylxPrevEventName',this.ylxPrevEventName)
+      uni.$emit(this.ylxPrevEventName,()=>{
         uni.navigateBack()
       })
     },

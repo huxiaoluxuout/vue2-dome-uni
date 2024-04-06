@@ -2,7 +2,7 @@ export default {
 
     data() {
         return {
-            preEventName: '',
+            ylxPrevEventName: '',
             currentRouteEventName: '',
         }
     },
@@ -10,18 +10,18 @@ export default {
         const pages = getCurrentPages();
         this.currentRouteEventName = pages[pages.length - 1]['route'];
         if (pages.length > 1) {
-            this.preEventName = pages[pages.length - 2]['route'];
+            this.ylxPrevEventName = pages[pages.length - 2]['route'];
         }
-        uni.$on(this.currentRouteEventName, this.ylxOnCurrentPageHandler)
+        uni.$on(this.currentRouteEventName, this.ylxOnGetInfoHandler)
     },
     onUnload() {
         uni.$off(this.currentRouteEventName)
     },
     methods: {
-        ylxOnCurrentPageHandler(handler) {
+        ylxOnGetInfoHandler(handler) {
             if (typeof handler === 'function') {
                 handler((callbackPrams) => {
-                    console.log('ylxOnCurrentPageHandler', callbackPrams)
+                    console.log('ylxOnGetInfoHandler', callbackPrams)
                 })
             } else {
                 console.log(handler)

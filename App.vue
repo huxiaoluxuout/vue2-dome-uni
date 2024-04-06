@@ -2,7 +2,7 @@
 
 
 import {getLogin} from "@/network/apis/test_api";
-import appEventBus from "@/mixins/mixinsAppEventBus";
+import appEventBus from "@/mixins/mixinsEventBus";
 
 import {devEnableDebug} from "@/common/js/devEnableDebug";
 

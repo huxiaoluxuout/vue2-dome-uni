@@ -35,8 +35,6 @@ eventBus.on('OnGlobEvent', ({eventName, isPath = true, handler}) => {
         uni.navigateTo({url: path + query + (startStr + 'eventName=' + eventName)})
     }
 })
-
-
 Vue.prototype.$EventBus = eventBus
 
 

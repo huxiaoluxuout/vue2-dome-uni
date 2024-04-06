@@ -48,19 +48,16 @@ import ZshuNavbar from "@/components/zshu-components/zshu-navbar.vue";
 
 import {ylxNavigateTo} from "@/utils/uniTools";
 
-// import mixinsYlxUniEventBus from "@/mixins/mixinsYlxUniEventBus";
-
-
 import ZshuUploadimg from "@/components/zshu-components/zshu-uploadimg.vue";
 
 import {data} from "test/data.json"
 import {startTimer, uuid, simulateOperation} from "@/utils/tools";
-import mixinsOnRegisterEvent from "@/mixins/mixinsOnRegisterEvent";
+import mixinsEventBusRegister from "@/mixins/mixinsEventBusRegister";
 
 
 export default {
   components: {ZshuNavbar, ZshuUploadimg},
-  mixins: [mixinsOnRegisterEvent],
+  mixins: [mixinsEventBusRegister],
   data() {
     return {
 
@@ -87,6 +84,13 @@ export default {
   onLoad() {
     // 注册事件监听器
     this.$EventBus.on('myEvent', this.listener);
+	
+	let myObject = {
+	  data: 'value'
+	};
+	
+	// 现在myObject和所有其他对象都有了globalMethod这个方法
+	// myObject.globalMethod(); // 输出: This is a global method
   },
   computed: {},
   methods: {
@@ -237,7 +241,7 @@ export default {
 
     },
 
-    ylxOnCurrentPageHandler(callback) {
+    ylxOnGetInfoHandler(callback) {
       typeof callback === 'function' && callback()
     },
 

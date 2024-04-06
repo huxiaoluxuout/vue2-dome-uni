@@ -141,42 +141,6 @@ function simulateOperation() {
     });
 }
 
-
-// ------------------------------------------
-
-
-function arrayEquals(arr1, arr2) {
-    if (!arr2) return false;
-    if (arr1.length !== arr2.length) return false;
-
-    for (let i = 0; i < arr1.length; i++) {
-        if (arr1[i] instanceof Array && arr2[i] instanceof Array) {
-            if (!arrayEquals(arr1[i], arr2[i])) return false;
-        } else if (arr1[i] !== arr2[i]) {
-            return false;
-        }
-    }
-
-    return true;
-}
-
-// 使用示例
-let obj1 = { a: 1, b: 2, c: { d: 3 } };
-let obj2 = { a: 1, b: 2, c: { d: 3 } };
-let obj3 = { a: 1, b: 2, c: { d: 4 } };
-
-// console.log(deepEqual(obj1, obj2)); // 输出 true
-// console.log(deepEqual(obj1, obj3)); // 输出 false
-
-let arr1 = [1, 2, [3, 4]];
-let arr2 = [1, 2, [3, 4]];
-let arr3 = [1, 2, [3, 5]];
-
-console.log(arrayEquals(arr1, arr2)); // 输出 true
-console.log(arrayEquals(arr1, arr3)); // 输出 false
-
-
-
 export {
     uuid,
     encodeObjectToQueryString,
