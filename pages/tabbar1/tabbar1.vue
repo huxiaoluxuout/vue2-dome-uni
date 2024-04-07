@@ -28,7 +28,7 @@
 
     <!--    <u-button type="primary" :plain="true" text="A1" @click="A1"></u-button>-->
 
-    <!--    <u-button type="primary" :plain="true" text="定位" @click="$u.route('/pages/dingWei/dingWei')"></u-button>-->
+        <u-button type="primary" :plain="true" text="定位" @click="$u.route('/pages/dingWei/dingWei')"></u-button>
 
 
     <!--    <u-button type="primary" :plain="true" text="BindingX" @click="$u.route('/pages/n_BindingX/n_BindingX')"></u-button>-->

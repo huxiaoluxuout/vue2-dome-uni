@@ -151,7 +151,7 @@ const hasLocation = async () => {
 };
 
 // 获取经纬度
-export const uniGetLocation = async () => {
+export const uniGetLocation = async (type) => {
     // #ifdef WEB
     console.log('web')
     // #endif
@@ -162,7 +162,7 @@ export const uniGetLocation = async () => {
 
     return new Promise(resolve => {
         uni.getLocation({
-            type: 'gcj02',
+            type: type, //wgs84 gcj02
             isHighAccuracy: true,
             geocode: false,
             success: function (res) {
@@ -207,10 +207,10 @@ export const uniChooseLocation = async ({latitude, longitude, keyword} = {}) => 
 }
 
 
-const startLocationUpdate = () => {
+const startLocationUpdate = (type) => {
     return new Promise((resolve, reject) => {
         uni.startLocationUpdate({
-            type:'wgs84',
+            type:type, // wgs84 gcj02
             success(startRes) {
                 resolve(startRes)
             },
@@ -228,7 +228,7 @@ const startLocationUpdate = () => {
 }
 
 
-export const uniOnLocationChange = async () => {
+export const uniOnLocationChange = async (type) => {
 
     // #ifdef WEB
     console.log('web')
@@ -239,7 +239,7 @@ export const uniOnLocationChange = async () => {
     // #endif
 
     try {
-        await startLocationUpdate()
+        await startLocationUpdate(type)
         uni.onLocationChange(function (res) {
             uni.$emit('onLocationChangeData', res)
         })

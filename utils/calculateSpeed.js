@@ -1,54 +1,25 @@
+import Big from "@/utils/lib/big.min"
 
+let previousLatitude, previousLongitude, previousTime
 
-export function calculateSpeed() {
-    let previousLatitude = null, previousLongitude = null, previousTime = null;
-
-    let totalDistance = 0, totalTime = 0, speed = 0, averageSpeed = 0;
-    let num = 0
-
-    return function calcSpeed(latitude, longitude) {
-        num++;
-
-        const currentTime = new Date().getTime();
-        if (previousLatitude !== null && previousLongitude !== null && previousTime !== null) {
-
-            const distance = calculateDistance(latitude, longitude, previousLatitude, previousLongitude);
-            const timeDiff = (currentTime - previousTime) / 1000;
-            // 相差几分钟
-            const diffM = timeDiff / 60;
-            // 相差几小时
-            const diffH = diffM / 60;
-            speed = distance / diffH;
-            totalTime += diffH;
-
-            console.log(`距离: ${distance} km, 间隔: ${timeDiff} s, 时速: ${speed} km/h`);
-
-            totalDistance += distance;
-            averageSpeed = totalDistance / totalTime;
-            console.log(`总距离: ${totalDistance} km, 平均速度: ${averageSpeed} km/h, 总时长: ${totalTime} h`);
-
-            previousLatitude = latitude;
-            previousLongitude = longitude;
-            previousTime = currentTime;
-
-
-        } else {
-            totalTime = 0;
-            console.log(`初始位置集。未检测到移动.`);
-            previousLatitude = latitude;
-            previousLongitude = longitude;
-            previousTime = currentTime;
+export function calculateSpeed({latitude, longitude}) {
+    const currentTime = new Date().getTime();// 获取当前时间戳
+    let speedKph = 0; // 初始化速度变量（公里/小时）
+    if (previousLatitude && previousLongitude && previousTime) {
+        const distance = calculateDistance(latitude, longitude, previousLatitude, previousLongitude); // 距离单位：公里
+        const timeDiff = currentTime - previousTime; // 时间差单位：毫秒
+        if (timeDiff > 0) { // 确保时间差不是0，避免除以0的情况
+            let diffSpeedTime = new Big(timeDiff).div(3600000) // 时间差单位：小时
+            speedKph = new Big(distance).div(diffSpeedTime) // 转换速度为公里/小时
         }
-
-
-        return {
-            totalDistance,
-            averageSpeed,
-            speedKph: speed,
-            totalTime: totalTime * 60 * 60
-        };
     }
 
+// 更新上一次的位置和时间信息
+    previousLatitude = latitude;
+    previousLongitude = longitude;
+    previousTime = currentTime;
+
+    return {latitude, longitude, time: formatDate(currentTime), speedKph};
 
 }
 

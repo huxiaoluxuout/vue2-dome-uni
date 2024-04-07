@@ -3,17 +3,18 @@ export default {
     onLoad(options) {
         if (options.eventName) {
             let eventName = options.eventName
-            let register = false
+            let hasRegistered = false
             uni.$emit(eventName, () => {
-                register = true
+                hasRegistered = true
                 uni.$off(eventName, this.ylxOnHandler)
             })
-            this.onEvent(register, eventName)
+            this.onEvent(hasRegistered, eventName)
         }
     },
+
     methods: {
-        onEvent(register, eventName) {
-            if (register) return
+        onEvent(hasRegistered, eventName) {
+            if (hasRegistered) return
             uni.$on(eventName, this.ylxOnHandler)
             uni.$emit('GlobEvent' + eventName)
         },

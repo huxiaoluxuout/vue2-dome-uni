@@ -1,79 +1,95 @@
 <template>
   <view class="content">
+    <view style="font-size: 6em;text-align:center;">{{ speedKph }}</view>
 
-    <view class="text-area">
-      <view class="title">当前时速:{{ speedKph }}公里/小时</view>
+    <radio-group @change="radioChange" class="radio-group">
+      <radio v-for="(item, index) in items" :key="item.value" :value="item.value" :checked="index === current">
+        {{ item.name }}
+      </radio>
+    </radio-group>
 
-      <view class="title">总距离:{{ totalDistance }}公里</view>
-      <view class="title">总时长:{{ totalTime }}</view>
-    </view>
-    <button @click="startLocationChange">开启</button>
+
+    <button style="width: 100px;height: 100px;font-size: 14px;line-height: 100px;border-radius: 50%;" @click="getLocation">获取定位</button>
     <view style="height: 20px;"></view>
     <button @click="stopLocationChange">关闭</button>
-    <view style="height: 20px;"></view>
 
-    <view class="view-item" v-for="(item,index) in dataList" :key="index">
-      <view class="fz12">纬度: {{ item.latitude }}</view>
-      <view class="fz12">经度: {{ item.longitude }}</view>
-      <view class="fz12">时间: {{ item.time }}</view>
+    <view style="height: 45vh;"></view>
+
+    <view style="position:fixed;bottom:0;width: 100vw;height: 50vh;overflow-y:auto;z-index: 20;background-color:rgb(252,113,53);">
+      <view class="view-item" v-for="(item,index) in dataList" :key="index">
+        <view class="fz12">纬度: {{ item.latitude }}</view>
+        <view class="fz12">经度: {{ item.longitude }}</view>
+        <view class="fz12">时间: {{ item.time }}</view>
+      </view>
     </view>
-
 
   </view>
 </template>
 
 <script>
-import {uniOnLocationChange} from "@/common/js/uniApi";
-import {calculateSpeed} from "@/utils/calculateSpeed.js"
 
-let calcSpeed = calculateSpeed();
+import Big from "@/utils/lib/big.min"
+import {calculateSpeed} from "@/utils/calculateSpeed";
+import {uniOnLocationChange} from "@/common/js/uniApi";
 
 export default {
 
   data() {
     return {
-
       speedKph: 0,
       dataList: [],
-      totalDistance: 0,
-
-      totalTime: 0
+      current: 0,
+      items: [
+        {
+          value: 'wgs84',
+          name: 'wgs84'
+        },
+        {
+          value: 'gcj02',
+          name: 'gcj02'
+        }
+      ]
     }
   },
+
   onLoad() {
-
-    const that = this;
     uni.$on('onLocationChangeData', (res => {
-
-      let result = calcSpeed(res.latitude, res.longitude)
-
-      console.log('result',result)
-      that.speedKph = result.speedKph;
-
-      that.totalTime = `${Math.floor(result.totalTime / 60)} : ${Math.floor(result.totalTime % 60)}`;
-      that.totalDistance = result.totalDistance;
-
+      let {latitude, longitude, time, speedKph} = calculateSpeed(res)
+      this.speedKph = new Big(speedKph).toFixed(3)
+      this.dataList = [{latitude, longitude, time,}, ...this.dataList];
 
     }))
 
-    uniOnLocationChange()
-
-  },
-  onUnload() {
-    this.stopLocationChange()
   },
   methods: {
-
-    startLocationChange() {
-      uniOnLocationChange()
-    },
-    stopLocationChange() {
-      uni.stopLocationUpdate({
-        complete: (complete) => {
-          console.log('complete', complete)
+    async radioChange(e) {
+      await this.stopLocationChange()
+      for (let i = 0; i < this.items.length; i++) {
+        if (this.items[i].value === e.detail.value) {
+          this.current = i;
+          break;
         }
-      })
+      }
+      this.getLocation()
     },
+
+    getLocation() {
+      console.log('this.items[this.current].value', this.items[this.current].value)
+      uniOnLocationChange(this.items[this.current].value)
+    },
+
+    stopLocationChange() {
+      return new Promise((resolve, reject) => {
+        uni.stopLocationUpdate({
+          complete: (complete) => {
+            console.log('complete', complete)
+            resolve(complete)
+          }
+        })
+      })
+
+    },
+
   }
 }
 
@@ -85,11 +101,18 @@ export default {
   font-size: 14px;
   justify-content: space-around;
   margin-top: 4px;
+  color: #ffffff;
+}
+
+.radio-group {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 30rpx 10%;
 }
 
 .fz12 {
   font-size: 12px;
 }
-
 
 </style>
