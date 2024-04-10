@@ -1,152 +1,97 @@
 <template>
 
-  <div class="page-swiper">
-    <swiper class="content-wrapper" :render-whole="true" :autoplay="false" :circular="false"
-            :disable-touch="disableTouch" vertical easing-function="easeInOutCubic"
+  <view class="page-swiper">
+
+    <view class="navbar" @click="backPage" style="width:40px;height: 40px; position: fixed;top: 30px;left: 10rpx;z-index: 999">
+      <uni-icons type="left" size="30" color="#fff"></uni-icons>
+    </view>
+
+
+    <swiper class="content-wrapper" vertical :render-whole="true" :autoplay="false" :circular="false" :touchable="false"
             @change="swiperChanged" @animationfinish="animationfinish">
 
       <template v-for="(item,index) in originList">
-        <swiper-item class="content-wrapper swiper-item" :key="item.id">
-          <div class="content-wrapper video-box">
-
-            <video :id="'video'+index" class="content-wrapper" v-if="index===showVideoIndex" :src="item.playurl"
-                   :autoplay="false" :controls="true" :custom-cache="false" :loop="false"
-                   :enable-play-gesture="true" :enable-progress-gesture="true" :http-cache="true" play-btn-position="center"
-                   :show-center-play-btn="true"
+        <swiper-item class="content-wrapper" :key="item.id">
+          <view class="content-wrapper video-box">
+            <video :id="'video'+index" class="content-wrapper" v-if="index===showVideoIndex" :src="item.playurl" :controls="true"
+                   :enable-play-gesture="true" :enable-progress-gesture="true"
                    :poster="item.picurl"
             >
 
             </video>
 
             <template v-if="index!==showVideoIndex">
-
-              <video v-if="index===showVideoIndex-1" :id="'video'+index" class="content-wrapper" :src="item.playurl"
-                     :autoplay="false" play-btn-position="center" :poster="item.picurl">
-              </video>
-
-              <video v-if="index===showVideoIndex+1" :id="'video'+index" class="content-wrapper" :src="item.playurl"
-                     :autoplay="false" play-btn-position="center" :poster="item.picurl">
-              </video>
-
-
+              <video v-if="index===showVideoIndex-1" :id="'video'+index" class="content-wrapper" :src="item.playurl" :poster="item.picurl"></video>
+              <video v-if="index===showVideoIndex+1" :id="'video'+index" class="content-wrapper" :src="item.playurl" :poster="item.picurl"></video>
             </template>
 
+
             <!-- 文本标题 -->
-            <div class="video-text">
-              <text class="tips">{{ index + 1 }} / {{ originList.length }} {{ item.title }}</text>
-            </div>
-          </div>
+            <view class="bottom-desc">
+              <text class="tips">{{ index + 1 }} / {{ originList.length }}</text>
+              <text class="bottom-desc-title">{{ item.title }}</text>
+
+            </view>
+
+          </view>
 
         </swiper-item>
       </template>
     </swiper>
 
-    <div class="fixed-right">
-      <uni-grid :column="4" :highlight="true">
-        <uni-grid-item v-for="(item, index) in list" :index="index" :key="index">
-          <view class="grid-item-box" @click="changeGrid(index)">
-            <uni-icons :type="item.type" :size="34" color="#fff"/>
-            <text class="fixed-right-text">{{ item.text }}</text>
-          </view>
-        </uni-grid-item>
-      </uni-grid>
-    </div>
-
-    <uni-popup ref="popup" border-radius="10px 10px 0 0">
-      <view class="popup-container">
-        <text>底部弹出 Popup 自定义圆角</text>
-      </view>
-    </uni-popup>
-  </div>
+  </view>
 </template>
 
 <script>
 
-import {startTimer, uuid} from "@/utils/tools";
 
+const uuid = () => {
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+    var r = Math.random() * 16 | 0,
+        v = c === 'x' ? r : (r & 0x3 | 0x8);
+    return v.toString(16);
+  });
+}
 
 const videoContexts = []
-let cacheList = []
+
+
 export default {
   data() {
     return {
 
-      originList: [], // 源数据
-      originList2: [], // 源数据
+      originList: [],
       showVideoIndex: 0, //控制video是否渲染
 
       page: 1, // 视频分页
-      pageSize: 10,
+      pageSize: 8,
 
-
-      list: [
-        {
-          text: '播放',
-          badge: '0',
-          type: "heart-filled"
-        }, {
-          text: '暂停',
-          badge: '0',
-          type: "heart-filled"
-        }, {
-          text: '停止',
-          badge: '0',
-          type: "heart-filled"
-        }, {
-          text: 'Grid 1',
-          badge: '0',
-          type: "heart-filled"
-        },
-        {
-          text: 'Grid 2',
-          badge: '1',
-          type: "hand-up-filled"
-        },
-        {
-          text: 'Grid 3',
-          badge: '99',
-          type: "chat-filled"
-        },
-        {
-          text: 'Grid 4',
-          badge: '2',
-          type: "redo-filled"
-        },
-
-      ],
-
-      disableTouch: false,
-      currentIndex: 0,
-      autoplay: true,
-
+      direction: -90
     }
   },
 
-  onLoad(options) {
-    console.log(options)
-
-    if(options.eventName){
-      uni.$emit(options.eventName, (prams) => {
-        console.log('options.eventName', prams)
-      })
-    }
-
+  onLoad() {
     this.getVideoList()
 
   },
-  onReady() {
+
+  onUnload() {
+    this.videoContext.stop()
 
   },
 
   computed: {
     videoContext() {
-      return videoContexts[this.showVideoIndex]
+      let videoId = 'video' + this.showVideoIndex
+      this.id = this.originList[this.showVideoIndex].id
+      return videoContexts.find(item => item.videoId === videoId).handler
     },
   },
 
-
   methods: {
-
+    backPage() {
+      uni.navigateBack()
+    },
 
     /* 获取视频数据 */
     getVideoList() {
@@ -155,21 +100,20 @@ export default {
         url: 'https://api.apiopen.top/api/getMiniVideo?page=' + this.page + '&pageSize=' + this.pageSize, // 请求数据接口
         data: {},
         success: (resData) => {
-
           let res = JSON.parse(JSON.stringify(resData))
           res.data.result.list.forEach(item => item.id = uuid())
-
+          // console.log(res.data.result);
           if (res.data.code === 200) {
 
             if (this.page === 1) {
               this.originList = [...this.originList, ...res.data.result.list]
-              this.setVideoShow(0)
               this.setVideoContext(0)
               this.$nextTick(() => {
-                startTimer(() => {
+                setTimeout(()=>{
                   this.videoContext.play()
-                }, 200)
+                },100)
               })
+
             } else {
               this.$nextTick(() => {
                 this.originList = [...this.originList, ...res.data.result.list];
@@ -181,81 +125,55 @@ export default {
           }
         }
       })
-
-    },
-    updated() {
-      if (cacheList.length === 0) return
-      let data = cacheList.splice(0, 3)
-      this.$nextTick(() => {
-        this.originList = [...this.originList, ...data];
-      });
     },
 
     setVideoContext(current) {
+      this.$nextTick(() => {
+        let videoId = 'video' + current
+        let videoContext = uni.createVideoContext(videoId)
+        let hasAlready = videoContexts.find(item => item.videoId === videoId)
+        if (hasAlready) return
+        videoContexts.push({videoId: videoId, handler: videoContext})
 
-      try {
-        if (videoContexts.length === current) {
-          let videoId = 'video' + current
-          let videoContext = uni.createVideoContext(videoId)
-          videoContexts.push(videoContext)
-        }
-      } catch (err) {
-        console.log('err', err)
-      }
+      })
 
     },
 
-    setVideoShow(current) {
-      if (current === 0) {
-        this.$set(this.originList, current, {...this.originList[current], show: true});
-        this.$set(this.originList, current + 1, {...this.originList[current + 1], show: true});
-        this.$set(this.originList, current + 2, {...this.originList[current + 2], show: true});
-      } else {
-        let heideIndex = this.originList.findIndex(item => !item.show);
-        if (heideIndex !== -1) {
-          console.log('setShow-ok')
-          this.$nextTick(() => {
-            this.$set(this.originList, heideIndex, {...this.originList[heideIndex], show: true});
-
-          })
-        }
-      }
-
-    },
-
+    // 自动播放/暂停视频
     changePlay(current, type) {
 
-      if (type === 'toPre') {
-        let len = this.originList.length
-        try {
-          if (current !== len) {
-            videoContexts[current + 1].pause();
-          }
+      let videoId = 'video' + current
+      let backVideoId = 'video' + (current + 1)
+      let frontVideoId = 'video' + (current - 1)
 
+      if (type === 'toPrev') {
 
-          startTimer(() => {
-            videoContexts[current].play();
-          }, 200)
-        } catch (error) {
+        let backVideoVideoContext = videoContexts.find(item => item.videoId === backVideoId)
 
-          console.error('01:捕获到错误:', error);
+        if (backVideoVideoContext) {
+          backVideoVideoContext.handler.pause()
         }
+
+        this.setVideoContext(current)
+
+        setTimeout(()=>{
+          videoContexts.find(item => item.videoId === videoId).handler.play()
+        },100)
 
       } else if (type === 'toNext') {
 
-        try {
-          videoContexts[current - 1].pause()
-          startTimer(() => {
-            videoContexts[current].play();
-          }, 200)
-        } catch (error) {
-          this.autoplay = false
-          console.error('02:捕获到错误:', current, error);
+        let frontVideoContext = videoContexts.find(item => item.videoId === frontVideoId)
 
+        if (frontVideoContext) {
+          frontVideoContext.handler.pause()
         }
 
-      }
+        this.setVideoContext(current)
+        setTimeout(()=>{
+          videoContexts.find(item => item.videoId === videoId).handler.play()
+        },100)
 
+      }
 
     },
 
@@ -266,39 +184,24 @@ export default {
         this.changePlay(current, 'toNext')
       }
       // 向上一个滑动
-      else {
+      else if (current < this.showVideoIndex) {
         this.showVideoIndex = current;
-        this.changePlay(current, 'toPre')
+        this.changePlay(current, 'toPrev')
       }
-
-      this.disableTouch = false
     },
 
     swiperChanged({detail: {current}}) {
-      this.disableTouch = true
+
+      this.setVideoContext(current)
       // 向下一个滑动
       if (current > this.showVideoIndex) {
         let updateNum = ((this.page - 1) * this.pageSize) - 2
         let currentNum = current + 1
-        if (currentNum === updateNum) {
+        if (currentNum >= updateNum) {
           console.log('更新数据')
-          this.getVideoList()
+          // this.getVideoList()
         }
-
-        // this.updated()
-        this.setVideoShow(current)
-        this.$nextTick(() => {
-          this.setVideoContext(current)
-        })
-
       }
-
-    },
-
-
-    changeGrid(index) {
-      console.log('changeGrid', index)
-
     },
 
   }
@@ -306,14 +209,15 @@ export default {
 </script>
 
 <style scoped>
+
 .page-swiper {
-  width: 750rpx;
+  /* #ifndef APP-NVUE */
   display: flex;
   flex-direction: column;
-  flex: 1;
-  /* #ifndef APP-NVUE */
-  height: 100vh;
   /* #endif */
+  width: 750rpx;
+  flex: 1;
+
 }
 
 .content-wrapper {
@@ -323,91 +227,38 @@ export default {
   flex: 1;
 }
 
-.swiper-item {
-  background-color: #000000;
-
-}
 
 .video-box {
-  position: relative;
+  /* #ifndef APP-NVUE */
+  display: flex;
+  flex-direction: column;
+  /* #endif */
   background-color: #000000;
+  position: relative;
+  justify-content: center;
+  align-items: center;
 }
 
 
 /*---------------------------------------------*/
-.video-text {
+.bottom-desc {
   position: absolute;
-  width: 700rpx;
-  bottom: 150rpx;
+  width: 640rpx;
+  bottom: 60px;
   z-index: 9999;
-  margin-left: 50rpx;
+  margin-left: 30rpx;
+  margin-right: 80rpx;
 }
 
 .tips {
-  width: 560rpx;
-  font-size: 26rpx;
+  font-size: 18px;
   color: #ffffff;
 }
 
-/*-------------------------------------------*/
-.fixed-right {
-  position: fixed;
-  right: 30rpx;
-  bottom: 200px;
-  z-index: 100;
+.bottom-desc-title {
+  font-size: 18px;
+  color: #ffffff;
 
 }
 
-.fixed-right-text {
-  font-size: 12px;
-  color: #fff;
-}
-
-.grid-item-box {
-  padding: 4px;
-  display: flex;
-  margin-bottom: 10px;
-  /* #ifndef APP-NVUE */
-  flex-direction: column;
-  /* #endif */
-
-}
-
-.popup-container {
-  width: 750rpx;
-  height: 520px;
-  background-color: #fff;
-}
-
-.picurl-box {
-  width: 750rpx;
-  flex: 1;
-  position: absolute;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  right: 0;
-  z-index: 100;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.picurl-img {
-
-}
-
-.icon-play {
-
-  width: 750rpx;
-  flex: 1;
-  position: absolute;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  z-index: 100;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
 </style>
