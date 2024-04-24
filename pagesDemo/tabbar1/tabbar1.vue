@@ -13,7 +13,7 @@
 
     <!--    <u-button type="primary" :plain="true" text="仿抖音页面" @click="$u.route('/pages/dou_yin/dou_yin')"></u-button>-->
 
-    <u-button type="primary" :plain="true" text="N-仿抖音页面1" @click="$u.route('/pages/n_dou_yin/n_dou_yin')"></u-button>
+    <u-button type="primary" :plain="true" text="N-仿抖音页面1" @click="$u.route('/pagesDemo/n_dou_yin/n_dou_yin')"></u-button>
     <u-button type="primary" :plain="true" text="N-仿抖音页面2" @click="OnGlobEventDouYin"></u-button>
 
     <!--    <u-button type="primary" :plain="true" text="OnGlobEventtabbar2" @click="OnGlobEventtabbar2"></u-button>-->
@@ -26,9 +26,9 @@
 
     <!--    <u-button type="primary" :plain="true" text="OnGlobEventA1" @click="OnGlobEventA1"></u-button>-->
 
-    <!--    <u-button type="primary" :plain="true" text="A1" @click="A1"></u-button>-->
+        <u-button type="primary" :plain="true" text="A1" @click="A1"></u-button>
 
-        <u-button type="primary" :plain="true" text="定位" @click="$u.route('/pages/dingWei/dingWei')"></u-button>
+        <u-button type="primary" :plain="true" text="定位" @click="$u.route('/pagesDemo/dingWei/dingWei')"></u-button>
 
 
     <!--    <u-button type="primary" :plain="true" text="BindingX" @click="$u.route('/pages/n_BindingX/n_BindingX')"></u-button>-->
@@ -49,7 +49,7 @@ import {ylxNavigateTo} from "@/utils/uniTools";
 
 import ZshuUploadimg from "@/components/zshu-components/zshu-uploadimg.vue";
 
-import {data} from "test/data.json"
+import {data} from "@/test/data.json"
 import {startTimer, uuid, simulateOperation} from "@/utils/tools";
 import mixinsEventBusRegister from "@/mixins/mixinsEventBusRegister";
 
@@ -169,13 +169,13 @@ export default {
 
     EventBusClick() {
 
-      uni.$emit('OnGlobEvent', {eventName: '/pages/n_dou_yin/n_dou_yin', handler: this.getVideoList})
+      uni.$emit('OnGlobEvent', {eventName: '/pagesDemo/n_dou_yin/n_dou_yin', handler: this.getVideoList})
 
     },
 
     EventBusClick2() {
 
-      this.$EventBus.emit('OnGlobEvent', {eventName: '/pages/dou_yin/dou_yin', handler: this.getVideoList})
+      this.$EventBus.emit('OnGlobEvent', {eventName: '/pagesDemo/dou_yin/dou_yin', handler: this.getVideoList})
     },
 
 
@@ -183,7 +183,7 @@ export default {
 
       uni.$emit('OnGlobEvent', {
         type: 'switchTab',
-        eventName: '/pages/tabbar2/tabbar2',
+        eventName: '/pagesDemo/tabbar2/tabbar2',
         handler: this.getVideoList
       })
 
@@ -193,7 +193,7 @@ export default {
 
       uni.$emit('OnGlobEvent', {
         type: 'switchTab',
-        eventName: '/pages/tabbar3/tabbar3',
+        eventName: '/pagesDemo/tabbar3/tabbar3',
         handler: this.getVideoListgetVideoList
       })
 
@@ -211,9 +211,9 @@ export default {
     // ------
     tabbar2() {
 
-      uni.$emit('/pages/tabbar2/tabbar2', this.getVideoList)
+      uni.$emit('/pagesDemo/tabbar2/tabbar2', this.getVideoList)
       uni.switchTab({
-        url: '/pages/tabbar2/tabbar2'
+        url: '/pagesDemo/tabbar2/tabbar2'
       });
 
     },
@@ -223,19 +223,12 @@ export default {
       typeof callback === 'function' && callback('getVideoListgetVideoList ')
 
     },
-    tabbar3() {
 
-      uni.$emit('/pages/tabbar3/tabbar3', this.getVideoListgetVideoList)
-      uni.switchTab({
-        url: '/pages/tabbar3/tabbar3'
-      });
-
-    },
     A1() {
 
-      uni.$emit('/pages/A1/A1', this.getVideoListgetVideoList)
+      uni.$emit('/pagesDemo/A1/A1', this.getVideoListgetVideoList)
       uni.navigateTo({
-        url: '/pages/A1/A1'
+        url: '/pagesDemo/A1/A1'
       });
 
     },
@@ -247,7 +240,7 @@ export default {
     // 仿抖音
     OnGlobEventDouYin() {
       uni.$emit('OnGlobEvent', {
-        eventName: '/pages/n_dou_yin/n_dou_yin',
+        eventName: '/pagesDemo/n_dou_yin/n_dou_yin',
         handler: this.getVideoListgetVideoList
       })
 

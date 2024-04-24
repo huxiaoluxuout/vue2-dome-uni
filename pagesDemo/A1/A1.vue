@@ -8,7 +8,7 @@
 
     </zshu-navbar>
 
-    <button @click="$u.route('/pages/A3/A3')">A3</button>
+    <button @click="$u.route('/pagesDemo/A3/A3')">A3</button>
 
 
     <view style="position: fixed;top: 50%;left:50%;transform:translateX(-50%);background-color:#fff;z-index: 10;">

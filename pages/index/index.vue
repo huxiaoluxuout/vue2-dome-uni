@@ -1,28 +1,17 @@
 <template>
-	<view class="content">
-
-
-<!--    <u-button text="渐变色按钮" color="linear-gradient(to right, rgb(66, 83, 216), rgb(213, 51, 186))"></u-button>-->
-
-	</view>
+  <view>
+    pagesDemo
+  </view>
 </template>
 
 <script>
-	export default {
-		data() {
-			return {
-
-			}
-		},
-		onLoad() {
-
-		},
-		methods: {
-
-		}
-	}
+export default {
+  data() {
+    return {};
+  }
+}
 </script>
 
-<style scoped>
+<style lang="scss">
 
 </style>

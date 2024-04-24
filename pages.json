@@ -6,7 +6,7 @@
   },
   "pages": [
     {
-      "path": "pages/tabbar1/tabbar1",
+      "path": "pagesDemo/tabbar1/tabbar1",
       "style": {
         "navigationBarTitleText": "tabbar1",
         "enablePullDownRefresh": false,
@@ -14,7 +14,7 @@
       }
     },
     {
-      "path": "pages/tabbar2/tabbar2",
+      "path": "pagesDemo/tabbar2/tabbar2",
       "style": {
         "navigationBarTitleText": "tabbar2",
         "enablePullDownRefresh": false,
@@ -22,7 +22,7 @@
       }
     },
     {
-      "path": "pages/tabbar3/tabbar3",
+      "path": "pagesDemo/tabbar3/tabbar3",
       "style": {
         "navigationBarTitleText": "tabbar3",
         "enablePullDownRefresh": false,
@@ -32,21 +32,7 @@
     {
       "path": "pages/index/index",
       "style": {
-        "navigationBarTitleText": "uni-app"
-      }
-    },
-    {
-      "path": "pages/A1/A1",
-      "style": {
-        "navigationBarTitleText": "",
-        "enablePullDownRefresh": true,
-        "navigationStyle": "custom"
-      }
-    },
-    {
-      "path": "pages/custom-camera/custom-camera",
-      "style": {
-        "navigationBarTitleText": "相机",
+        "navigationBarTitleText": "index",
         "enablePullDownRefresh": false
       }
     },
@@ -56,214 +42,92 @@
         "navigationBarTitleText": "登录",
         "enablePullDownRefresh": false
       }
-    },
+    }
+  ],
+  "subPackages": [
     {
-      "path": "pages/A2/A2",
-      "style": {
-        "navigationBarTitleText": "",
-        "enablePullDownRefresh": true
-      }
-    },
-    {
-      "path": "pages/A3/A3",
-      "style": {
-        "navigationBarTitleText": "",
-        "enablePullDownRefresh": false
-      }
-    },
-    {
-      "path": "pages/A4/A4",
-      "style": {
-        "navigationBarTitleText": "",
-        "enablePullDownRefresh": false
-      }
-    },
-    {
-      "path": "uni_modules/uni-push-admin/pages/extra/extra",
-      "style": {
-        "h5": {
-          "titleNView": {
-            "type": "transparent"
+      "root": "pagesDemo",
+      "pages": [
+        {
+          "path": "A1/A1",
+          "style": {
+            "navigationBarTitleText": "",
+            "enablePullDownRefresh": true,
+            "navigationStyle": "custom"
           }
         },
-        "navigationBarTitleText": "push-admin",
-        "navigationStyle": "default"
-      }
-    },
-    {
-      "path": "uni_modules/uni-push-admin/pages/log/list",
-      "style": {
-        "h5": {
-          "titleNView": {
-            "type": "transparent"
+        {
+          "path": "custom-camera/custom-camera",
+          "style": {
+            "navigationBarTitleText": "相机",
+            "enablePullDownRefresh": false
           }
         },
-        "navigationBarTitleText": "推送记录",
-        "navigationStyle": "default"
-      }
-    },
-    {
-      "path": "uni_modules/uni-push-admin/pages/log/detail",
-      "style": {
-        "navigationBarTitleText": "推送详情",
-        "navigationStyle": "default"
-      }
-    },
-    {
-      "path": "uni_modules/uni-push-admin/pages/sendMessage/sendMessage",
-      "style": {
-        "h5": {
-          "titleNView": {
-            "type": "transparent"
+
+        {
+          "path": "A2/A2",
+          "style": {
+            "navigationBarTitleText": "",
+            "enablePullDownRefresh": true
           }
         },
-        "navigationBarTitleText": "消息推送",
-        "navigationStyle": "default"
-      }
-    },
-    {
-      "path": "uni_modules/uni-id-pages/pages/userinfo/deactivate/deactivate",
-      "style": {
-        "navigationBarTitleText": "注销账号"
-      }
-    },
-    {
-      "path": "uni_modules/uni-id-pages/pages/userinfo/userinfo",
-      "style": {
-        "navigationBarTitleText": "个人资料"
-      }
-    },
-    {
-      "path": "uni_modules/uni-id-pages/pages/userinfo/bind-mobile/bind-mobile",
-      "style": {
-        "navigationBarTitleText": "绑定手机号码"
-      }
-    },
-    {
-      "path": "uni_modules/uni-id-pages/pages/userinfo/cropImage/cropImage",
-      "style": {
-        "navigationBarTitleText": ""
-      }
-    },
-    {
-      "path": "uni_modules/uni-id-pages/pages/login/login-withoutpwd",
-      "style": {
-        "navigationBarTitleText": ""
-      }
-    },
-    {
-      "path": "uni_modules/uni-id-pages/pages/login/login-withpwd",
-      "style": {
-        "navigationBarTitleText": ""
-      }
-    },
-    {
-      "path": "uni_modules/uni-id-pages/pages/login/login-smscode",
-      "style": {
-        "navigationBarTitleText": "手机验证码登录"
-      }
-    },
-    {
-      "path": "uni_modules/uni-id-pages/pages/register/register",
-      "style": {
-        "navigationBarTitleText": "注册"
-      }
-    },
-    {
-      "path": "uni_modules/uni-id-pages/pages/register/register-by-email",
-      "style": {
-        "navigationBarTitleText": "邮箱验证码注册"
-      }
-    },
-    {
-      "path": "uni_modules/uni-id-pages/pages/retrieve/retrieve",
-      "style": {
-        "navigationBarTitleText": "重置密码"
-      }
-    },
-    {
-      "path": "uni_modules/uni-id-pages/pages/retrieve/retrieve-by-email",
-      "style": {
-        "navigationBarTitleText": "通过邮箱重置密码"
-      }
-    },
-    {
-      "path": "uni_modules/uni-id-pages/pages/common/webview/webview",
-      "style": {
-        "enablePullDownRefresh": false,
-        "navigationBarTitleText": ""
-      }
-    },
-    {
-      "path": "uni_modules/uni-id-pages/pages/userinfo/change_pwd/change_pwd",
-      "style": {
-        "enablePullDownRefresh": false,
-        "navigationBarTitleText": "修改密码"
-      }
-    },
-    {
-      "path": "uni_modules/uni-id-pages/pages/register/register-admin",
-      "style": {
-        "enablePullDownRefresh": false,
-        "navigationBarTitleText": "注册管理员账号"
-      }
-    },
-    {
-      "path": "uni_modules/uni-id-pages/pages/userinfo/set-pwd/set-pwd",
-      "style": {
-        "enablePullDownRefresh": false,
-        "navigationBarTitleText": "设置密码"
-      }
-    },
-    {
-      "path": "uni_modules/uni-id-pages/pages/userinfo/realname-verify/realname-verify",
-      "style": {
-        "enablePullDownRefresh": false,
-        "navigationBarTitleText": "实名认证"
-      }
-    },
-    {
-      "path": "pages/dou_yin/dou_yin",
-      "style": {
-        "navigationBarTitleText": "仿抖音页面",
-        "enablePullDownRefresh": false
-      }
-    },
-    {
-      "path": "pages/n_dou_yin/n_dou_yin",
-      "style": {
-        "navigationBarTitleText": "n_dou_yin",
-        "enablePullDownRefresh": false
-      }
-    },
-    {
-      "path": "pages/n_dou_yin/n_dou_yin_2",
-      "style": {
-        "navigationBarTitleText": "n_dou_yin_2",
-        "enablePullDownRefresh": false
-      }
-    },
-    {
-      "path": "pages/collect_cards/collect_cards",
-      "style": {
-        "navigationBarTitleText": "集卡",
-        "enablePullDownRefresh": false
-      }
-    },
-    {
-      "path": "pages/n_BindingX/n_BindingX",
-      "style": {
-        "navigationBarTitleText": "BindingX",
-        "enablePullDownRefresh": false
-      }
-    },
-    {
-    	"path" : "pages/dingWei/dingWei",
-    	"style" : 
-    	{
-    		"navigationBarTitleText" : "定位",
-    		"enablePullDownRefresh" : false
-    	}
+        {
+          "path": "A3/A3",
+          "style": {
+            "navigationBarTitleText": "",
+            "enablePullDownRefresh": false
+          }
+        },
+        {
+          "path": "A4/A4",
+          "style": {
+            "navigationBarTitleText": "",
+            "enablePullDownRefresh": false
+          }
+        },
+        {
+          "path": "dou_yin/dou_yin",
+          "style": {
+            "navigationBarTitleText": "仿抖音页面",
+            "enablePullDownRefresh": false
+          }
+        },
+        {
+          "path": "n_dou_yin/n_dou_yin",
+          "style": {
+            "navigationBarTitleText": "n_dou_yin",
+            "enablePullDownRefresh": false
+          }
+        },
+        {
+          "path": "n_dou_yin/n_dou_yin_2",
+          "style": {
+            "navigationBarTitleText": "n_dou_yin_2",
+            "enablePullDownRefresh": false
+          }
+        },
+        {
+          "path": "collect_cards/collect_cards",
+          "style": {
+            "navigationBarTitleText": "集卡",
+            "enablePullDownRefresh": false
+          }
+        },
+        {
+          "path": "n_BindingX/n_BindingX",
+          "style": {
+            "navigationBarTitleText": "BindingX",
+            "enablePullDownRefresh": false
+          }
+        },
+        {
+          "path": "dingWei/dingWei",
+          "style": {
+            "navigationBarTitleText": "定位",
+            "enablePullDownRefresh": false
+          }
+        }
+      ]
     }
   ],
   "tabBar": {
@@ -272,19 +136,19 @@
     "backgroundColor": "#ffffff",
     "list": [
       {
-        "pagePath": "pages/tabbar1/tabbar1",
+        "pagePath": "pagesDemo/tabbar1/tabbar1",
         "text": "tabbar1",
         "iconPath": "static/tabbar/news.png",
         "selectedIconPath": "static/tabbar/news_on.png"
       },
       {
-        "pagePath": "pages/tabbar2/tabbar2",
+        "pagePath": "pagesDemo/tabbar2/tabbar2",
         "text": "tabbar2",
         "iconPath": "static/tabbar/index.png",
         "selectedIconPath": "static/tabbar/index_on.png"
       },
       {
-        "pagePath": "pages/tabbar3/tabbar3",
+        "pagePath": "pagesDemo/tabbar3/tabbar3",
         "text": "tabbar3",
         "iconPath": "static/tabbar/mine.png",
         "selectedIconPath": "static/tabbar/mine_on.png"
