@@ -11,10 +11,8 @@
         <u-button type="primary" :plain="true" text="zshu-uploadimg" @click="openUploadImg"></u-button>-->
 
 
-    <!--    <u-button type="primary" :plain="true" text="仿抖音页面" @click="$u.route('/pages/dou_yin/dou_yin')"></u-button>-->
 
-    <u-button type="primary" :plain="true" text="N-仿抖音页面1" @click="$u.route('/pagesDemo/n_dou_yin/n_dou_yin')"></u-button>
-    <u-button type="primary" :plain="true" text="N-仿抖音页面2" @click="OnGlobEventDouYin"></u-button>
+    <u-button type="primary" :plain="true" text="仿抖音页面" @click="$u.route('/pagesDemo/dou_yin/dou_yin')"></u-button>
 
     <!--    <u-button type="primary" :plain="true" text="OnGlobEventtabbar2" @click="OnGlobEventtabbar2"></u-button>-->
 
@@ -169,7 +167,7 @@ export default {
 
     EventBusClick() {
 
-      uni.$emit('OnGlobEvent', {eventName: '/pagesDemo/n_dou_yin/n_dou_yin', handler: this.getVideoList})
+      uni.$emit('OnGlobEvent', {eventName: '/pagesDemo/dou_yin/dou_yin', handler: this.getVideoList})
 
     },
 
@@ -240,7 +238,7 @@ export default {
     // 仿抖音
     OnGlobEventDouYin() {
       uni.$emit('OnGlobEvent', {
-        eventName: '/pagesDemo/n_dou_yin/n_dou_yin',
+        eventName: '/pagesDemo/dou_yin/dou_yin',
         handler: this.getVideoListgetVideoList
       })
 

@@ -6,25 +6,22 @@
       <uni-icons type="left" size="30" color="#fff"></uni-icons>
     </view>
 
-
     <swiper class="content-wrapper" vertical :render-whole="true" :autoplay="false" :circular="false" :touchable="false"
             @change="swiperChanged" @animationfinish="animationfinish">
 
       <template v-for="(item,index) in originList">
         <swiper-item class="content-wrapper" :key="item.id">
           <view class="content-wrapper video-box">
-            <video :id="'video'+index" class="content-wrapper" v-if="index===showVideoIndex" :src="item.playurl" :controls="true"
+            <video :id="'video'+index" class="content-wrapper video" v-if="index===showVideoIndex" :src="item.video" :controls="true"
                    :enable-play-gesture="true" :enable-progress-gesture="true"
-                   :poster="item.picurl"
+                   :poster="item.img"
             >
-
             </video>
 
             <template v-if="index!==showVideoIndex">
-              <video v-if="index===showVideoIndex-1" :id="'video'+index" class="content-wrapper" :src="item.playurl" :poster="item.picurl"></video>
-              <video v-if="index===showVideoIndex+1" :id="'video'+index" class="content-wrapper" :src="item.playurl" :poster="item.picurl"></video>
+              <video v-if="index===showVideoIndex-1" :id="'video'+index" class="content-wrapper video" :src="item.video" :poster="item.img"></video>
+              <video v-if="index===showVideoIndex+1" :id="'video'+index" class="content-wrapper video" :src="item.video" :poster="item.img"></video>
             </template>
-
 
             <!-- 文本标题 -->
             <view class="bottom-desc">
@@ -39,19 +36,14 @@
       </template>
     </swiper>
 
+
   </view>
 </template>
 
 <script>
 
 
-const uuid = () => {
-  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
-    var r = Math.random() * 16 | 0,
-        v = c === 'x' ? r : (r & 0x3 | 0x8);
-    return v.toString(16);
-  });
-}
+import {fetchVideoList} from "@/network/apis/test_api";
 
 const videoContexts = []
 
@@ -59,20 +51,16 @@ const videoContexts = []
 export default {
   data() {
     return {
-
-      originList: [],
+      originList: [], // 源数据
       showVideoIndex: 0, //控制video是否渲染
-
       page: 1, // 视频分页
       pageSize: 8,
-
-      direction: -90
+      updateItemChangeHandle: null,
     }
   },
 
   onLoad() {
     this.getVideoList()
-
   },
 
   onUnload() {
@@ -83,71 +71,91 @@ export default {
   computed: {
     videoContext() {
       let videoId = 'video' + this.showVideoIndex
-      this.id = this.originList[this.showVideoIndex].id
+      const item = this.originList[this.showVideoIndex]
+      this.id = item.id
+
       return videoContexts.find(item => item.videoId === videoId).handler
     },
+    currentItem() {
+      return this.originList[this.showVideoIndex]
+    }
   },
 
   methods: {
     backPage() {
-      uni.navigateBack()
+      uni.navigateBack({
+        delta: 1,
+        fail(errMsg) {
+          console.error(errMsg)
+        },
+      });
     },
 
     /* 获取视频数据 */
     getVideoList() {
-
-      uni.request({
-        url: 'https://api.apiopen.top/api/getMiniVideo?page=' + this.page + '&pageSize=' + this.pageSize, // 请求数据接口
-        data: {},
-        success: (resData) => {
-          let res = JSON.parse(JSON.stringify(resData))
-          res.data.result.list.forEach(item => item.id = uuid())
-          // console.log(res.data.result);
-          if (res.data.code === 200) {
-
+      fetchVideoList({
+        page: this.page,
+        type: 1,
+        keywords: ''
+      }).then(res => {
+        if (res.code === 200) {
+          if (res.data.length) {
             if (this.page === 1) {
-              this.originList = [...this.originList, ...res.data.result.list]
-              this.setVideoContext(0)
-              this.$nextTick(() => {
-                setTimeout(()=>{
-                  this.videoContext.play()
-                },100)
-              })
+              this.init(res.data)
+              this.page++
 
             } else {
               this.$nextTick(() => {
-                this.originList = [...this.originList, ...res.data.result.list];
+                this.originList = [...this.originList, ...res.data];
               });
-
+              this.page++
             }
 
-            this.page++
           }
+
+        } else {
+          uni.showToast({title: res.msg, icon: 'none'})
         }
+
       })
+
+
+    },
+
+    init(cacheVideoList) {
+      this.originList = cacheVideoList
+      this.setVideoContext(0)
+      this.$nextTick(() => {
+        this.startTimer(() => {
+          this.videoContext.play()
+        }, 50)
+      })
+
     },
 
     setVideoContext(current) {
       this.$nextTick(() => {
-        let videoId = 'video' + current
-        let videoContext = uni.createVideoContext(videoId)
-        let hasAlready = videoContexts.find(item => item.videoId === videoId)
+        const videoId = 'video' + current
+        const videoContext = uni.createVideoContext(videoId)
+        const hasAlready = videoContexts.find(item => item.videoId === videoId)
         if (hasAlready) return
         videoContexts.push({videoId: videoId, handler: videoContext})
-
       })
-
+    },
+    startTimer(callback, delay, ...args) {
+      let timer = setTimeout(() => {
+        callback(...args);
+        clearTimeout(timer);
+      }, delay);
     },
 
-    // 自动播放/暂停视频
+    // 自动暂停/播放
     changePlay(current, type) {
-
       let videoId = 'video' + current
       let backVideoId = 'video' + (current + 1)
       let frontVideoId = 'video' + (current - 1)
 
       if (type === 'toPrev') {
-
         let backVideoVideoContext = videoContexts.find(item => item.videoId === backVideoId)
 
         if (backVideoVideoContext) {
@@ -155,25 +163,21 @@ export default {
         }
 
         this.setVideoContext(current)
-
-        setTimeout(()=>{
+        this.startTimer(() => {
           videoContexts.find(item => item.videoId === videoId).handler.play()
-        },100)
+        }, 50)
 
       } else if (type === 'toNext') {
-
         let frontVideoContext = videoContexts.find(item => item.videoId === frontVideoId)
-
         if (frontVideoContext) {
           frontVideoContext.handler.pause()
         }
-
         this.setVideoContext(current)
-        setTimeout(()=>{
+        this.startTimer(() => {
           videoContexts.find(item => item.videoId === videoId).handler.play()
-        },100)
-
+        }, 50)
       }
+
 
     },
 
@@ -191,7 +195,6 @@ export default {
     },
 
     swiperChanged({detail: {current}}) {
-
       this.setVideoContext(current)
       // 向下一个滑动
       if (current > this.showVideoIndex) {
@@ -199,10 +202,12 @@ export default {
         let currentNum = current + 1
         if (currentNum >= updateNum) {
           console.log('更新数据')
-          // this.getVideoList()
+          this.getVideoList()
         }
       }
+
     },
+
 
   }
 }
@@ -214,6 +219,7 @@ export default {
   /* #ifndef APP-NVUE */
   display: flex;
   flex-direction: column;
+  height: 100vh;
   /* #endif */
   width: 750rpx;
   flex: 1;
@@ -228,6 +234,10 @@ export default {
 }
 
 
+.video {
+//transform: translateY(-200rpx);
+}
+
 .video-box {
   /* #ifndef APP-NVUE */
   display: flex;
@@ -239,7 +249,6 @@ export default {
   align-items: center;
 }
 
-
 /*---------------------------------------------*/
 .bottom-desc {
   position: absolute;
@@ -250,15 +259,17 @@ export default {
   margin-right: 80rpx;
 }
 
-.tips {
-  font-size: 18px;
-  color: #ffffff;
-}
-
 .bottom-desc-title {
   font-size: 18px;
   color: #ffffff;
 
 }
+
+.tips {
+  width: 560rpx;
+  font-size: 30rpx;
+  color: #ffffff;
+}
+
 
 </style>

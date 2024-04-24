@@ -7,3 +7,5 @@ export const getLogin = (data) => request({url: '/index/api/login', method: 'pos
 export const getMineOrderList = (data) => request({url: '/feiying/api.order/getMineOrderList', method: 'post', data});
 
 
+// 视频列表
+export const fetchVideoList= (data) => request({url: '/common/api.video/videolist', method: 'post', data})

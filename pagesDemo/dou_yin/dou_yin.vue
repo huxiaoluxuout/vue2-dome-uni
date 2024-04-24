@@ -1,22 +1,39 @@
 <template>
+
   <view class="page-swiper">
-    <!--swiper实现整屏划动播放视频-->
-    <swiper class="content-wrapper" :render-whole="true" :circular="false" vertical :duration="200" @change="swiperChanged">
-      <swiper-item class="content-wrapper" v-for="(item,index) in originList" :key="item.id">
-        <view class="content-wrapper video-box">
-          <video class="content-wrapper" v-if="index===showVideoIndex" :src="item.src" :autoplay="true" :controls="true"
-                 :custom-cache="false" :loop="false" :enable-play-gesture="true" :enable-progress-gesture="true"
-                 :show-center-play-btn="true">
-          </video>
 
-          <!-- 文本标题 -->
-          <view class="video-text">
-            <text class="tips">{{ index + 1 }} / {{ originList.length }}</text>
+    <view class="navbar" @click="backPage" style="width:40px;height: 40px; position: fixed;top: 30px;left: 10rpx;z-index: 999">
+      <uni-icons type="left" size="30" color="#fff"></uni-icons>
+    </view>
+
+    <swiper class="content-wrapper" vertical :render-whole="true" :autoplay="false" :circular="false" :touchable="false"
+            @change="swiperChanged" @animationfinish="animationfinish">
+
+      <template v-for="(item,index) in originList">
+        <swiper-item class="content-wrapper" :key="item.id">
+          <view class="content-wrapper video-box">
+            <video :id="'video'+index" class="content-wrapper video" v-if="index===showVideoIndex" :src="item.video" :controls="true"
+                   :enable-play-gesture="true" :enable-progress-gesture="true"
+                   :poster="item.img"
+            >
+            </video>
+
+            <template v-if="index!==showVideoIndex">
+              <video v-if="index===showVideoIndex-1" :id="'video'+index" class="content-wrapper video" :src="item.video" :poster="item.img"></video>
+              <video v-if="index===showVideoIndex+1" :id="'video'+index" class="content-wrapper video" :src="item.video" :poster="item.img"></video>
+            </template>
+
+            <!-- 文本标题 -->
+            <view class="bottom-desc">
+              <text class="tips">{{ index + 1 }} / {{ originList.length }}</text>
+              <text class="bottom-desc-title">{{ item.title }}</text>
+
+            </view>
+
           </view>
-        </view>
 
-      </swiper-item>
-
+        </swiper-item>
+      </template>
     </swiper>
 
 
@@ -24,109 +41,189 @@
 </template>
 
 <script>
-import {uuid} from "@/utils/tools";
+
+
+import {fetchVideoList} from "@/network/apis/test_api";
+
+const videoContexts = []
 
 
 export default {
   data() {
     return {
-
       originList: [], // 源数据
       showVideoIndex: 0, //控制video是否渲染
-
       page: 1, // 视频分页
-      pageSize: 5
+      pageSize: 8,
+      updateItemChangeHandle: null,
     }
   },
 
-  onLoad(options) {
-    // console.log(options)
-    /*let pages = getCurrentPages();
-    let currentEventName = '/' + pages[pages.length - 1]['route'];
-    console.log('currentEventName', currentEventName)*/
+  onLoad() {
+    this.getVideoList()
+  },
 
-    this.$EventBus.emit(options.eventName, (prams) => {
-      console.log('options.eventName', prams)
-    })
-
-    // this.getPageID()
-
+  onUnload() {
+    this.videoContext.stop()
 
   },
 
-  methods: {
+  computed: {
+    videoContext() {
+      let videoId = 'video' + this.showVideoIndex
+      const item = this.originList[this.showVideoIndex]
+      this.id = item.id
 
-    /* 生成随机的 pageID */
-    getPageID() {
-      let pageID = Math.floor(Math.random() * (10 - 1 + 1) + 1);
-      // console.log('pageID', pageID)
-      this.getVideoList(pageID)
+      return videoContexts.find(item => item.videoId === videoId).handler
     },
+    currentItem() {
+      return this.originList[this.showVideoIndex]
+    }
+  },
+
+  methods: {
+    backPage() {
+      uni.navigateBack({
+        delta: 1,
+        fail(errMsg) {
+          console.error(errMsg)
+        },
+      });
+    },
+
     /* 获取视频数据 */
     getVideoList() {
-      let data = [
-        {src: 'https://minivideo.xiu123.cn/original/ef89ed0de4e644c9bc7cda9f47bbe347/da0c8ff-17cb63cd142.mp4'},
+      fetchVideoList({
+        page: this.page,
+        type: 1,
+        keywords: ''
+      }).then(res => {
+        if (res.code === 200) {
+          if (res.data.length) {
+            if (this.page === 1) {
+              this.init(res.data)
+              this.page++
 
-        {src: 'https://minivideo.xiu123.cn/original/6f6953cbef3442abac1b3f674350da58/116c7a43-17ceae3c8f3.mp4'},
+            } else {
+              this.$nextTick(() => {
+                this.originList = [...this.originList, ...res.data];
+              });
+              this.page++
+            }
 
-        {src: 'https://minivideo.xiu123.cn/original/fa40b5e9e415435fab14d8c4f279a742/20fdc9eb-17d12597c7d.mp4'},
+          }
 
-        {src: 'https://minivideo.xiu123.cn/original/ee17c0546f2d4a83b9cca3c7adc076f5/1f7eebd-17cea9d8f78.mp4'},
+        } else {
+          uni.showToast({title: res.msg, icon: 'none'})
+        }
 
-        {src: 'https://minivideo.xiu123.cn/original/bcd3baf4ecf0483eb29029a41aafd63d/1eac7c0a-17cd8c270d1.mp4'},
-
-        /*  {src: 'https://minivideo.xiu123.cn/original/8e6c3b4ea0c2464cb1f0f88f71ead849/21f175f6-17cd9ee3e1d.mp4'},
-
-          {src: 'https://minivideo.xiu123.cn/original/8e9f69b67bbc41a8b635b48f0eda5aa3/594e99e-17ce0639948.mp4'},
-          {src: 'https://minivideo.xiu123.cn/original/352bcaafa00944b48e627d7f8464616b/4518875b-17cca60d244.mp4'},
-          {src: 'https://minivideo.xiu123.cn/original/9e28a4a7c7ed475ebd82cc10d421d4a7/3d0c3607-17cbb52e55f.mp4'},*/
-      ]
-
-      data.forEach((item, index) => {
-        //取源数据的部分属性组合成新的数组
-        this.originList.push({
-          src: item.src,
-          id: uuid(),
-        })
       })
-      this.page++
+
+
+    },
+
+    init(cacheVideoList) {
+      this.originList = cacheVideoList
+      this.setVideoContext(0)
+      this.$nextTick(() => {
+        this.startTimer(() => {
+          this.videoContext.play()
+        }, 50)
+      })
+
+    },
+
+    setVideoContext(current) {
+      this.$nextTick(() => {
+        const videoId = 'video' + current
+        const videoContext = uni.createVideoContext(videoId)
+        const hasAlready = videoContexts.find(item => item.videoId === videoId)
+        if (hasAlready) return
+        videoContexts.push({videoId: videoId, handler: videoContext})
+      })
+    },
+    startTimer(callback, delay, ...args) {
+      let timer = setTimeout(() => {
+        callback(...args);
+        clearTimeout(timer);
+      }, delay);
+    },
+
+    // 自动暂停/播放
+    changePlay(current, type) {
+      let videoId = 'video' + current
+      let backVideoId = 'video' + (current + 1)
+      let frontVideoId = 'video' + (current - 1)
+
+      if (type === 'toPrev') {
+        let backVideoVideoContext = videoContexts.find(item => item.videoId === backVideoId)
+
+        if (backVideoVideoContext) {
+          backVideoVideoContext.handler.pause()
+        }
+
+        this.setVideoContext(current)
+        this.startTimer(() => {
+          videoContexts.find(item => item.videoId === videoId).handler.play()
+        }, 50)
+
+      } else if (type === 'toNext') {
+        let frontVideoContext = videoContexts.find(item => item.videoId === frontVideoId)
+        if (frontVideoContext) {
+          frontVideoContext.handler.pause()
+        }
+        this.setVideoContext(current)
+        this.startTimer(() => {
+          videoContexts.find(item => item.videoId === videoId).handler.play()
+        }, 50)
+      }
+
+
+    },
+
+    animationfinish({detail: {current}}) {
+      // 向下一个滑动
+      if (current > this.showVideoIndex) {
+        this.showVideoIndex = current;
+        this.changePlay(current, 'toNext')
+      }
+      // 向上一个滑动
+      else if (current < this.showVideoIndex) {
+        this.showVideoIndex = current;
+        this.changePlay(current, 'toPrev')
+      }
     },
 
     swiperChanged({detail: {current}}) {
-      let len = this.originList.length
-      let pageIndex = (len / this.pageSize)
-      let x = (pageIndex * this.pageSize) - (this.pageSize - 2);
-
-      console.log(x + 1, current)
-
+      this.setVideoContext(current)
+      // 向下一个滑动
       if (current > this.showVideoIndex) {
-
-        if (current === x) {
+        let updateNum = ((this.page - 1) * this.pageSize) - 2
+        let currentNum = current + 1
+        if (currentNum >= updateNum) {
           console.log('更新数据')
-          this.getPageID()
-
+          this.getVideoList()
         }
-      } else {
-        console.log('向上一个滑动，更新数据')
       }
 
-      this.showVideoIndex = current;
-
     },
+
 
   }
 }
 </script>
 
 <style scoped>
+
 .page-swiper {
-  width: 750rpx;
+  /* #ifndef APP-NVUE */
   display: flex;
   flex-direction: column;
-  flex: 1;
-  /* #ifndef APP-NVUE */
   height: 100vh;
   /* #endif */
+  width: 750rpx;
+  flex: 1;
+
 }
 
 .content-wrapper {
@@ -136,21 +233,43 @@ export default {
   flex: 1;
 }
 
-.video-box {
-  position: relative;
+
+.video {
+//transform: translateY(-200rpx);
 }
 
-.video-text {
+.video-box {
+  /* #ifndef APP-NVUE */
+  display: flex;
+  flex-direction: column;
+  /* #endif */
+  background-color: #000000;
+  position: relative;
+  justify-content: center;
+  align-items: center;
+}
+
+/*---------------------------------------------*/
+.bottom-desc {
   position: absolute;
-  width: 700rpx;
-  bottom: 150rpx;
+  width: 640rpx;
+  bottom: 60px;
   z-index: 9999;
-  margin-left: 50rpx;
+  margin-left: 30rpx;
+  margin-right: 80rpx;
+}
+
+.bottom-desc-title {
+  font-size: 18px;
+  color: #ffffff;
+
 }
 
 .tips {
   width: 560rpx;
-  font-size: 26rpx;
+  font-size: 30rpx;
   color: #ffffff;
 }
+
+
 </style>

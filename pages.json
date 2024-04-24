@@ -89,21 +89,9 @@
           "path": "dou_yin/dou_yin",
           "style": {
             "navigationBarTitleText": "仿抖音页面",
-            "enablePullDownRefresh": false
-          }
-        },
-        {
-          "path": "n_dou_yin/n_dou_yin",
-          "style": {
-            "navigationBarTitleText": "n_dou_yin",
-            "enablePullDownRefresh": false
-          }
-        },
-        {
-          "path": "n_dou_yin/n_dou_yin_2",
-          "style": {
-            "navigationBarTitleText": "n_dou_yin_2",
-            "enablePullDownRefresh": false
+            "enablePullDownRefresh": false,
+            "navigationStyle": "custom"
+
           }
         },
         {
