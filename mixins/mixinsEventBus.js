@@ -13,21 +13,32 @@ function splitQueryUrl(pathUrl) {
         startStr: query ? '&' : '?',
     }
 }
+
+
 export default {
     onLaunch: function () {
 
-        uni.$on('OnGlobEvent', ({type = 'navigateTo', eventName, isPath = true, handler}) => {
-            uni.$emit(eventName, handler)
-            uni.$once('GlobEvent' + eventName, ()=> {
-                uni.$emit(eventName, handler)
-            })
+        uni.$on('OnGlobEvent', ({type = 'navigateTo', eventPathName, isToPage = true, options = {}}) => {
 
-            if (isPath) {
-                const {path, query, startStr} = splitQueryUrl(eventName)
-                uni[type]({url: path + query + (startStr + 'eventName=' + eventName)})
+            const {path, query, startStr} = splitQueryUrl(eventPathName)
+
+            uni.$emit(path, options)
+            uni.$once('GlobEvent' + path, () => uni.$emit(path, options))
+
+            if (isToPage && (type === 'navigateTo' || type === 'switchTab')) {
+
+                uni[type]({
+                    url: path + query + (startStr + 'eventName=' + path),
+                    fail(errMsg) {
+                        console.error('errMsg', errMsg)
+                    },
+                })
+            } else {
+                console.error("Invalid type. Must be 'navigateTo' or 'switchTab'.");
             }
         })
-    },
+    }
 }
+
 
 

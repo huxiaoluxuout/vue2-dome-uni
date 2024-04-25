@@ -1,20 +1,16 @@
 <template>
   <view>
-    <!--    <z-paging ref="paging" v-model="dataList" use-page-scroll  @query="queryList">-->
-    <!--      <view slot="top">
-            <zshu-tabs  :activeId="activeId" @updateActiveId="(id)=>{activeId = id}" :list-tabs="listTabs"></zshu-tabs>
-          </view>-->
-    <view class="dome-test" v-for="(item,index) in dataList" :key="index">
-      <view class="dome-test-item">{{ item.id }}</view>
-      <view class="dome-test-item">{{ item.name }}</view>
-      <view class="dome-test-item">{{ item.take_time_text }}</view>
-      <view class="dome-test-item">{{ item.fault }}</view>
-    </view>
+    <!--
+        <z-paging ref="paging" v-model="dataList" use-page-scroll @query="queryList">
+          <view slot="top">
+            <zshu-tabs :activeId="activeId" @updateActiveId="(id)=>{activeId = id}" :list-tabs="listTabs"></zshu-tabs>
+          </view>
+          <view slot="bottom">
+            <tabbar :INDEX="1"></tabbar>
+          </view>
+        </z-paging>
+    -->
 
-    <view slot="bottom">
-      <tabbar :INDEX="1"></tabbar>
-    </view>
-    <!--    </z-paging>-->
 
     <tabbar :INDEX="1"></tabbar>
 
@@ -51,69 +47,29 @@ export default {
     }
   },
 
-  onLoad(options) {
+  onLoad() {
+    console.log('tabbar2')
 
-    const eventName = '/pages/tabbar2/tabbar2'
+    const eventName = '/pagesDemo/tabbar2/tabbar2'
 
-    uni.$on(eventName, (handler) => {
-      handler((callbackPrams) => {
-        console.log('$on-tabbar2', callbackPrams)
-      })
+    uni.$on(eventName, (callbackInfo) => {
+      console.log(callbackInfo);
+
+      if (typeof callbackInfo === 'function') {
+        callbackInfo()
+      }else {
+        callbackInfo.handler('hello')
+      }
+
     })
     uni.$emit('GlobEvent' + eventName)
 
   },
 
-  watch: {
-    activeId() {
-      // this.$refs.paging.reload()
-    },
-  },
-
-  methods: {
-    getMineOrderListHandle(pageNo, pageSize) {
-
-      getMineOrderList({
-        page: pageNo,
-        page_size: pageSize,
-        status: this.activeId - 1
-      }).then(res => {
-        this.$refs.paging.complete(res.data.data);
-
-      }).catch(() => {
-        this.$refs.paging.complete(false);
-      })
-    },
-
-    queryList(pageNo, pageSize, form) {
-
-      this.getMineOrderListHandle(pageNo, pageSize)
-
-    },
-    listChange() {
-
-    },
-    // 下拉刷新被触发
-    onRefresh() {
-      // 告知z-paging下拉刷新结束，这样才可以开始下一次的下拉刷新
-      setTimeout(() => {
-        // 1.5秒之后停止刷新动画
-        this.$refs.paging.complete();
-      }, 1500)
-    },
-
-  }
 }
 </script>
 
 <style scoped>
-.dome-test {
-  border: 1px solid red;
-  margin-bottom: 10px;
-}
 
-.dome-test-item {
-  line-height: 2.5;
-}
 
 </style>

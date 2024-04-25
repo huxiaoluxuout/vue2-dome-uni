@@ -11,25 +11,21 @@
         <u-button type="primary" :plain="true" text="zshu-uploadimg" @click="openUploadImg"></u-button>-->
 
 
+    <u-button type="primary" :plain="true" text="A1" @click="A1"></u-button>
+    <u-button type="primary" :plain="true" text="OnGlobEventA1" @click="OnGlobEventA1"></u-button>
+
+
+    <u-button type="primary" :plain="true" text="OnGlobEventtabbar2" @click="OnGlobEventtabbar2"></u-button>
+
+    <u-button type="primary" :plain="true" text="tabbar2" @click="tabbar2"></u-button>
+
+
+
+
 
     <u-button type="primary" :plain="true" text="仿抖音页面" @click="$u.route('/pagesDemo/dou_yin/dou_yin')"></u-button>
 
-    <!--    <u-button type="primary" :plain="true" text="OnGlobEventtabbar2" @click="OnGlobEventtabbar2"></u-button>-->
-
-    <!--    <u-button type="primary" :plain="true" text="tabbar2" @click="tabbar2"></u-button>-->
-
-    <!--    <u-button type="primary" :plain="true" text="OnGlobEventtabbar3" @click="OnGlobEventtabbar3"></u-button>-->
-
-    <!--    <u-button type="primary" :plain="true" text="tabbar3" @click="tabbar3"></u-button>-->
-
-    <!--    <u-button type="primary" :plain="true" text="OnGlobEventA1" @click="OnGlobEventA1"></u-button>-->
-
-        <u-button type="primary" :plain="true" text="A1" @click="A1"></u-button>
-
-        <u-button type="primary" :plain="true" text="定位" @click="$u.route('/pagesDemo/dingWei/dingWei')"></u-button>
-
-
-    <!--    <u-button type="primary" :plain="true" text="BindingX" @click="$u.route('/pages/n_BindingX/n_BindingX')"></u-button>-->
+    <u-button type="primary" :plain="true" text="定位" @click="$u.route('/pagesDemo/dingWei/dingWei')"></u-button>
 
     <view style="position: fixed;bottom: 0;">
       <tabbar :INDEX="0"></tabbar>
@@ -48,7 +44,7 @@ import {ylxNavigateTo} from "@/utils/uniTools";
 import ZshuUploadimg from "@/components/zshu-components/zshu-uploadimg.vue";
 
 import {data} from "@/test/data.json"
-import {startTimer, uuid, simulateOperation} from "@/utils/tools";
+
 import mixinsEventBusRegister from "@/mixins/mixinsEventBusRegister";
 
 
@@ -79,15 +75,6 @@ export default {
     }
   },
   onLoad() {
-    // 注册事件监听器
-    this.$EventBus.on('myEvent', this.listener);
-
-    let myObject = {
-      data: 'value'
-    };
-
-    // 现在myObject和所有其他对象都有了globalMethod这个方法
-    // myObject.globalMethod(); // 输出: This is a global method
   },
   computed: {},
   methods: {
@@ -110,115 +97,20 @@ export default {
     },
 
     // ---------------------------------------------
-    getVideoList(callback) {
-      console.log('getVideoList',)
-      typeof callback === 'function' && callback('getVideoList')
-
-      return
-      simulateOperation().then(res => {
-        console.log('res', res)
-        data.forEach(item => item.id = uuid())
-        this.videoList = [...this.videoList, ...data]
-        if (this.page === 1) {
-
-        }
-        this.page++
-
-
-      }).catch(err => {
-        console.log('err', err)
-      })
-
-      /*uni.request({
-        url: 'https://api.apiopen.top/api/getMiniVideo?page=' + this.page + '&pageSize=' + this.pageSize, // 请求数据接口
-        data: {},
-        success: (resData) => {
-
-          let res = JSON.parse(JSON.stringify(resData))
-          res.data.result.list.forEach(item => item.id = uuid())
-
-          if (res.data.code === 200) {
-
-            if (this.page === 1) {
-              this.originList = [...this.originList, ...res.data.result.list]
-              this.setVideoShow(0)
-              this.setVideoContext(0)
-              this.$nextTick(() => {
-                startTimer(() => {
-                  this.videoContext.play()
-                }, 200)
-              })
-            } else {
-              this.$nextTick(() => {
-                this.originList = [...this.originList, ...res.data.result.list];
-              });
-
-            }
-
-            this.page++
-          }
-        }
-      })*/
+    getVideoList(param) {
+      console.log('getVideoList',param)
+      // typeof callback === 'function' && callback('getVideoList')
 
     },
-    listener(msg) {
-      console.log('listener', msg)
-    },
+    // ---------------------------------------------------
 
-    EventBusClick() {
-
-      uni.$emit('OnGlobEvent', {eventName: '/pagesDemo/dou_yin/dou_yin', handler: this.getVideoList})
-
-    },
-
-    EventBusClick2() {
-
-      this.$EventBus.emit('OnGlobEvent', {eventName: '/pagesDemo/dou_yin/dou_yin', handler: this.getVideoList})
-    },
-
-
-    OnGlobEventtabbar2() {
-
-      uni.$emit('OnGlobEvent', {
-        type: 'switchTab',
-        eventName: '/pagesDemo/tabbar2/tabbar2',
-        handler: this.getVideoList
-      })
-
-    },
-
-    OnGlobEventtabbar3() {
-
-      uni.$emit('OnGlobEvent', {
-        type: 'switchTab',
-        eventName: '/pagesDemo/tabbar3/tabbar3',
-        handler: this.getVideoListgetVideoList
-      })
-
-    },
     OnGlobEventA1() {
 
       uni.$emit('OnGlobEvent', {
-        // type: 'switchTab',
-        eventName: '/pages/A1/A1',
-        handler: this.getVideoListgetVideoList
+        eventPathName: '/pagesDemo/A1/A1',
+        options: this.getVideoListgetVideoList,
+
       })
-
-    },
-
-    // ------
-    tabbar2() {
-
-      uni.$emit('/pagesDemo/tabbar2/tabbar2', this.getVideoList)
-      uni.switchTab({
-        url: '/pagesDemo/tabbar2/tabbar2'
-      });
-
-    },
-    getVideoListgetVideoList(callback) {
-      console.log('getVideoListgetVideoList',)
-
-      typeof callback === 'function' && callback('getVideoListgetVideoList ')
 
     },
 
@@ -231,17 +123,39 @@ export default {
 
     },
 
-    ylxOnGetInfoHandler(callback) {
-      typeof callback === 'function' && callback()
-    },
+    tabbar2() {
 
-    // 仿抖音
-    OnGlobEventDouYin() {
+      uni.$emit('/pagesDemo/tabbar2/tabbar2', this.getVideoList)
+      uni.switchTab({
+        url: '/pagesDemo/tabbar2/tabbar2'
+      });
+
+    },
+    OnGlobEventtabbar2() {
+
       uni.$emit('OnGlobEvent', {
-        eventName: '/pagesDemo/dou_yin/dou_yin',
-        handler: this.getVideoListgetVideoList
+        type: 'switchTab',
+        eventPathName: '/pagesDemo/tabbar2/tabbar2',
+        options: {
+          handler:this.getVideoList,
+          param:{age:100,className:'1'}
+        }
       })
 
+    },
+
+    getVideoListgetVideoList(callback) {
+      console.log('getVideoListgetVideoList',)
+
+      typeof callback === 'function' && callback('getVideoListgetVideoList ')
+
+    },
+    // ---------------------------------------------------
+
+
+
+    ylxOnGetInfoHandler(callback) {
+      typeof callback === 'function' && callback()
     },
 
   }
