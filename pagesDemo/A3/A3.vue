@@ -7,10 +7,8 @@
 </template>
 
 <script>
-import mixinsOnRegisterEvent from "@/mixins/mixinsEventBusRegister";
-
 export default {
-  mixins:[mixinsOnRegisterEvent],
+
   data() {
     return {
      title:'我是A3'

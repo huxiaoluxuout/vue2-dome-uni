@@ -38,15 +38,14 @@
 <script>
 import pagesConfig from "@/pages.json";
 
-import mixinsPullDownRefresh from "@/mixins/mixinsPullDownRefresh";
-import mixinsNextPageManager from "@/mixins/mixinsNextPageManager";
+
 import {ylxNavigateTo, ylxStyleObjectToString, ylxFilterPath} from "@/utils/uniTools";
 
 const {tabBar: {list: tabBarPages}} = pagesConfig
 let menuButtonInfoALI = null, systemInfo = null, pages = null;
 
 export default {
-  mixins: [mixinsPullDownRefresh, mixinsNextPageManager],
+ 
   props: {
     configNavBar: {
       type: Object,

@@ -76,8 +76,7 @@
 
 <script>
 import {getMineOrderList} from "@/network/apis/test_api";
-import mixinsNextPageManager from "@/mixins/mixinsNextPageManager";
-import mixinsPullDownRefresh from "@/mixins/mixinsPullDownRefresh";
+
 
 import ZshuTabs from "@/components/zshu-components/zshu-tabs.vue";
 
@@ -87,7 +86,7 @@ import YlxSlider from "@/components/ylx-components/ylx-slider.vue";
 
 export default {
   components: {YlxSlider, ZshuNavbar, ZshuTabs},
-  mixins: [mixinsNextPageManager, mixinsPullDownRefresh],
+
   data() {
     return {
 

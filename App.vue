@@ -2,18 +2,15 @@
 
 
 import {getLogin} from "@/network/apis/test_api";
-import appEventBus from "@/mixins/mixinsEventBus";
-
-import {devEnableDebug} from "@/common/js/devEnableDebug";
+import instanceUniEventBus from "@/utils/common/uniEventBus/instanceUniEventBus";
 
 
 export default {
-  mixins: [appEventBus],
+
 
   onLaunch: function (options) {
     console.log('App Launch')
-    devEnableDebug(options)
-    // this.loginApi()
+    instanceUniEventBus.registerGlobEvent()
 
   },
 
@@ -48,7 +45,7 @@ export default {
 /* #ifndef APP-PLUS-NVUE*/
 
 @import "@/uni_modules/uview-ui/index.scss";
-@import '@/common/style/app.scss';
+
 
 /* #endif*/
 

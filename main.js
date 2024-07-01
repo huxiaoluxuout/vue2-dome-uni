@@ -1,6 +1,6 @@
 import App from './App'
 
-import {EventBus} from "@/utils/EventBus";
+
 
 // #ifndef VUE3
 import Vue from 'vue'
@@ -13,7 +13,6 @@ import store from './store'
 
 Vue.prototype.$store = store
 
-const eventBus = new EventBus()
 
 function splitQueryUrl(pathUrl) {
     // 以问号 (?) 分割 URL，获取路径和查询字符串
@@ -28,19 +27,6 @@ function splitQueryUrl(pathUrl) {
     }
 }
 
-eventBus.on('OnGlobEvent', ({eventName, isPath = true, handler}) => {
-    eventBus.once(eventName, handler)
-    if (isPath) {
-        const {path, query, startStr} = splitQueryUrl(eventName)
-        uni.navigateTo({url: path + query + (startStr + 'eventName=' + eventName)})
-    }
-})
-Vue.prototype.$EventBus = eventBus
-
-
-import PageReadyShow from "./mixins/mixinsPageReadyShow";
-
-Vue.mixin(PageReadyShow)
 
 
 Vue.config.productionTip = false

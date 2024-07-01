@@ -2,55 +2,24 @@
   <view class="page">
 
 
-    <!--    <zshu-uploadimg ref="uploadImg" columns-limit="2" gap="10px" scale="1.58" limit="13"
-                        hidden-upload-icon img-width="150px"
-                        :fileImageList="fileImageList" @updateFileImageList="updateFileImageList"
-        >
-        </zshu-uploadimg>
-
-        <u-button type="primary" :plain="true" text="zshu-uploadimg" @click="openUploadImg"></u-button>-->
+    <u-button type="primary" :plain="true" text="toA1" @click="toA1"></u-button>
 
 
-    <u-button type="primary" :plain="true" text="A1" @click="A1"></u-button>
-    <u-button type="primary" :plain="true" text="OnGlobEventA1" @click="OnGlobEventA1"></u-button>
-
-
-    <u-button type="primary" :plain="true" text="OnGlobEventtabbar2" @click="OnGlobEventtabbar2"></u-button>
-
-    <u-button type="primary" :plain="true" text="tabbar2" @click="tabbar2"></u-button>
-
-
-
-
-
-    <u-button type="primary" :plain="true" text="仿抖音页面" @click="$u.route('/pagesDemo/dou_yin/dou_yin')"></u-button>
-
-    <u-button type="primary" :plain="true" text="定位" @click="$u.route('/pagesDemo/dingWei/dingWei')"></u-button>
-
-    <view style="position: fixed;bottom: 0;">
-      <tabbar :INDEX="0"></tabbar>
-
-    </view>
+    <tabbar :INDEX="0"></tabbar>
 
 
   </view>
 </template>
 
 <script>
-import ZshuNavbar from "@/components/zshu-components/zshu-navbar.vue";
 
 import {ylxNavigateTo} from "@/utils/uniTools";
 
-import ZshuUploadimg from "@/components/zshu-components/zshu-uploadimg.vue";
-
 import {data} from "@/test/data.json"
 
-import mixinsEventBusRegister from "@/mixins/mixinsEventBusRegister";
-
+import instanceUniEventBus from "@/utils/common/uniEventBus/instanceUniEventBus";
 
 export default {
-  components: {ZshuNavbar, ZshuUploadimg},
-  mixins: [mixinsEventBusRegister],
   data() {
     return {
 
@@ -75,6 +44,7 @@ export default {
     }
   },
   onLoad() {
+
   },
   computed: {},
   methods: {
@@ -96,61 +66,21 @@ export default {
       }
     },
 
-    // ---------------------------------------------
-    getVideoList(param) {
-      console.log('getVideoList',param)
-      // typeof callback === 'function' && callback('getVideoList')
 
-    },
     // ---------------------------------------------------
 
-    OnGlobEventA1() {
-
-      uni.$emit('OnGlobEvent', {
-        eventPathName: '/pagesDemo/A1/A1',
-        options: this.getVideoListgetVideoList,
-
-      })
-
-    },
-
-    A1() {
-
-      uni.$emit('/pagesDemo/A1/A1', this.getVideoListgetVideoList)
-      uni.navigateTo({
-        url: '/pagesDemo/A1/A1'
-      });
-
-    },
-
-    tabbar2() {
-
-      uni.$emit('/pagesDemo/tabbar2/tabbar2', this.getVideoList)
-      uni.switchTab({
-        url: '/pagesDemo/tabbar2/tabbar2'
-      });
-
-    },
-    OnGlobEventtabbar2() {
-
-      uni.$emit('OnGlobEvent', {
-        type: 'switchTab',
-        eventPathName: '/pagesDemo/tabbar2/tabbar2',
-        options: {
-          handler:this.getVideoList,
-          param:{age:100,className:'1'}
+    toA1(){
+      instanceUniEventBus.pageNotice({
+        eventPathName:'/pagesDemo/A1/A1',
+        options:{
+          typw:true,
+          name: 'lixl',
+          age:18
         }
-      })
-
+      },true)
     },
 
-    getVideoListgetVideoList(callback) {
-      console.log('getVideoListgetVideoList',)
 
-      typeof callback === 'function' && callback('getVideoListgetVideoList ')
-
-    },
-    // ---------------------------------------------------
 
 
 

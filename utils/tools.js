@@ -6,7 +6,6 @@ const uuid = () => {
     });
 }
 
-
 // 将参数转换为查询字符串
 const encodeObjectToQueryString = (params, starStr = '?') => {
     if (Object.keys(params).length === 0) {
@@ -33,7 +32,6 @@ const encodeParseQueryString = (queryString) => {
     return params;
 };
 
-
 // 对象转成字符串 (style)
 const objectStyleToString = (obj) => {
     let str = '';
@@ -43,18 +41,14 @@ const objectStyleToString = (obj) => {
     return str;
 }
 
-
 function splitQueryUrl(pathUrl) {
-    // 以问号 (?) 分割 URL，获取路径和查询字符串
-    let url = /^\//.test(pathUrl) ? pathUrl : '/' + pathUrl
-    let parts = url.split('?');
-    let path = parts[0];
-    let query = parts[1];
+    let url = /^\//.test(pathUrl) ? pathUrl : '/' + pathUrl;
+    let [path, query] = url.split('?');
     return {
         path,
         query: query ? '?' + query : '',
         startStr: query ? '&' : '?',
-    }
+    };
 }
 
 
@@ -141,6 +135,91 @@ function simulateOperation() {
     });
 }
 
+// 判断数据类型
+function dataTypeJudge(val, type) {
+    const dataType = Object.prototype.toString.call(val).replace(/\[object (\w+)\]/, "$1").toLowerCase();
+    return type ? dataType === type : dataType;
+}
+
+// 将时间戳格式化为日期字符串
+function formatTimestamp(timestamp) {
+    const date = new Date(timestamp);
+    const year = date.getFullYear();
+    const month = (date.getMonth() + 1).toString().padStart(2, '0');
+    const day = date.getDate().toString().padStart(2, '0');
+    const hours = date.getHours().toString().padStart(2, '0');
+    const minutes = date.getMinutes().toString().padStart(2, '0');
+    const seconds = date.getSeconds().toString().padStart(2, '0');
+    return `${year}-${month}-${day}`;
+}
+// 输出时间戳
+function dateTimestamp(date) {
+// 将日期字符串转换为日期对象
+    const dateObject = new Date(date);
+// 获取时间戳（毫秒数）
+    return dateObject.getTime();
+}
+
+function computedRatio(strRatio) {
+    let result =strRatio
+    if (strRatio.indexOf(':') !== -1) {
+        let ratio =strRatio.split(':').map(Number);
+        result = (ratio[0] / ratio[1]).toFixed(3);
+    }
+    return result
+}
+
+const promiseCallback = (promiseFn,...args) => {
+    return  {
+        onSuccess:  (callback)  =>  {
+            promiseFn(...args).then(res  =>  {
+                callback(res);
+            });
+        },
+        onError:  (callback)  =>  {
+            promiseFn(...args).catch(err  =>  {
+                callback(err);
+            });
+        }
+    };
+}
+
+function handlerClick(isClick = true) {
+    let isClickable = isClick
+    return (fn, ...arg) => {
+        if (isClickable) {
+            if (typeof fn === 'function') {
+                fn(...arg)
+            }
+            isClickable = false
+            setTimeout(() => {
+                isClickable = true
+            }, 500) // 设置延迟时间为500毫秒
+        }
+
+    }
+
+}
+
+function parseSize(str) {
+    let match = str.match(/(\d+)(rpx|px)/i);
+    if (match) {
+        return {
+            num: parseFloat(match[1]),
+            unit: match[2]
+        };
+    } else {
+        return {
+            num: parseFloat(str),
+            unit: 'rpx'
+        };
+    }
+}
+function  removeTrailingZeros(value)  {
+    let  stringValue  =  value.toString();
+    return  stringValue.replace(/(\.\d*?[1-9])0+$|\.0*$/,  '\$1');
+}
+
 export {
     uuid,
     encodeObjectToQueryString,
@@ -150,7 +229,15 @@ export {
     isEmptyData,
     splitQueryUrl,
     startTimer,
-    simulateOperation
+    simulateOperation,
+    dataTypeJudge,
+    formatTimestamp,
+    dateTimestamp,
+    computedRatio,
+    promiseCallback,
+    handlerClick,
+    parseSize,
+    removeTrailingZeros,
 
 }
 

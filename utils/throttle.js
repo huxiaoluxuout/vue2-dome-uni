@@ -1,4 +1,6 @@
-let timer; let flag;
+let timer;
+let flag;
+
 /**
  * 节流原理：在一定时间内，只能触发一次
  *
@@ -26,4 +28,7 @@ function throttle(func, wait = 500, immediate = true) {
         }, wait)
     }
 }
-export default throttle
+
+export {
+    throttle
+}

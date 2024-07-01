@@ -1,8 +1,9 @@
 import pagesConfig from "@/pages.json";
-import {uniChooseImage, uniChooseLocation, uniGetLocation} from "@/common/js/uniApi";
 
-const {tabBar: {list: tabBarPages}} = pagesConfig
+import {promiseCallback} from "@/utils/tools";
+import {mpCheckAuthorizes} from "@/utils/common/authorize/mpAuthorizes";
 
+const {tabBar: {list: tabBarPages} = {list: []}} = pagesConfig
 
 // 微信登录 code
 const ylxLoginCode = () => {
@@ -59,39 +60,6 @@ const ylxPayMoney = function (data) {
     })
 }
 
-// 获取当前位置
-const ylxMyLocation = async () => {
-    try {
-        await uniGetLocation()
-
-    } catch (err) {
-        console.error(err)
-    }
-
-}
-
-// 打开地图选择位置
-const ylxChooseLocation = async () => {
-
-    try {
-        await uniChooseLocation()
-
-    } catch (err) {
-        console.error(err)
-    }
-
-}
-
-// 选择图片/拍摄
-const ylxChooseImage = async () => {
-    try {
-        await uniChooseImage()
-
-    } catch (err) {
-        console.error(err)
-    }
-
-}
 
 
 // IOS 底部兼容
@@ -117,7 +85,7 @@ const ylxViewInfo = (selector, callback, that) => {
 }
 
 //统一提示方便全局修改
-const ylxToast = (title, duration = 1500, mask = true, icon = 'none') => {
+const ylxToast = (title, duration = 1500, mask = false, icon = 'none') => {
     if (Boolean(title) === false) {
         return;
     }
@@ -139,6 +107,16 @@ const ylxDebuggerMsg = () => {
 const ylxFilterPath = (path) => {
     return /^\//.test(path) ? path : '/' + path
 };
+
+function removeVueExtension(filePath) {
+    if (filePath.lastIndexOf('.vue') !== -1) {
+        console.warn('移除.vue')
+        return filePath.replace(/\.vue$/, '');
+    } else {
+        return filePath
+    }
+}
+
 const toTargetPage = (pagePath, parseInfo = {}, api) => {
 
     if (!pagePath) return;
@@ -164,7 +142,7 @@ const toTargetPage = (pagePath, parseInfo = {}, api) => {
         }
 
         uni[api]({
-            url: ylxFilterPath(pagePath + queryString),
+            url: ylxFilterPath(removeVueExtension(pagePath) + queryString),
             success: function (res) {
                 console.log(res.errMsg)
             },
@@ -180,7 +158,7 @@ const ylxNavigateTo = (pagePath, parse = {}) => toTargetPage(pagePath, parse, 'n
 const ylxRedirectTo = (pagePath, parse = {}) => toTargetPage(pagePath, parse, 'redirectTo');
 
 
-const ylxAttributeStylers = (item, keyMap = []) => {
+const ylxAttributeStylers = (attr, keyMap = []) => {
     // 原始数组
     const originalArray = ['flex', 'backgroundColor', 'filter', 'color'];
 
@@ -192,7 +170,7 @@ const ylxAttributeStylers = (item, keyMap = []) => {
 
     // 遍历合并后的键数组，提取属性值并添加到结果对象中。
     for (const key of mergedKeys) {
-        const value = item[key];
+        const value = attr[key];
         if (value !== null && value !== undefined) {
             result[key] = value;
         }
@@ -202,29 +180,58 @@ const ylxAttributeStylers = (item, keyMap = []) => {
 };
 
 // 对象转成字符串 (style)
-const ylxStyleObjectToString = (obj) => {
-    let str = '';
-    for (const key in obj) {
-        str += `${key.replace(/([A-Z])/g, '-$1').toLowerCase()}:${obj[key]};`;
+const ylxStyleObjectToString = (styleObject) => {
+    let styleStr = '';
+    for (const key in styleObject) {
+        styleStr += `${key.replace(/([A-Z])/g, '-$1').toLowerCase()}:${styleObject[key]};`;
     }
-    return str;
+    return styleStr;
 }
 
 
-const ylxOpenWxDebug = (options) => {
+const ylxOpenWxDebug = () => {
     uni.getSystemInfo({
         success(res) {
             // #ifdef MP
-            if (res.brand && res.brand !== "devtools" && process.env.NODE_ENV === 'development') {
-                // 打开调试
-                uni.setEnableDebug({
-                    enableDebug: options.query?.isDebugger === '1'
-                })
+            const accountInfo = uni.getAccountInfoSync()
+            const {miniProgram} = accountInfo
+            if ((res?.brand && res.brand !== "devtools")) {
+                if (process.env.NODE_ENV === 'development') {
+                    // 打开调试
+                    uni.setEnableDebug({
+                        enableDebug: ['develop', 'trial'].includes(miniProgram.envVersion) // 区分  develop:开发版本 trial:体验版 release:正式版
+                    })
+                } else {
+                    console.log('生产环境');
+
+                }
             }
             // #endif
 
         }
     })
+}
+
+
+
+function showModelHandler(title, params) {
+    uni.showModal({
+        title,
+        showCancel: false,
+        success: function (res) {
+            if (res.confirm) {
+                if (typeof params === 'function') {
+                    params()
+                } else {
+                    uni.$emit('connectErr', params)
+                }
+            }
+        }
+    });
+}
+
+function ylxBluetoothAuthorize() {
+    return promiseCallback(mpCheckAuthorizes,'bluetooth','请允许小程序使用蓝牙')
 }
 
 export {
@@ -234,14 +241,12 @@ export {
     ylxFilterPath,
     ylxLoginCode,
     ylxPayMoney,
-    ylxMyLocation,
-    ylxChooseLocation,
-    ylxChooseImage,
     ylxViewInfo,
     ylxDebuggerMsg,
     ylxNavigateTo,
     ylxRedirectTo,
     ylxOpenWxDebug,
     ylxToast,
-
+    ylxBluetoothAuthorize,
+    showModelHandler
 }

@@ -19,51 +19,30 @@
 </template>
 
 <script>
-import mixinsPullDownRefresh from "@/mixins/mixinsPullDownRefresh";
-import mixinsEventBusUse from "@/mixins/mixinsEventBusUse";
-import mixinsEventBusRegister from "@/mixins/mixinsEventBusRegister";
+
+
+import instanceUniEventBus from "@/utils/common/uniEventBus/instanceUniEventBus";
+import useUniEventBusVue2 from "@/utils/common/uniEventBus/useUniEventBusVue2";
 
 export default {
-  mixins: [mixinsPullDownRefresh,mixinsEventBusUse,mixinsEventBusRegister],
+  mixins: [useUniEventBusVue2],
+
   data() {
     return {}
   },
+  onLoad() {
+    instanceUniEventBus.onPageNotice((data) => {
+      console.log('onPageNotice-data', data)
+    })
+  },
 
   methods: {
-
-    /*onHandler(handler) {
-      if (typeof handler === 'function') {
-        handler((callbackPrams) => {
-          console.log('A1', callbackPrams)
-        })
-      } else {
-        console.log(handler)
-
-      }
-
-    },*/
-
     ylxOnPullDown() {
       console.log('1 onPullDown');
     },
-
-    ylxPullDownCallBack() {
-      console.log('2 pullDownCallBack');
-
-    },
-
     toPrePage() {
-      console.log('A1')
-      uni.$emit(this.ylxPrevEventName,()=>{
-        uni.navigateBack()
-      })
+      console.log('1 toPrePage');
     },
-    ylxOnGetInfoHandler(callback) {
-      console.log(callback)
-      typeof callback === 'function' && callback()
-    },
-
-
   }
 }
 </script>

@@ -29,8 +29,9 @@
 <script>
 
 import Big from "@/utils/lib/big.min"
-import {calculateSpeed} from "@/utils/calculateSpeed";
-import {uniOnLocationChange} from "@/common/js/uniApi";
+
+
+
 
 export default {
 
@@ -54,9 +55,8 @@ export default {
 
   onLoad() {
     uni.$on('onLocationChangeData', (res => {
-      let {latitude, longitude, time, speedKph} = calculateSpeed(res)
-      this.speedKph = new Big(speedKph).toFixed(3)
-      this.dataList = [{latitude, longitude, time,}, ...this.dataList];
+
+
 
     }))
 
