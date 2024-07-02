@@ -1,15 +1,17 @@
 import instanceUniEventBus from "@/utils/common/uniEventBus/instanceUniEventBus";
-
 import {onUnmounted, ref} from 'vue';
 
-export function instanceUniEventBusMixins(callback) {
-    const currentEventName = ref('')
-    instanceUniEventBus.setCurrentPageEvent().then(res => {
-        currentEventName.value = res
+export function useUniEventBusVue3(callback) {
+    if (typeof callback !== 'function') {
+        console.error(`${callback}必须是函数`);
+        return;
+    }
+    const currentPageEventName = ref('')
+    instanceUniEventBus.getCurrentPageEventName().then(pageEventName => {
+        currentPageEventName.value = pageEventName
         callback()
     })
     onUnmounted(() => {
-        instanceUniEventBus.removeCurrentEvent(currentEventName.value)
+        instanceUniEventBus.removeCurrentPageEventName(currentPageEventName.value)
     })
 }
-

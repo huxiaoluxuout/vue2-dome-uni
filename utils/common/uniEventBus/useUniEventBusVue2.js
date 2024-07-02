@@ -3,16 +3,16 @@ import instanceUniEventBus from "@/utils/common/uniEventBus/instanceUniEventBus"
 export default {
     data() {
         return {
-            currentEventName: '',
+            currentPageEventName: '',
         }
     },
     onLoad: function () {
-        instanceUniEventBus.setCurrentPageEvent().then(currentEventName => {
-            this.currentEventName = currentEventName
+        instanceUniEventBus.getCurrentPageEventName().then(currentPageEventName => {
+            this.currentPageEventName = currentPageEventName
         })
     },
     onUnload() {
-        uni.$off(this.currentEventName)
+        instanceUniEventBus.removeCurrentPageEventName(this.currentPageEventName)
     },
 }
 

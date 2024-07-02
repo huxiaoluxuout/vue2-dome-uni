@@ -43,10 +43,10 @@ export class UniEventBusCore {
 
     currentEventName = '';
 
-    setCurrentPageEvent() {
+    getCurrentPageEventName() {
         return new Promise(resolve => {
             const pages = getCurrentPages();
-            this.currentEventName = '/' + pages[pages.length - 1]['route'];
+            this.currentEventName = '/' + pages[pages.length - 1]['route']
             resolve(this.currentEventName);
         });
     }
@@ -76,7 +76,7 @@ export class UniEventBusCore {
         uni.$emit('GlobEvent' + eventName);
     }
 
-    removeCurrentEvent(currentEventName) {
+    removeCurrentPageEventName(currentEventName) {
         uni.$off(currentEventName);
     }
 
